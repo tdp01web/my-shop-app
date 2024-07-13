@@ -12,7 +12,10 @@ const categoryRouter = require("./routes/prodcategoryRoutes");
 const blogcategoryRouter = require("./routes/blogCatRoutes");
 const couponRouter = require("./routes/couponRoutes");
 const brandRouter = require("./routes/brandRoutes");
+const colorRouter = require("./routes/colorRoutes");
+const enqRouter = require("./routes/enqRouter");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 4000;
 
@@ -22,6 +25,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 app.use("/api/user", authRouter);
 app.use("/api/product", productRouter);
@@ -30,7 +34,9 @@ app.use("/api/category", categoryRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/blogcategory", blogcategoryRouter);
 app.use("/api/brand", brandRouter);
+app.use("/api/color", colorRouter);
 app.use("/api/coupon", couponRouter);
+app.use("/api/enquiry", enqRouter);
 
 app.use(notFound);
 app.use(errorHandler);
