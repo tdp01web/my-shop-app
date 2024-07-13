@@ -3,7 +3,12 @@ const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 const User = require("../models/userModel");
 const validateMongoDbId = require("../utils/validateMongodbId");
-const { cloudinaryUploadImg } = require("../utils/cloudinary");
+const {
+  cloudinaryUploadImg,
+  cloudinaryDeleteImg,
+} = require("../utils/cloudinary");
+const fs = require("fs");
+const path = require("path");
 
 //! Thêm sản phẩm mới
 const createProduct = asyncHandler(async (req, res) => {
@@ -108,6 +113,7 @@ const getAllProduct = asyncHandler(async (req, res) => {
   }
 });
 
+//! thêm vào danh sách yêu thích
 const addToWishlist = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   const { prodId } = req.body;
@@ -195,36 +201,46 @@ const rating = asyncHandler(async (req, res) => {
   }
 });
 
-//!
+//! upload ảnh
+
 const uploadImage = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  validateMongoDbId(id);
   try {
-    const uploader = (path) => cloudinaryUploadImg(path, "Image");
+    const uploader = (path) => cloudinaryUploadImg(path, "images");
     const urls = [];
     const files = req.files;
+    // console.log(req.files);
     for (const file of files) {
       const { path } = file;
       const newpath = await uploader(path);
+      console.log(newpath);
       urls.push(newpath);
-      fs.unlinkSync(path);
-    }
-    const findProduct = await Product.findByIdAndUpdate(
-      id,
-      {
-        images: urls.map((file) => {
-          return file;
-        }),
-      },
-      {
-        new: true,
+      try {
+        await fs.unlinkSync(path);
+      } catch (error) {
+        console.error(`Failed to delete file ${file.path}:`, error);
       }
-    );
-    res.json(findProduct);
+    }
+    const images = urls.map((file) => {
+      return file;
+    });
+    res.json(images);
   } catch (error) {
     throw new Error(error);
   }
 });
+
+//! xóa ảnh
+const deleteImage = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleted = cloudinaryDeleteImg(id, "images");
+    res.json({ message: "deleted image" });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 module.exports = {
   createProduct,
   getaProduct,
@@ -234,4 +250,5 @@ module.exports = {
   addToWishlist,
   rating,
   uploadImage,
+  deleteImage,
 };
