@@ -1,0 +1,15 @@
+.slider-container .slick-dots {
+  display: none !important;
+}
+.slider-container .slick-arrow .slick-next,
+.slider-container .slick-arrow .slick-prev {
+  display: none !important;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
