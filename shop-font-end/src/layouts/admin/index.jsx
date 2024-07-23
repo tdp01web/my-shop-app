@@ -1,7 +1,7 @@
-import React from 'react'
-import HeaderLayoutAdmin from './components/header';
-import FooterLayoutAdmin from './components/footer';
-import { Outlet } from 'react-router-dom';
+import React from "react";
+import FooterLayoutAdmin from "./components/footer";
+import { Outlet } from "react-router-dom";
+import HeaderLayoutAdmin from "./components/header/HeaderLayoutAdmin";
 
 const LayoutAdmin = () => {
   return (
@@ -12,7 +12,7 @@ const LayoutAdmin = () => {
           <Outlet />
         </main>
         <FooterLayoutAdmin />
-      </div >
+      </div>
     </>
   );
 };

@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const HeaderLayoutAdmin = () => {
-  return (
-    <div>HeaderLayoutAdmin</div>
-  )
-}
+  return <div>HeaderLayoutAdmin</div>;
+};
 
-export default HeaderLayoutAdmin
+export default HeaderLayoutAdmin;
