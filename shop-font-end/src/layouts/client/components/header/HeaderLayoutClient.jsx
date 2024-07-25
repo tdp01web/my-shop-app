@@ -5,14 +5,13 @@ import SubHeader from "./component/SubHeader";
 import { useBreakpoints } from "../../../../hooks/useBreakpoints";
 
 const HeaderLayoutClient = () => {
-  const { mobile, tablet } = useBreakpoints();
+  const { mobile, tablet, desktop, laptop } = useBreakpoints();
   return (
     <div>
       <SlideImages />
       <MainHeader />
-      {!mobile && !tablet && <SubHeader />}
+      {(desktop || laptop) && <SubHeader />}
     </div>
   );
 };
-
 export default HeaderLayoutClient;
