@@ -7,7 +7,7 @@ const LayoutClient = () => {
     <>
       <div className="max-w-screen-xl mx-auto bg-[#ECECEC]">
         <HeaderLayoutClient />
-        {/* <Banner /> */}
+        <Banner />
         <main className="w-[80%] mx-auto ">
           <Outlet />
         </main>

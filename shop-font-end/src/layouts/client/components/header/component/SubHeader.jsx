@@ -24,7 +24,7 @@ const SubHeader = ({ vertical }) => {
       })}
     >
       <div
-        className={clsx("mx-auto  hide-scrollbar", {
+        className={clsx("mx-auto md:w-[80%] md:p-3  hide-scrollbar", {
           "flex overflow-x-auto": !vertical,
           "flex flex-col": vertical,
         })}
@@ -33,7 +33,7 @@ const SubHeader = ({ vertical }) => {
           <div
             key={index}
             className={clsx(
-              "flex items-center gap-2 text-[14px] font-500 hover:text-[#E30019] cursor-pointer",
+              "flex items-center  gap-2 text-[14px] font-500 hover:text-[#E30019] cursor-pointer",
               {
                 "px-[32px]": !vertical,
                 "border-r border-gray-700":
