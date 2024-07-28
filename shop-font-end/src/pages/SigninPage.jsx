@@ -24,9 +24,9 @@ const SigninPage = () => {
         <p tabIndex={0} role="heading" aria-label="Login to your account" className="text-xl font-extrabold leading-6 text-gray-800">
           Login to your account
         </p>
-        <p className="text-[18px] mt-4 font-medium leading-none text-gray-500">
+        <p className="text-[16px] mt-4 font-medium leading-none text-gray-500">
           Dont have account?{" "}
-          <Link to="/signup" tabIndex={0} role="link" aria-label="Sign up here" className="text-sm font-medium leading-none underline text-gray-800 cursor-pointer">
+          <Link to="/signup" tabIndex={0} role="link" aria-label="Sign up here" className="text-4 font-medium leading-none underline text-gray-800 cursor-pointer">
             {" "}
             Sign up here
           </Link>
@@ -38,7 +38,7 @@ const SigninPage = () => {
             <path d="M4.17667 11.9366C3.97215 11.3165 3.85378 10.6521 3.85378 9.96562C3.85378 9.27905 3.97215 8.6147 4.16591 7.99463L4.1605 7.86257L1.13246 5.44363L1.03339 5.49211C0.37677 6.84302 0 8.36005 0 9.96562C0 11.5712 0.37677 13.0881 1.03339 14.4391L4.17667 11.9366Z" fill="#FBBC05" />
             <path d="M9.68807 3.85336C11.5073 3.85336 12.7344 4.66168 13.4342 5.33718L16.1684 2.59107C14.4892 0.985496 12.3039 0 9.68807 0C5.89885 0 2.62637 2.23672 1.0332 5.49214L4.16573 7.99466C4.95162 5.59183 7.12608 3.85336 9.68807 3.85336Z" fill="#EB4335" />
           </svg>
-          <p className="text-base font-medium ml-4 text-gray-700">Continue with Google</p>
+          <p className="text-[20px] font-medium ml-4 text-gray-700">Continue with Google</p>
         </button>
         <button aria-label="Continue with github" role="button" className="focus:outline-none  focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center w-full mt-4">
           <svg width={21} height={20} viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +47,7 @@ const SigninPage = () => {
               fill="#333333"
             />
           </svg>
-          <p className="text-base font-medium ml-4 text-gray-700">Continue with Github</p>
+          <p className="text-[20px] font-medium ml-4 text-gray-700">Continue with Github</p>
         </button>
         <div className="w-full flex items-center justify-between py-5">
           <hr className="w-full bg-gray-400" />
@@ -59,7 +59,7 @@ const SigninPage = () => {
           label="Email"
           rules={[
             {
-              message: 'vui lòng nhập email!',
+              message: 'Vui lòng nhập email!',
               required: true,
               type: 'email'
             },
@@ -69,10 +69,10 @@ const SigninPage = () => {
         </Form.Item>
         <Form.Item className='text-black font-bold'
           name="password"
-          label="mật khẩu"
+          label="Mật khẩu"
           rules={[
             {
-              message: 'vui lòng nhập password!',
+              message: 'Vui lòng nhập password!',
               required: true,
               min: 6
             },
