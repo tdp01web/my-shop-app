@@ -30,7 +30,7 @@ const SignupPage = () => {
         <>
             <Form className="mt-[30px] mx-auto sm:w-[400px]" name="form_item_path" layout="vertical" onFinish={onFinish} autoComplete="off">
                 <p tabIndex={0} role="heading" aria-label="Login to your account" className="text-xl font-extrabold leading-6 text-gray-800">
-                    signup to your account
+                    Signup to your account
                 </p>
                 <button aria-label="Continue with google" role="button" className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center w-full mt-10">
                     <svg width={19} height={20} viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +39,7 @@ const SignupPage = () => {
                         <path d="M4.17667 11.9366C3.97215 11.3165 3.85378 10.6521 3.85378 9.96562C3.85378 9.27905 3.97215 8.6147 4.16591 7.99463L4.1605 7.86257L1.13246 5.44363L1.03339 5.49211C0.37677 6.84302 0 8.36005 0 9.96562C0 11.5712 0.37677 13.0881 1.03339 14.4391L4.17667 11.9366Z" fill="#FBBC05" />
                         <path d="M9.68807 3.85336C11.5073 3.85336 12.7344 4.66168 13.4342 5.33718L16.1684 2.59107C14.4892 0.985496 12.3039 0 9.68807 0C5.89885 0 2.62637 2.23672 1.0332 5.49214L4.16573 7.99466C4.95162 5.59183 7.12608 3.85336 9.68807 3.85336Z" fill="#EB4335" />
                     </svg>
-                    <p className="text-base font-medium ml-4 text-gray-700">Continue with Google</p>
+                    <p className="text-[20px] font-medium ml-4 text-gray-700">Continue with Google</p>
                 </button>
                 <button aria-label="Continue with github" role="button" className="focus:outline-none  focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center w-full mt-4">
                     <svg width={21} height={20} viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +48,7 @@ const SignupPage = () => {
                             fill="#333333"
                         />
                     </svg>
-                    <p className="text-base font-medium ml-4 text-gray-700">Continue with Github</p>
+                    <p className="text-[20px] font-medium ml-4 text-gray-700">Continue with Github</p>
                 </button>
                 <div className="w-full flex items-center justify-between py-5">
                     <hr className="w-full bg-gray-400" />
@@ -58,13 +58,13 @@ const SignupPage = () => {
                 <Form.Item className='text-black font-bold'
                     rules={[
                         {
-                            message: 'vui lòng nhập name!',
+                            message: 'Vui lòng nhập name!',
                             required: true,
                             min: 3
                         },
                     ]}
                     name="name"
-                    label="name"
+                    label="Name"
                 >
                     <Input className='font-mono border border-indigo-600 h-[48px]' placeholder="nhập name" />
                 </Form.Item>
@@ -83,10 +83,10 @@ const SignupPage = () => {
                 </Form.Item>
                 <Form.Item className='text-black font-bold'
                     name="password"
-                    label="mật khẩu"
+                    label="Mật khẩu"
                     rules={[
                         {
-                            message: 'vui lòng nhập password!',
+                            message: 'Vui lòng nhập mật khẩu!',
                             required: true,
                             min: 6
                         },
@@ -99,10 +99,10 @@ const SignupPage = () => {
                 </Form.Item>
                 <Form.Item className='text-black font-bold'
                     name="confirmpassword"
-                    label="nhập lại mật khẩu"
+                    label="Nhập lại mật khẩu"
                     rules={[
                         {
-                            message: 'vui lòng nhập confirm password!',
+                            message: 'Vui lòng nhập lại mật khẩu!',
                             required: true,
                             min: 6
                         },
@@ -129,7 +129,7 @@ const SignupPage = () => {
                     htmlType="submit"
                     className="w-full h-[52px] text-center py-3 rounded text-[20px] bg-[#4a71c4] text-white hover:bg-green-dark focus:outline-none my-1"
                 >
-                    Sign in
+                    Sign up
                 </Button>
             </Form>
         </>

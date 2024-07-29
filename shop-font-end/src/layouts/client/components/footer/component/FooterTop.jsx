@@ -76,7 +76,7 @@ const FooterTop = () => {
               className="flex justify-between items-center cursor-pointer md:cursor-auto"
               onClick={() => toggleSection(index)}
             >
-              <h4 className="font-600 text-[16px] leading-[22px] uppercase">
+              <h4 className="font-600 text-[14px] md:text-[16px]  leading-[22px] uppercase">
                 {section.title}
               </h4>
               <div className="md:hidden">
@@ -88,7 +88,7 @@ const FooterTop = () => {
               </div>
             </div>
             <ul
-              className={`flex flex-col gap-2 text-[12px] 2xl:text-[14px] font-400 ${
+              className={`flex flex-col gap-2   text-[14px] 2xl:text-[16px] font-500 ${
                 openSections.includes(index) ? "block" : "hidden"
               } md:block`}
             >

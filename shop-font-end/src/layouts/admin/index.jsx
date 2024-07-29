@@ -25,7 +25,7 @@ const LayoutAdmin = () => {
         <SidebarLayoutAdmin />
         <MainLayoutAdmin />
       </Layout>
-      <Footer style={{ textAlign: 'center' }}>MANAGE SNEAKER-CUTI</Footer>
+      <Footer className='text-center font-bold text-[17px]'>MANAGE SNEAKER-CUTI</Footer>
     </Layout>
   );
 };
