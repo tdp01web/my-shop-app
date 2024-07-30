@@ -21,7 +21,7 @@ const AboutsPage = () => {
             <p className="font-normal text-base leading-6 text-black mt-6">Sự hài lòng của khách hàng chính là động lực giúp GearVN không ngừng hoàn thiện, mang lại ngày càng nhiều giá trị tích cực cho cộng đồng.</p>
           </div>
           <div className="lg:flex items-center w-full lg:w-1/2 ">
-            <img className="lg:block w-full object-cover w-full rounded-md" src="https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/356662508_266414546069571_2404233093151306531_n.png?stp=dst-jpg&_nc_cat=110&ccb=1-7&_nc_sid=86c6b0&_nc_eui2=AeFqGkE3PuXh7sp2cEnstshxveoYTKH2kI296hhMofaQjUmL7_kRKI4y1m3rwgUc6-82gd10HWBLsh4WJHTIum8c&_nc_ohc=PEwYCybc6EUQ7kNvgEydnGU&_nc_ht=scontent.fhan17-1.fna&oh=00_AYB6_GQffmZdDYjYjvEnyZbe-2QTn6LDR0o_7E2PszgPrw&oe=66AB95A6 " alt="people discussing on board" />
+            <img className="lg:block w-full object-cover rounded-md" src="https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/356662508_266414546069571_2404233093151306531_n.png?stp=dst-jpg&_nc_cat=110&ccb=1-7&_nc_sid=86c6b0&_nc_eui2=AeFqGkE3PuXh7sp2cEnstshxveoYTKH2kI296hhMofaQjUmL7_kRKI4y1m3rwgUc6-82gd10HWBLsh4WJHTIum8c&_nc_ohc=PEwYCybc6EUQ7kNvgEydnGU&_nc_ht=scontent.fhan17-1.fna&oh=00_AYB6_GQffmZdDYjYjvEnyZbe-2QTn6LDR0o_7E2PszgPrw&oe=66AB95A6 " alt="people discussing on board" />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 my-5">

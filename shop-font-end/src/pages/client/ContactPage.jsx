@@ -2,7 +2,7 @@ import React from 'react'
 const ContactPage = () => {
   return (
     <>
-      <div className="max-w-screen-xl mx-auto">
+      <div className="mx-auto">
         <div className="relative">
           <section
             className="w-full h-[40vh] lg:h-[55vh] bg-cover bg-center brightness-50"
@@ -15,7 +15,7 @@ const ContactPage = () => {
             </p>
           </div>
         </div>
-        <div className="w-full h-[130vh] md:h-[60vh] lg:h-[80vh] bg-[#E30019] relative">
+        <div className="w-full h-[150vh] md:h-[80vh] bg-[#E30019] relative">
           <div className="absolute -top-[3%] md:-top-[10%] left-1/2 -translate-x-1/2 grid grid-cols-1 md:grid-cols-3 h-fit w-4/5 md:w-[90%] lg:w-4/5 rounded shadow overflow-hidden text-white">
             <div className="p-2 md:p-4 h-full bg-gray-800 col-span-2">
               <form>

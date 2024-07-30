@@ -6,9 +6,6 @@ import FooterLayoutClient from '../layouts/client/components/footer'
 const NotFoundPage = () => {
   return (
     <>
-      <div className="max-w-screen-xl mx-auto bg-[#ECECEC]">
-        <HeaderLayoutClient/>
-        <main className="w-full md:w-[60%] mx-auto">
           <div className=" bg-white">
             <div className="text-center">
               <img src="https://file.hstatic.net/200000636033/file/404_0031c39563584f53bce84ce2e6add746.png" alt="" />
@@ -29,9 +26,6 @@ const NotFoundPage = () => {
               </a>
             </div>
           </div>  
-        </main>
-        <FooterLayoutClient />
-      </div>
     </>
 
   )
