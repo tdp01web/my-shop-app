@@ -11,6 +11,9 @@ import SigninPage from "../pages/SigninPage"
 import SignupPage from "../pages/SignupPage"
 import ContactPage from "../pages/client/ContactPage"
 import AboutsPage from "../pages/client/AboutsPage"
+import CartPage from "../pages/client/CartPage"
+import ProductsSalePage from "../pages/client/ProductsSalePage"
+import OrdersPage from "../pages/client/OrdersPage"
 const Router = () => {
     return (
         <BrowserRouter>
@@ -20,9 +23,13 @@ const Router = () => {
                     <Route path='products'>
                         <Route index element={<ProductPage />} />
                         <Route path=':id' element={<ProductDetailPage />} />
+                        <Route path='sales' element={<ProductsSalePage />} />
                     </Route>
-                <Route path='contacts' element={<ContactPage />}></Route>
-                <Route path='abouts' element={<AboutsPage />}></Route>
+                    <Route path='contacts' element={<ContactPage />}></Route>
+                    <Route path='abouts' element={<AboutsPage />}></Route>
+                    <Route path='cart' element={<CartPage />}></Route>
+                    <Route path='bills' element={<OrdersPage />}></Route>
+                    <Route path='*' element={<NotFoundPage />}></Route>
                 </Route>
                 <Route path='admin' element={<LayoutAdmin />}>
                     <Route index element={<ListProductAdmin />} />
@@ -32,7 +39,6 @@ const Router = () => {
                 </Route>
                 <Route path='signin' element={<SigninPage />}></Route>
                 <Route path='signup' element={<SignupPage />}></Route>
-                <Route path='*' element={<NotFoundPage />}></Route>
             </Routes>
         </BrowserRouter>
     )
