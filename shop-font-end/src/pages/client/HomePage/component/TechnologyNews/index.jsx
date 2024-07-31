@@ -1,0 +1,43 @@
+import React from "react";
+
+const TechnologyNews = () => {
+  const ListData = [
+    {
+      title: "Solidworks là gì? tính năng vượt trội Solidworks mang lại",
+      image: "/public/images/danhmucsp/tintuc1.webp",
+    },
+    {
+      title: "Cách lấy lại file Excel chưa lưu đảm bảo thành công",
+      image: "/public/images/danhmucsp/tintuc2.webp",
+    },
+    {
+      title: "Máy in không in được: Nguyên nhân và cách khắc phục",
+      image: "/public/images/danhmucsp/tintuc3.webp",
+    },
+    {
+      title: "Lắp đặt camera an ninh cho gia đình cần lưu ý điều gì",
+      image: "/public/images/danhmucsp/tintuc4.webp",
+    },
+  ];
+  return (
+    <div className="bg-white p-4 flex flex-col gap-2 rounded-sm">
+      <h2 className="text-[24px] font-600 ">Tin tức công nghệ</h2>
+      <div className="grid grid-cols-4 gap-4">
+        {ListData.map((item, index) => (
+          <div key={index} className="flex flex-col gap-2">
+            <div className="relative pb-[56.25%] rounded-sm">
+              <img
+                src={item.image}
+                alt={item.title}
+                className="absolute top-0 left-0 w-full rounded-[4px] h-full object-cover"
+              />
+            </div>
+            <p className="text-[16px] font-[500]">{item.title}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default TechnologyNews;

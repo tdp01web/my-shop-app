@@ -13,3 +13,6 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+.slick-slider .slick-dots {
+  display: none !important;
+}

@@ -10,6 +10,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { useBreakpoints } from "../../../../../hooks/useBreakpoints";
 import SubHeader from "./SubHeader";
 import { useState } from "react";
+import Menu from "../../../../../pages/client/HomePage/component/HomePageTop/component/Menu";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const links = [
@@ -99,6 +100,7 @@ function MainHeader() {
           onKeyDown={handleDrawerClose}
         >
           <SubHeader vertical />
+          <Menu />
         </Box>
       </Drawer>
     </Box>
