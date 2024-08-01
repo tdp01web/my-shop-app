@@ -5,22 +5,22 @@ const ContactPage = () => {
       <div className="mx-auto">
         <div className="relative">
           <section
-            className="w-full h-[40vh] lg:h-[55vh] bg-cover bg-center brightness-50"
+            className="brightness-50 bg-cover bg-center w-full h-[40vh] lg:h-[55vh]"
             style={{ background: "black" }}
           ></section>
-          <div className="absolute top-1/2 left-[5%] md:left-[10%] -translate-y-1/2 text-white">
-            <h1 className="text-3xl md:text-5xl font-bold">Liên hệ với chúng tôi</h1>
+          <div className="top-1/2 left-[5%] md:left-[10%] absolute text-white -translate-y-1/2">
+            <h1 className="font-bold text-3xl md:text-5xl">Liên hệ với chúng tôi</h1>
             <p className="text-sm md:text-lg">
               Chúng tôi luôn ở bên bạn
             </p>
           </div>
         </div>
-        <div className="w-full h-[150vh] md:h-[80vh] bg-[#E30019] relative">
-          <div className="absolute -top-[3%] md:-top-[10%] left-1/2 -translate-x-1/2 grid grid-cols-1 md:grid-cols-3 h-fit w-4/5 md:w-[90%] lg:w-4/5 rounded shadow overflow-hidden text-white">
-            <div className="p-2 md:p-4 h-full bg-gray-800 col-span-2">
+        <div className="relative bg-[#E30019] w-full h-[150vh] md:h-[80vh]">
+          <div className="-top-[3%] md:-top-[10%] left-1/2 absolute grid grid-cols-1 md:grid-cols-3 shadow rounded w-4/5 md:w-[90%] lg:w-4/5 h-fit text-white -translate-x-1/2 overflow-hidden">
+            <div className="col-span-2 bg-gray-800 p-2 md:p-4 h-full">
               <form>
-                <div className="flex flex-col md:flex-row justify-center items-start md:items-center pt-8 p-4">
-                  <h2 className="text-2xl md:text-3xl font-semibold">
+                <div className="flex md:flex-row flex-col justify-center items-start md:items-center p-4 pt-8">
+                  <h2 className="font-semibold text-2xl md:text-3xl">
                     Nội dung
                   </h2>
                   <svg
@@ -42,7 +42,7 @@ const ContactPage = () => {
                     <path d="M18 15l3 3l-3 3" />
                   </svg>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-6 px-4 md:py-12 md:px-8 text-sm">
+                <div className="gap-8 grid grid-cols-1 md:grid-cols-2 px-4 md:px-8 py-6 md:py-12 text-sm">
                   <div className="flex flex-col gap-1">
                     <label className="font-semibold">
                       Họ tên <span className="text-red-500">*</span>
@@ -104,8 +104,8 @@ const ContactPage = () => {
                   </div>
                 </div>
               </form>
-              <div className="flex items-center justify-center md:justify-end py-4 px-8">
-                <button className="py-2 px-4 md:py-4 md:px-6 bg-gray-800 rounded-md border-2 border-white flex items-center gap-2 hover:scale-95 transition-all">
+              <div className="flex justify-center md:justify-end items-center px-8 py-4">
+                <button className="flex items-center gap-2 border-2 border-white bg-gray-800 px-4 md:px-6 py-2 md:py-4 rounded-md hover:scale-95 transition-all">
                   <span className="text-xl">Gửi</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -125,11 +125,11 @@ const ContactPage = () => {
                 </button>
               </div>
             </div>
-            <div className="py-6 px-4 h-[500px] md:h-full bg-blue-800 grid grid-cols-1 grid-rows-5">
-              <h2 className="text-xl lg:text-2xl flex justify-center text-center md:text-start font-semibold">
+            <div className="grid grid-cols-1 grid-rows-5 bg-blue-800 px-4 py-6 h-[500px] md:h-full">
+              <h2 className="flex justify-center font-semibold text-center text-xl md:text-start lg:text-2xl">
                 Thông tin liên hệ
               </h2>
-              <div className="row-span-4 flex flex-col items-center justify-center">
+              <div className="flex flex-col justify-center items-center row-span-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="icon icon-tabler icon-tabler-mail-share"
@@ -153,25 +153,25 @@ const ContactPage = () => {
               <div className="flex justify-center items-center gap-4">
                 <a title="youtube" href="#">
                   <img
-                    className="h-8 w-8 invert"
+                    className="w-8 h-8 invert"
                     src="https://www.svgrepo.com/show/521936/youtube.svg"
                   />
                 </a>
                 <a title="linkedin" href="#">
                   <img
-                    className="h-12 w-12 invert"
+                    className="w-12 h-12 invert"
                     src="https://www.svgrepo.com/show/520815/linkedin.svg"
                   />
                 </a>
                 <a title="instagram" href="#">
                   <img
-                    className="h-8 w-8 invert"
+                    className="w-8 h-8 invert"
                     src="https://www.svgrepo.com/show/521711/instagram.svg"
                   />
                 </a>
                 <a title="github" href="#">
                   <img
-                    className="h-8 w-8 invert"
+                    className="w-8 h-8 invert"
                     src="https://www.svgrepo.com/show/512317/github-142.svg"
                   />
                 </a>
