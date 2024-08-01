@@ -9,18 +9,18 @@ const ContactPage = () => {
             style={{ background: "black" }}
           ></section>
           <div className="top-1/2 left-[5%] md:left-[10%] absolute text-white -translate-y-1/2">
-            <h1 className="font-bold text-3xl md:text-5xl">Liên hệ với chúng tôi</h1>
+            <h1 className="font-bold text-2xl md:text-3xl">Liên hệ với chúng tôi</h1>
             <p className="text-sm md:text-lg">
               Chúng tôi luôn ở bên bạn
             </p>
           </div>
         </div>
-        <div className="relative bg-[#E30019] w-full h-[150vh] md:h-[80vh]">
+        <div className="relative bg-[#E30019] w-full h-[180vh] md:h-[80vh]">
           <div className="-top-[3%] md:-top-[10%] left-1/2 absolute grid grid-cols-1 md:grid-cols-3 shadow rounded w-4/5 md:w-[90%] lg:w-4/5 h-fit text-white -translate-x-1/2 overflow-hidden">
             <div className="col-span-2 bg-gray-800 p-2 md:p-4 h-full">
               <form>
                 <div className="flex md:flex-row flex-col justify-center items-start md:items-center p-4 pt-8">
-                  <h2 className="font-semibold text-2xl md:text-3xl">
+                  <h2 className="font-semibold text-xl md:text-2xl">
                     Nội dung
                   </h2>
                   <svg
@@ -48,7 +48,7 @@ const ContactPage = () => {
                       Họ tên <span className="text-red-500">*</span>
                     </label>
                     <input
-                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md"
+                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md text-[16px]"
                       placeholder="Nhập họ tên"
                       required=""
                       name="name"
@@ -60,7 +60,7 @@ const ContactPage = () => {
                       Email <span className="text-red-500">*</span>
                     </label>
                     <input
-                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md"
+                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md text-[16px]"
                       placeholder="Nhập email"
                       required=""
                       name="email"
@@ -72,7 +72,7 @@ const ContactPage = () => {
                       Số điện thoại <span className="text-red-500">*</span>
                     </label>
                     <input
-                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md"
+                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md text-[16px]"
                       placeholder="Nhập số điện thoại"
                       required=""
                       name="phone"
@@ -84,7 +84,7 @@ const ContactPage = () => {
                       Tiêu đề <span className="text-red-500">*</span>
                     </label>
                     <input
-                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md"
+                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md text-[16px]"
                       placeholder="Nhập tiêu đề"
                       required=""
                       name="subject"
@@ -96,7 +96,7 @@ const ContactPage = () => {
                       Nội dung <span className="text-red-500">*</span>
                     </label>
                     <textarea
-                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md"
+                      className="border-[1px] border-white bg-gray-800 p-2 rounded-md text-[16px]"
                       placeholder="Nhập nội dung"
                       required
                       name="subject"
@@ -106,7 +106,7 @@ const ContactPage = () => {
               </form>
               <div className="flex justify-center md:justify-end items-center px-8 py-4">
                 <button className="flex items-center gap-2 border-2 border-white bg-gray-800 px-4 md:px-6 py-2 md:py-4 rounded-md hover:scale-95 transition-all">
-                  <span className="text-xl">Gửi</span>
+                  <span className="text-[24px]">Gửi</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="icon icon-tabler icon-tabler-brand-telegram"
