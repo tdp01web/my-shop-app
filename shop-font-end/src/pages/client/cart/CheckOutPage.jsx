@@ -14,7 +14,7 @@ const CheckoutPage = () => {
     console.log(value)
   };
   return (
-    <div id="summary" class=" w-full sm:w-1/4 md:w-1/2 px-8">
+    <div id="summary" className="w-full sm:w-1/2 md:w-1/2 px-8 py-10">
       <div className="py-10 px-4 lg:mt-0">
         <p className="text-[18px] font-medium">Thanh toán</p>
         <Form name="form_item_path" layout="vertical" onFinish={onFinish} autoComplete="off">
@@ -29,7 +29,7 @@ const CheckoutPage = () => {
             name="name"
             label="Họ tên"
           >
-            <Input className=' border border-gray-700 h-[36px]' placeholder="Nhập họ tên" />
+            <Input className=' border border-gray-500 h-[46px]' placeholder="Họ và tên (bắt buộc)" />
           </Form.Item>
           <Form.Item className='text-black '
             name="email"
@@ -42,31 +42,31 @@ const CheckoutPage = () => {
               },
             ]}
           >
-            <Input className=' border border-gray-700 h-[36px]' placeholder="Nhập email" />
+            <Input className=' border border-gray-500 h-[46px]' placeholder="Email (bắt buộc)" />
           </Form.Item>
           <Form.Item className='text-black '
             rules={[
               {
-                message: 'vui lòng nhập Phone!',
+                message: 'vui lòng nhập số điện thoại!',
                 required: true,
               },
             ]}
             name="phone"
-            label="Phone"
+            label="Số điện thoại"
           >
-            <Input className=' border border-gray-700 h-[36px]' placeholder="nhập name" />
+            <Input className=' border border-gray-500 h-[46px]' placeholder="nhập Số điện thoại (bắt buộc)" />
           </Form.Item>
           <Form.Item className='text-black '
             rules={[
               {
-                message: 'vui lòng nhập Address!',
+                message: 'vui lòng nhập địa chỉ!',
                 required: true,
               },
             ]}
             name="address"
-            label="Address"
+            label="Địa chỉ nhận hàng"
           >
-            <Input className=' border border-gray-700 h-[36px]' placeholder="nhập name" />
+            <Input className='border border-gray-500 h-[46px]' placeholder="Địa chỉ nhận hàng (bắt buộc)" />
           </Form.Item>
           <Form.Item className='flex w-[200px]'>
             <ReCAPTCHA
@@ -98,9 +98,9 @@ const CheckoutPage = () => {
             <label for="e-wallet" className="ml-2">Thanh toán qua ví điện tử</label>
           </div>
           <button
-            className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
+            className="mt-6 w-full h-[46px] rounded-md bg-black py-1.5 font-medium text-blue-50 hover:bg-blue-600"
           >
-            Check out
+            Xác nhận đặt hàng
           </button>
         </Form>
       </div>

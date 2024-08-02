@@ -94,7 +94,7 @@ const SigninPage = () => {
         </Form.Item>
         <Button
           htmlType="submit"
-          className="w-full h-[52px] text-center py-3 rounded text-[20px] bg-[#d32026] text-white hover:bg-green-dark focus:outline-none my-1"
+          className="w-full h-[52px] text-center py-3 rounded text-[20px] bg-[#d32026] hover:bg-blue-600 text-white hover:bg-green-dark focus:outline-none my-1"
         >
           Đăng nhập
         </Button>
