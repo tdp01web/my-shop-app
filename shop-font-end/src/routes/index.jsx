@@ -11,6 +11,8 @@ import SigninPage from "../pages/SigninPage";
 import SignupPage from "../pages/SignupPage";
 import ContactPage from "../pages/client/ContactPage";
 import AboutsPage from "../pages/client/AboutsPage";
+import OrdersPage from "../pages/client/OrdersPage";
+import CartPage from "../pages/client/cart/CartPage";
 const Router = () => {
   return (
     <BrowserRouter>
@@ -23,6 +25,8 @@ const Router = () => {
           </Route>
           <Route path="contacts" element={<ContactPage />}></Route>
           <Route path="abouts" element={<AboutsPage />}></Route>
+          <Route path='cart' element={<CartPage />}></Route>
+          <Route path='orders/bill' element={<OrdersPage />}></Route>
         </Route>
         <Route path="admin" element={<LayoutAdmin />}>
           <Route index element={<ListProductAdmin />} />
