@@ -6,7 +6,7 @@ const AboutsPage = () => {
       <div className="2xl:container 2xl:mx-auto px-4 md:px-6 lg:px-20 py-9 md:py-12 lg:py-16">
         <div className="w-full">
           <h1 className="mt-2 w-full font-bold text-2xl text-center text-red-600 lg:text-4xl leading-9 lg:leading-10">Giới thiệu Gearvn</h1>
-          <p className="mt-6 font-normal text-[16px] text-black lg:text-16 leading-8">Khách hàng hôm nay là đồng đội tương lai! Chúng ta cùng nhau lan toả giá trị tích cực đến cộng đồng game thủ và tất cả những người yêu công nghệ tại Việt Nam</p>
+          <p className="mt-6 font-semibold text-[16px] text-gray-800 lg:text-12 italic">"Khách hàng hôm nay là đồng đội tương lai! Chúng ta cùng nhau lan toả giá trị tích cực đến cộng đồng game thủ và tất cả những người yêu công nghệ tại Việt Nam"</p>
         </div>
 
         <div className="mt-12 sm:mt-10 lg:mt-14">
@@ -49,12 +49,12 @@ const AboutsPage = () => {
             <div className="w-full lg:w-6/12 xl:w-5/12">
               <h2 className="font-bold text-black text-center text-xl leading-7 lg:leading-9">Hệ thống Showroom</h2>
               <img src="./public/images/download.png" alt="" />
-              <h3 className="font-bold text-gray-700 text-lg leading-7 lg:leading-9">Miền Bắc</h3>
-              <ul className="mx-7 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
+              <h3 className="my-2 font-bold text-gray-700 text-lg leading-7 lg:leading-9">Miền Bắc</h3>
+              <ul className="mx-7 my-3 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
                 <li>Showroom GearVn Thái Hà</li>
               </ul>
               <h3 className="font-bold text-gray-700 text-lg leading-7 lg:leading-9">Miền Nam</h3>
-              <ul className="mx-7 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
+              <ul className="mx-7 my-3 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
                 <li>Showroom GearVn Hoàng Hoa Thám</li>
                 <li>Showroom GearVn Kha Vạn Cân</li>
               </ul>
@@ -63,7 +63,7 @@ const AboutsPage = () => {
               <h2 className="font-bold text-black text-center text-xl leading-7 lg:leading-9">Mua sắm trực tiếp</h2>
               <img src="./public/images/download2.png" alt="" />
               <h3 className="font-bold text-gray-700 text-lg leading-7 lg:leading-9">Website GearVn</h3>
-              <ul className="mx-7 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
+              <ul className="mx-7 my-3 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
                 <li>www.gearvn.com</li>
                 <li>Miễn phí giao hàng toàn quốc</li>
               </ul>
