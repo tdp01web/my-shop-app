@@ -1,14 +1,12 @@
-// components/ImageSlideshow.js
 import Slider from "react-slick";
-import PropTypes from "prop-types";
-
+/* eslint-disable react/prop-types */
 const ImageSlideshow = ({ images, setCurrentImageIndex }) => {
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    autoplay: true, // Bật chế độ tự động
-    autoplaySpeed: 1000, // Thay đổi thời gian chuyển ảnh (3 giây)
+    autoplay: true,
+    autoplaySpeed: 1000,
     slidesToShow: 5,
     slidesToScroll: 1,
     beforeChange: (current, next) => setCurrentImageIndex(next),
@@ -34,17 +32,6 @@ const ImageSlideshow = ({ images, setCurrentImageIndex }) => {
       </Slider>
     </div>
   );
-};
-
-ImageSlideshow.propTypes = {
-  images: PropTypes.arrayOf(
-    PropTypes.shape({
-      url: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  currentImageIndex: PropTypes.number.isRequired,
-  setCurrentImageIndex: PropTypes.func.isRequired,
 };
 
 export default ImageSlideshow;

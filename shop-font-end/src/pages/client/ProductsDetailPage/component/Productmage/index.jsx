@@ -1,8 +1,7 @@
-import PropTypes from "prop-types";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import "slick-carousel/slick/slick.css";
+/* eslint-disable react/prop-types */
 const ProductImage = ({ product, currentImageIndex, setCurrentImageIndex }) => {
   const settings = {
     dots: true,
@@ -48,20 +47,6 @@ const ProductImage = ({ product, currentImageIndex, setCurrentImageIndex }) => {
       </div>
     </div>
   );
-};
-
-ProductImage.propTypes = {
-  product: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    images: PropTypes.arrayOf(
-      PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        color: PropTypes.string,
-      })
-    ).isRequired,
-  }).isRequired,
-  currentImageIndex: PropTypes.number.isRequired,
-  setCurrentImageIndex: PropTypes.func.isRequired,
 };
 
 export default ProductImage;

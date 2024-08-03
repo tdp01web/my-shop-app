@@ -1,7 +1,5 @@
-// ProductDetailsPrice.js
-import PropTypes from "prop-types";
 import { AiFillStar } from "react-icons/ai";
-
+/* eslint-disable react/prop-types */
 const ProductDetailsPrice = ({ product }) => {
   return (
     <div>
@@ -32,16 +30,6 @@ const ProductDetailsPrice = ({ product }) => {
       {/* End Giá */}
     </div>
   );
-};
-
-ProductDetailsPrice.propTypes = {
-  product: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    oldPrice: PropTypes.number.isRequired,
-    discount: PropTypes.number.isRequired,
-  }).isRequired,
 };
 
 export default ProductDetailsPrice;

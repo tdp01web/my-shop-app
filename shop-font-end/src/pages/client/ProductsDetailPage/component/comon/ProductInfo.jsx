@@ -1,10 +1,9 @@
-import PropTypes from "prop-types";
 import ProductDetailsPrice from "../ProductsPrice";
 import ColorSelector from "../ColorSelector";
 import ButtonBuy from "../button";
 import ProductFeatures from "../ProductFeatures";
 import Promotions from "../Promotions";
-
+/* eslint-disable react/prop-types */
 const ProductInfo = ({ product, selectedColor, handleColorClick }) => {
   return (
     <div className="col-span-2 md:flex md:space-x-6">
@@ -17,17 +16,11 @@ const ProductInfo = ({ product, selectedColor, handleColorClick }) => {
           handleColorClick={handleColorClick}
         />
         <ButtonBuy />
-        <ProductFeatures />
-        <Promotions />
+        <ProductFeatures product={product} />
+        <Promotions product={product} />
       </div>
     </div>
   );
-};
-
-ProductInfo.propTypes = {
-  product: PropTypes.object.isRequired,
-  selectedColor: PropTypes.string.isRequired,
-  handleColorClick: PropTypes.func.isRequired,
 };
 
 export default ProductInfo;

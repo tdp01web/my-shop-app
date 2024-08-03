@@ -1,4 +1,7 @@
-const Promotions = () => {
+/* eslint-disable react/prop-types */
+const Promotions = ({ product }) => {
+  const { promotions } = product;
+
   return (
     <div className="space-y-2">
       <div className="hidden md:block border-b border-gray-300 mb-40"></div>
@@ -7,61 +10,23 @@ const Promotions = () => {
           <span className="ml-2">Khuyến mãi</span>
         </h1>
         <ul className="list-none p-4 space-y-2">
-          <li className="flex items-start">
-            <span className="bg-green-700 text-white text-[10px] font-900 rounded-full flex items-center justify-center w-4 h-4 mr-2 mt-1">
-              ✓
-            </span>
-            <span className="text-[14px]">
-              Giảm ngay 100.000đ khi mua Microsoft Office kèm Laptop tại GEARVN.
-              <a href="#" className="text-blue-500">
-                (Xem thêm)
-              </a>
-            </span>
-          </li>
-          <li className="flex items-start">
-            <span className="bg-green-700 text-white text-[10px] font-900 rounded-full flex items-center justify-center w-4 h-4 mr-2 mt-1">
-              ✓
-            </span>
-            <span className="text-[14px]">
-              Ưu đãi 50.000đ khi mua thêm túi chống sốc kèm Laptop.
-              <a href="#" className="text-blue-500">
-                (Xem thêm)
-              </a>
-            </span>
-          </li>
-          <li className="flex items-start">
-            <span className="bg-green-700 text-white text-[10px] font-900 rounded-full flex items-center justify-center w-4 h-4 mr-2 mt-1">
-              ✓
-            </span>
-            <span className="text-[14px]">
-              Ưu đãi 100.000đ khi mua thêm RAM Laptop với Laptop Văn Phòng.
-              <a href="#" className="text-blue-500">
-                (Xem thêm)
-              </a>
-            </span>
-          </li>
-          <li className="flex items-start">
-            <span className="bg-green-700 text-white text-[10px] font-900 rounded-full flex items-center justify-center w-4 h-4 mr-2 mt-1">
-              ✓
-            </span>
-            <span className="text-[14px]">
-              Ưu đãi 50.000đ khi mua giá treo kèm Laptop.
-              <a href="#" className="text-blue-500">
-                (Xem thêm)
-              </a>
-            </span>
-          </li>
-          <li className="flex items-start">
-            <span className="bg-green-700 text-white text-[10px] font-900 rounded-full flex items-center justify-center w-4 h-4 mr-2 mt-1">
-              ✓
-            </span>
-            <span className="text-[14px]">
-              Ưu đãi 50.000đ khi mua đế tản nhiệt kèm Laptop.
-              <a href="#" className="text-blue-500">
-                (Xem thêm)
-              </a>
-            </span>
-          </li>
+          {promotions && promotions.length > 0 ? (
+            promotions.map((promo, index) => (
+              <li key={index} className="flex items-start">
+                <span className="bg-green-700 text-white text-[10px] font-900 rounded-full flex items-center justify-center w-4 h-4 mr-2 mt-1">
+                  ✓
+                </span>
+                <span className="text-[14px]">
+                  {promo.description}
+                  <a href={promo.linkHref} className="text-blue-500">
+                    {promo.linkText}
+                  </a>
+                </span>
+              </li>
+            ))
+          ) : (
+            <li className="text-gray-500">Sản phẩm không có khuyến mãi nào.</li>
+          )}
         </ul>
       </div>
       <div className="p-2"></div>

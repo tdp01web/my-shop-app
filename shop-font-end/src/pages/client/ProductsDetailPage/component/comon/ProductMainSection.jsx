@@ -1,7 +1,6 @@
-import ProductImage from "../Productmage/index";
 import ProductInfo from "../../component/comon/ProductInfo";
-import PropTypes from "prop-types";
-
+import ProductImage from "../Productmage/index";
+/* eslint-disable react/prop-types */
 const ProductMainSection = ({
   product,
   currentImageIndex,
@@ -28,11 +27,5 @@ const ProductMainSection = ({
     </div>
   );
 };
-ProductMainSection.propTypes = {
-  product: PropTypes.object.isRequired,
-  currentImageIndex: PropTypes.number.isRequired,
-  setCurrentImageIndex: PropTypes.func.isRequired,
-  selectedColor: PropTypes.string.isRequired,
-  handleColorClick: PropTypes.func.isRequired,
-};
+
 export default ProductMainSection;

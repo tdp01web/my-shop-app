@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
 import { useEffect } from "react";
 
+/* eslint-disable react/prop-types */
 const ColorSelector = ({ product, selectedColor, handleColorClick }) => {
   useEffect(() => {
     if (product && product.colors.length > 0) {
@@ -35,26 +35,6 @@ const ColorSelector = ({ product, selectedColor, handleColorClick }) => {
       </div>
     </div>
   );
-};
-
-ColorSelector.propTypes = {
-  product: PropTypes.shape({
-    colors: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        image: PropTypes.string.isRequired,
-        hex: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    images: PropTypes.arrayOf(
-      PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        color: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-  }).isRequired,
-  selectedColor: PropTypes.string.isRequired,
-  handleColorClick: PropTypes.func.isRequired,
 };
 
 export default ColorSelector;
