@@ -169,24 +169,21 @@ const ProductDetailPage = () => {
         ],
         techNews: [
           {
+            image:
+              "https://file.hstatic.net/200000722513/article/gearvn-code-shindo-life-moi-nhat_be7590c1365f47d4aec1ef095e7a8a30_grande.jpg",
             title: "Máy in không in được: Nguyên nhân và cách khắc phục",
             link: "#",
           },
           {
+            image:
+              "https://file.hstatic.net/200000722513/article/npu-la-gi-banner_38e3cba2b4a2486492c5525172fbda7a_grande.jpg",
             title: "Lắp đặt camera an ninh cho gia đình cần lưu ý điều gì?",
             link: "#",
           },
           {
+            image:
+              "https://file.hstatic.net/200000722513/article/gearvn-code-genshin-impact-moi-nhat-danh-cho-nguoi-choi_571a19b47eaf4d72858f14661a41eff5_grande.jpg",
             title: "Phương pháp tính phần trăm trong Excel hiệu quả",
-            link: "#",
-          },
-          {
-            title: "Stalk là gì? Cách ngăn chặn stalk trên Facebook, Instagram",
-            link: "#",
-          },
-          {
-            title:
-              "Kiểm tra lỗi của laptop có bị sao không? Xử lý như thế nào?",
             link: "#",
           },
         ],

@@ -8,11 +8,9 @@ const ProductInformation = ({ product }) => {
   };
 
   return (
-    <div className="bg-gray-100 p-4 rounded-lg shadow-md w-full lg:w-7/12">
+    <div className="bg-white p-4 rounded-lg shadow-md w-full lg:w-7/12">
       <div className="w-full">
-        <h2 className="text-sm font-semibold border-b pb-2 mb-4">
-          Thông tin sản phẩm
-        </h2>
+        <h2 className="text-sm font-semibold  pb-2 mb-4">Thông tin sản phẩm</h2>
         <div>
           <h3 className="font-bold mb-2 text-sm">Thông số kĩ thuật:</h3>
           <table className="w-full text-left border-collapse border">
