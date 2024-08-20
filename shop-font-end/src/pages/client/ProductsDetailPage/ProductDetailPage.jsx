@@ -14,6 +14,7 @@ const ProductDetailPage = () => {
         name: "Laptop Gaming Lenovo LOQ 15IRX9 83DV00D5VN",
         price: 29490000,
         oldPrice: 31990000,
+        category: "laptop",
         discount: 8,
         rating: 0,
         images: [
@@ -187,6 +188,21 @@ const ProductDetailPage = () => {
             link: "#",
           },
         ],
+        giftList: [
+          { name: "Balo MSI Essential Backpack (Kèm máy) " },
+          {
+            name: "Voucher ưu đãi Học sinh - Sinh viên trị giá 300k (Từ 01.08 - 31.10.2024)",
+          },
+          {
+            name: "Chuột gaming tuỳ chọn trị giá đến 499k (Từ 01.08 - 31.10.2024)  - List sản phẩm.",
+          },
+        ],
+        imagesale: [
+          {
+            images:
+              "https://file.hstatic.net/200000722513/file/laptop_gaming_banner_product-detail.png",
+          },
+        ],
       };
       setProduct(productData);
       setSelectedColor(productData.colors[0].hex);
@@ -211,18 +227,24 @@ const ProductDetailPage = () => {
   if (!product) return <div>Loading...</div>;
 
   return (
-    <div className="relative z-20">
-      <ProductMainSection
-        product={product}
-        currentImageIndex={currentImageIndex}
-        setCurrentImageIndex={setCurrentImageIndex}
-        selectedColor={selectedColor}
-        handleColorClick={handleColorClick}
-      />
-      <ProductInfoSection product={product} />
-      <Review />
-      <div className="p-3"></div>
-    </div>
+    <>
+      <div className="w-[80%] mx-auto flex gap-3">
+        <span>Trang chủ</span> / <span>{product.category}</span> /
+        <span>{product.name}</span>
+      </div>
+      <div className="relative z-20">
+        <ProductMainSection
+          product={product}
+          currentImageIndex={currentImageIndex}
+          setCurrentImageIndex={setCurrentImageIndex}
+          selectedColor={selectedColor}
+          handleColorClick={handleColorClick}
+        />
+        <ProductInfoSection product={product} />
+        <Review />
+        <div className="p-3"></div>
+      </div>
+    </>
   );
 };
 

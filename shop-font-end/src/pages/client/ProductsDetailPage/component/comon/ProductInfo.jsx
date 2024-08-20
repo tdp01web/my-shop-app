@@ -3,6 +3,8 @@ import ColorSelector from "../ColorSelector";
 import ButtonBuy from "../button";
 import ProductFeatures from "../ProductFeatures";
 import Promotions from "../Promotions";
+import Sale from "../sale";
+import GiftList from "../sale/giftList";
 /* eslint-disable react/prop-types */
 const ProductInfo = ({ product, selectedColor, handleColorClick }) => {
   return (
@@ -15,8 +17,10 @@ const ProductInfo = ({ product, selectedColor, handleColorClick }) => {
           selectedColor={selectedColor}
           handleColorClick={handleColorClick}
         />
+        <Sale />
         <ButtonBuy />
         <ProductFeatures product={product} />
+        <GiftList product={product} />
         <Promotions product={product} />
       </div>
     </div>

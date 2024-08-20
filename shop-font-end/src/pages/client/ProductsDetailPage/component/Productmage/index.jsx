@@ -1,6 +1,7 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import ImageSale from "../sale/iamgeSale";
 
 /* eslint-disable react/prop-types */
 const ProductImage = ({ product, currentImageIndex, setCurrentImageIndex }) => {
@@ -64,7 +65,7 @@ const ProductImage = ({ product, currentImageIndex, setCurrentImageIndex }) => {
   return (
     <div className="col-span-1">
       <img
-        className="w-full md:h-[40%] object-cover object-center rounded-lg"
+        className="w-full md:h-[30%] object-cover object-center rounded-lg"
         src={currentImage.url}
         alt={product.name}
       />
@@ -81,6 +82,9 @@ const ProductImage = ({ product, currentImageIndex, setCurrentImageIndex }) => {
             </div>
           ))}
         </Slider>
+      </div>
+      <div>
+        <ImageSale product={product} />
       </div>
     </div>
   );
