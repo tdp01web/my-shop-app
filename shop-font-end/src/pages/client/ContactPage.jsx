@@ -2,45 +2,23 @@ import React from 'react'
 const ContactPage = () => {
   return (
     <>
-      <div className="mx-auto">
-        <div className="relative">
-          <section
-            className="brightness-50 bg-cover bg-center w-full h-[40vh] lg:h-[55vh]"
-            style={{ background: "black" }}
-          ></section>
-          <div className="top-1/2 left-[5%] md:left-[10%] absolute text-white -translate-y-1/2">
+      <div className="mx-72">
+        <div className=''>
+          <div className="bg-[url('https://st3.depositphotos.com/1010613/32552/i/450/depositphotos_325526072-stock-photo-white-popular-contact-web-icons.jpg')] bg-fixed p-10 text-black whitespace-nowrap ">
             <h1 className="font-bold text-2xl md:text-3xl">Liên hệ với chúng tôi</h1>
             <p className="text-sm md:text-lg">
               Chúng tôi luôn ở bên bạn
             </p>
           </div>
         </div>
-        <div className="relative bg-[#E30019] w-full h-[180vh] md:h-[80vh]">
-          <div className="-top-[3%] md:-top-[10%] left-1/2 absolute grid grid-cols-1 md:grid-cols-3 shadow rounded w-4/5 md:w-[90%] lg:w-4/5 h-fit text-white -translate-x-1/2 overflow-hidden">
+        <div className="bg-[#E30019] w-full">
+          <div className="grid grid-cols-1 md:grid-cols-3 shadow rounded h-fit text-white overflow-hidden">
             <div className="col-span-2 bg-gray-800 p-2 md:p-4 h-full">
               <form>
-                <div className="flex md:flex-row flex-col justify-center items-start md:items-center p-4 pt-8">
-                  <h2 className="font-semibold text-xl md:text-2xl">
+                <div className="flex md:flex-row flex-col justify-center items-center p-4 pt-8">
+                  <h2 className="border-b-[0.3rem] font-semibold text-xl md:text-2xl">
                     Nội dung
                   </h2>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="icon icon-tabler icon-tabler-mail-forward"
-                    width={33}
-                    height={33}
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="#fff"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M12 18h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7.5" />
-                    <path d="M3 6l9 6l9 -6" />
-                    <path d="M15 18h6" />
-                    <path d="M18 15l3 3l-3 3" />
-                  </svg>
                 </div>
                 <div className="gap-8 grid grid-cols-1 md:grid-cols-2 px-4 md:px-8 py-6 md:py-12 text-sm">
                   <div className="flex flex-col gap-1">
@@ -105,8 +83,8 @@ const ContactPage = () => {
                 </div>
               </form>
               <div className="flex justify-center md:justify-end items-center px-8 py-4">
-                <button className="flex items-center gap-2 border-2 border-white bg-gray-800 px-4 md:px-6 py-2 md:py-4 rounded-md hover:scale-95 transition-all">
-                  <span className="text-[24px]">Gửi</span>
+                <button className="flex items-center gap-2 border-2 border-white bg-gray-800 hover:bg-gray-700 shadow-sm px-4 md:px-6 py-2 md:py-4 rounded-md hover:scale-95 transition-all cursor-pointer">
+                  <span className="text-[24px]" >Gửi</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="icon icon-tabler icon-tabler-brand-telegram"
@@ -125,10 +103,12 @@ const ContactPage = () => {
                 </button>
               </div>
             </div>
-            <div className="grid grid-cols-1 grid-rows-5 bg-blue-800 px-4 py-6 h-[500px] md:h-full">
-              <h2 className="flex justify-center font-semibold text-center text-xl md:text-start lg:text-2xl">
-                Thông tin liên hệ
-              </h2>
+            <div className="grid grid-cols-1 grid-rows-5 bg-gray-800 px-4 py-6 md:border-l-2 h-[500px] md:h-full">
+              <div className="flex md:flex-row flex-col justify-center items-center p-4 pt-8">
+                  <h2 className="border-b-[0.3rem] font-semibold text-xl md:text-2xl">
+                  Thông tin liên hệ
+                  </h2>
+                </div>
               <div className="flex flex-col justify-center items-center row-span-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
