@@ -9,7 +9,7 @@ const ProductMainSection = ({
   handleColorClick,
 }) => {
   return (
-    <div className="bg-white w-full lg:w-[80%] mx-auto p-4 mt-20 rounded-md">
+    <div className="bg-white w-full lg:w-[80%] mx-auto p-4 mt-10 rounded-md">
       <main className="p-4">
         <div className="grid w-full grid-cols-1 md:grid-cols-3 gap-6">
           <ProductImage

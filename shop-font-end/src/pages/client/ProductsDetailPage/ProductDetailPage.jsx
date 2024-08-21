@@ -14,6 +14,7 @@ const ProductDetailPage = () => {
         name: "Laptop Gaming Lenovo LOQ 15IRX9 83DV00D5VN",
         price: 29490000,
         oldPrice: 31990000,
+        category: "laptop",
         discount: 8,
         rating: 0,
         images: [
@@ -169,25 +170,37 @@ const ProductDetailPage = () => {
         ],
         techNews: [
           {
+            image:
+              "https://file.hstatic.net/200000722513/article/gearvn-code-shindo-life-moi-nhat_be7590c1365f47d4aec1ef095e7a8a30_grande.jpg",
             title: "Máy in không in được: Nguyên nhân và cách khắc phục",
             link: "#",
           },
           {
+            image:
+              "https://file.hstatic.net/200000722513/article/npu-la-gi-banner_38e3cba2b4a2486492c5525172fbda7a_grande.jpg",
             title: "Lắp đặt camera an ninh cho gia đình cần lưu ý điều gì?",
             link: "#",
           },
           {
+            image:
+              "https://file.hstatic.net/200000722513/article/gearvn-code-genshin-impact-moi-nhat-danh-cho-nguoi-choi_571a19b47eaf4d72858f14661a41eff5_grande.jpg",
             title: "Phương pháp tính phần trăm trong Excel hiệu quả",
             link: "#",
           },
+        ],
+        giftList: [
+          { name: "Balo MSI Essential Backpack (Kèm máy) " },
           {
-            title: "Stalk là gì? Cách ngăn chặn stalk trên Facebook, Instagram",
-            link: "#",
+            name: "Voucher ưu đãi Học sinh - Sinh viên trị giá 300k (Từ 01.08 - 31.10.2024)",
           },
           {
-            title:
-              "Kiểm tra lỗi của laptop có bị sao không? Xử lý như thế nào?",
-            link: "#",
+            name: "Chuột gaming tuỳ chọn trị giá đến 499k (Từ 01.08 - 31.10.2024)  - List sản phẩm.",
+          },
+        ],
+        imagesale: [
+          {
+            images:
+              "https://file.hstatic.net/200000722513/file/laptop_gaming_banner_product-detail.png",
           },
         ],
       };
@@ -214,18 +227,24 @@ const ProductDetailPage = () => {
   if (!product) return <div>Loading...</div>;
 
   return (
-    <div className="relative z-20">
-      <ProductMainSection
-        product={product}
-        currentImageIndex={currentImageIndex}
-        setCurrentImageIndex={setCurrentImageIndex}
-        selectedColor={selectedColor}
-        handleColorClick={handleColorClick}
-      />
-      <ProductInfoSection product={product} />
-      <Review />
-      <div className="p-3"></div>
-    </div>
+    <>
+      <div className="w-[80%] mx-auto flex gap-3">
+        <span>Trang chủ</span> / <span>{product.category}</span> /
+        <span>{product.name}</span>
+      </div>
+      <div className="relative z-20">
+        <ProductMainSection
+          product={product}
+          currentImageIndex={currentImageIndex}
+          setCurrentImageIndex={setCurrentImageIndex}
+          selectedColor={selectedColor}
+          handleColorClick={handleColorClick}
+        />
+        <ProductInfoSection product={product} />
+        <Review />
+        <div className="p-3"></div>
+      </div>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 const ProductConfiguration = ({ product }) => {
   return (
-    <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+    <div className="bg-white p-4 rounded-lg shadow-md">
       <h2 className="text-sm font-semibold border-b pb-2 mb-4">Cấu hình</h2>
       <div className="m-3 border border-gray-100 rounded-md">
         <ul className="list-none">

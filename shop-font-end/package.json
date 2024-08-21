@@ -33,6 +33,7 @@
     "react-slick": "^0.30.2",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
+    "shop-font-end": "file:",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.11"
   },
