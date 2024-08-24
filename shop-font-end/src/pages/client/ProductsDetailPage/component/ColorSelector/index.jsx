@@ -34,7 +34,7 @@ const ColorSelector = ({ product, selectedColor, handleColorClick }) => {
   return (
     <div className="mt-6 flex flex-col">
       <div>
-        <h3 className="text-lg font-semibold text-gray-700">Chọn màu</h3>
+        <h3 className="text-sm font-semibold text-gray-700">Chọn màu</h3>
         <div className="flex items-center ml-3 gap-3">
           {product.colors.map((color, index) => (
             <button
@@ -57,9 +57,11 @@ const ColorSelector = ({ product, selectedColor, handleColorClick }) => {
         </div>
       </div>
       {/* Chọn số lượng */}
-      <div className="mt-4 flex items-center">
-        <h3 className="text-lg font-semibold text-gray-700">Chọn số lượng</h3>
-        <div className="flex items-center ml-3">
+      <div className="mt-4 flex items-center flex-wrap">
+        <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">
+          Chọn số lượng
+        </h3>
+        <div className="flex items-center ml-3 white">
           <button
             onClick={handleDecrease}
             disabled={quantity <= 1}

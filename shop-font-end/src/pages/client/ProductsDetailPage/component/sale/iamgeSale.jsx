@@ -5,7 +5,7 @@ const ImageSale = ({ product }) => {
     <div>
       {imagesale?.map((item, index) => (
         <span key={index}>
-          <img src={item.images} alt="" />
+          <img src={item.images} alt="" className="w-full" />
         </span>
       ))}
     </div>
