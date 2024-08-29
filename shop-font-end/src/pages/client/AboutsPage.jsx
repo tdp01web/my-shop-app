@@ -3,7 +3,7 @@ import React from 'react'
 const AboutsPage = () => {
   return (
     <>
-      <div className="2xl:container 2xl:mx-auto px-4 md:px-6 lg:px-20 py-9 md:py-12 lg:py-16">
+      <div className="md:mx-auto px-4 md:px-6 lg:px-20 py-9 md:py-12 lg:py-16 md:w-[80%]">
         <div className="w-full">
           <h1 className="mt-2 w-full font-bold text-2xl text-center text-red-600 lg:text-4xl leading-9 lg:leading-10">Giới thiệu Gearvn</h1>
           <p className="mt-6 font-semibold text-[16px] text-gray-800 lg:text-12 italic">"Khách hàng hôm nay là đồng đội tương lai! Chúng ta cùng nhau lan toả giá trị tích cực đến cộng đồng game thủ và tất cả những người yêu công nghệ tại Việt Nam"</p>

@@ -2,10 +2,10 @@ import React from 'react'
 const ContactPage = () => {
   return (
     <>
-      <div className="mx-72">
+      <div className="md:mx-auto w-[80%]">
         <div className=''>
-          <div className="bg-[url('https://st3.depositphotos.com/1010613/32552/i/450/depositphotos_325526072-stock-photo-white-popular-contact-web-icons.jpg')] bg-fixed p-10 text-black whitespace-nowrap ">
-            <h1 className="font-bold text-2xl md:text-3xl">Liên hệ với chúng tôi</h1>
+          <div className="bg-[url('https://st3.depositphotos.com/1010613/32552/i/450/depositphotos_325526072-stock-photo-white-popular-contact-web-icons.jpg')] bg-fixed p-10 text-black whitespace-nowrap w-full">
+            <h1 className="font-bold text-xl md:text-3xl ">Liên hệ với chúng tôi</h1>
             <p className="text-sm md:text-lg">
               Chúng tôi luôn ở bên bạn
             </p>
@@ -103,13 +103,13 @@ const ContactPage = () => {
                 </button>
               </div>
             </div>
-            <div className="grid grid-cols-1 grid-rows-5 bg-gray-800 px-4 py-6 md:border-l-2 h-[500px] md:h-full">
+            <div className="grid grid-cols-1 md:grid-rows-5 grid-rows-3 bg-gray-800 px-4 py-6 md:border-l-2 md:h-full">
               <div className="flex md:flex-row flex-col justify-center items-center p-4 pt-8">
                   <h2 className="border-b-[0.3rem] font-semibold text-xl md:text-2xl">
                   Thông tin liên hệ
                   </h2>
                 </div>
-              <div className="flex flex-col justify-center items-center row-span-4">
+              <div className="flex flex-col justify-center items-center md:row-span-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="icon icon-tabler icon-tabler-mail-share"
