@@ -45,3 +45,5 @@ nodemailer - để gửi các loại email khác nhau, bao gồm thông báo kí
 <!--! sharp là một thư viện xử lý hình ảnh hiệu suất cao cho Node.js. Nó hỗ trợ nhiều thao tác trên hình ảnh như thay đổi kích thước, cắt, chuyển định dạng, và nén hình ảnh. -->
 
 <!--! cloudinary là một dịch vụ đám mây dùng để quản lý và lưu trữ hình ảnh và video. Gói cloudinary của npm giúp tích hợp dễ dàng với API của Cloudinary để tải lên, quản lý và biến đổi hình ảnh trên đám mây. -->
+
+Mô-đun fs trong Node.js được sử dụng để tương tác với hệ thống tệp. Nó cung cấp các chức năng để đọc, ghi và thao tác với hệ thống tệp. Trong ngữ cảnh của mã của bạn, mô-đun fs được sử dụng để xóa các tệp khỏi hệ thống tệp cục bộ sau khi chúng đã được tải lên Cloudinary
