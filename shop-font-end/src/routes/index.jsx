@@ -14,6 +14,8 @@ import Account from "../pages/client/Account";
 import ProductDetailPage from "../pages/client/ProductsDetailPage/ProductDetailPage";
 import CartPage from "../pages/client/cart/CartPage";
 import OrdersPage from "../pages/client/OrdersPage";
+import Login from "../pages/client/login/Login";
+import Register from "../pages/client/register";
 const Router = () => {
   return (
     <BrowserRouter>
@@ -29,6 +31,8 @@ const Router = () => {
           <Route path="abouts" element={<AboutsPage />}></Route>
           <Route path="cart" element={<CartPage />}></Route>
           <Route path="orders/bill" element={<OrdersPage />}></Route>
+          <Route path="signin" element={<SigninPage />}></Route>
+          <Route path="signup" element={<SignupPage />}></Route>
         </Route>
         <Route path="admin" element={<LayoutAdmin />}>
           <Route index element={<ListProductAdmin />} />
@@ -36,8 +40,8 @@ const Router = () => {
             <Route index element={<ListCategoriesAdmin />} />
           </Route>
         </Route>
-        <Route path="signin" element={<SigninPage />}></Route>
-        <Route path="signup" element={<SignupPage />}></Route>
+        <Route path="login" element={<Login />}></Route>
+        <Route path="register" element={<Register />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </BrowserRouter>
