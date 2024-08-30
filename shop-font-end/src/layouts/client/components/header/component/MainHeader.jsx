@@ -82,12 +82,15 @@ function MainHeader() {
             </span>
           </div>
         ))}
-        <button className="md:flex hidden items-center gap-2 bg-[#BE1529] px-2 py-1 rounded-lg font-500 text-[13px] leading-4">
-          <FiUser style={{ width: "25px", height: "25px" }} />
-          <p className="2xl:block hidden">
-            Đăng <br /> nhập
-          </p>
-        </button>
+        <Link to={"/login"}>
+          <button className="md:flex hidden items-center gap-2 bg-[#BE1529] px-2 py-1 rounded-lg font-500 text-[13px] leading-4">
+            <FiUser style={{ width: "25px", height: "25px" }} />
+            <p className="2xl:block hidden">
+              Đăng <br /> nhập
+            </p>
+          </button>
+        </Link>
+
         <div className="flex bg-[#BE1529] p-2 rounded-lg items-center md:hidden">
           <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />
         </div>
