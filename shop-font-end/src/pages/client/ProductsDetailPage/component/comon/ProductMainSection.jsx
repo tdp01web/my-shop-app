@@ -11,7 +11,7 @@ const ProductMainSection = ({
   return (
     <div className="bg-white w-full lg:w-[80%] mx-auto lg:p-4 mt-10 rounded-md">
       <main className="p-4">
-        <div className="grid w-full grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid w-full grid-cols-1 md:grid-cols-3 md:gap-6">
           <ProductImage
             product={product}
             currentImageIndex={currentImageIndex}
