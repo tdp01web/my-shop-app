@@ -98,6 +98,9 @@ const Login = () => {
               </p>
             )}
           </Form.Item>
+          <Link to={"/register"}>
+            <p>Bạn chưa có tài khoản. Đăng ký</p>
+          </Link>
           <Button
             htmlType="submit"
             className="w-full py-6 text-center rounded text-[20px] bg-[#d32026] hover:bg-blue-600 text-white hover:bg-green-dark focus:outline-none my-1"
