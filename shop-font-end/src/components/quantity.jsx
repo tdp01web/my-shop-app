@@ -39,7 +39,7 @@ const Quantity = () => {
     }
   };
   return (
-    <div className="flex">
+    <div className=" mt-4 flex items-center flex-wrap">
       <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">
         Chọn số lượng
       </h3>

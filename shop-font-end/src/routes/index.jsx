@@ -10,15 +10,19 @@ import SigninPage from "../pages/SigninPage";
 import SignupPage from "../pages/SignupPage";
 import ContactPage from "../pages/client/ContactPage";
 import AboutsPage from "../pages/client/AboutsPage";
+import Account from "../pages/client/Account";
 import ProductDetailPage from "../pages/client/ProductsDetailPage/ProductDetailPage";
-import OrdersPage from "../pages/client/OrdersPage";
 import CartPage from "../pages/client/cart/CartPage";
+import OrdersPage from "../pages/client/OrdersPage";
+import Login from "../pages/client/login/Login";
+import Register from "../pages/client/register";
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="" element={<LayoutClient />}>
           <Route index element={<HomePage />} />
+          <Route path="account" element={<Account />} />
           <Route path="products">
             <Route index element={<ProductPage />} />
             <Route path=":id" element={<ProductDetailPage />} />
@@ -27,6 +31,8 @@ const Router = () => {
           <Route path="abouts" element={<AboutsPage />}></Route>
           <Route path="cart" element={<CartPage />}></Route>
           <Route path="orders/bill" element={<OrdersPage />}></Route>
+          <Route path="signin" element={<SigninPage />}></Route>
+          <Route path="signup" element={<SignupPage />}></Route>
         </Route>
         <Route path="admin" element={<LayoutAdmin />}>
           <Route index element={<ListProductAdmin />} />
@@ -34,8 +40,8 @@ const Router = () => {
             <Route index element={<ListCategoriesAdmin />} />
           </Route>
         </Route>
-        <Route path="signin" element={<SigninPage />}></Route>
-        <Route path="signup" element={<SignupPage />}></Route>
+        <Route path="login" element={<Login />}></Route>
+        <Route path="register" element={<Register />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </BrowserRouter>

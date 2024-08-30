@@ -38,7 +38,7 @@ const ColorSelector = ({ product, selectedColor, handleColorClick }) => {
         </div>
       </div>
       {/* Chọn số lượng */}
-      <div className="mt-4 flex items-center flex-wrap">
+      <div>
         <Quantity />
       </div>
     </div>

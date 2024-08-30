@@ -4,6 +4,7 @@ import { FaHdd, FaMemory } from "react-icons/fa";
 import { PiCircuitryLight } from "react-icons/pi";
 import { FaStar } from "react-icons/fa6";
 import { FaMicrochip } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 const Product = ({ name, price, priceOld, image, sold, rating, reviews }) => {
   const specs = [
     { icon: <FaMicrochip />, text: "i5 12400F" },
@@ -13,7 +14,10 @@ const Product = ({ name, price, priceOld, image, sold, rating, reviews }) => {
     { icon: <FaHdd />, text: "500GB" },
   ];
   return (
-    <div className="bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm ">
+    <Link
+      to={`/products/1`}
+      className="bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm "
+    >
       <div>
         <img src={image} alt={name} className="w-full h-auto" />
       </div>
@@ -49,7 +53,7 @@ const Product = ({ name, price, priceOld, image, sold, rating, reviews }) => {
           ({reviews} đánh giá)
         </span>
       </div>
-    </div>
+    </Link>
   );
 };
 
