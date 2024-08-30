@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const TechnologyNews = () => {
   const ListData = [
@@ -22,9 +23,9 @@ const TechnologyNews = () => {
   return (
     <div className="bg-white p-4 flex flex-col gap-2 rounded-sm">
       <h2 className="text-[24px] font-600 ">Tin tức công nghệ</h2>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {ListData.map((item, index) => (
-          <div key={index} className="flex flex-col gap-2">
+          <Link to={"/"} key={index} className="flex flex-col gap-2">
             <div className="relative pb-[56.25%] rounded-sm">
               <img
                 src={item.image}
@@ -33,7 +34,7 @@ const TechnologyNews = () => {
               />
             </div>
             <p className="text-[16px] font-[500]">{item.title}</p>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
