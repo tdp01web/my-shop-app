@@ -11,21 +11,22 @@ const LayoutClient = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
-
-  if (loading) {
-    return <Loader />;
-  }
 
   return (
     <>
       <div className="max-w-screen-xl mx-auto flex flex-col md:gap-10 bg-[#ECECEC]">
         <HeaderLayoutClient />
-        <main className="w-full mx-auto relative z-20">
-          <Outlet />
-        </main>
+        {loading ? (
+          <Loader />
+        ) : (
+          <main className="w-full mx-auto relative z-20">
+            <Outlet />
+          </main>
+        )}
+
         <Banner />
         <FooterLayoutClient />
       </div>
