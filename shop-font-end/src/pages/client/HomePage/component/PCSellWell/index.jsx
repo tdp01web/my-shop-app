@@ -60,7 +60,7 @@ const PCSellWell = () => {
       <ProductList
         title="PC bán chạy"
         categories={categories}
-        titleSale="trả góp 0%"
+        titleSale="Trả góp 0%"
         products={products}
         seeAllLink="/xem-tat-ca"
       />
