@@ -1,6 +1,5 @@
 import { AiFillStar } from "react-icons/ai";
 
-// Dữ liệu đánh giá mẫu
 const ratingData = [
   { stars: 5, count: 0 },
   { stars: 4, count: 0 },
@@ -9,11 +8,12 @@ const ratingData = [
   { stars: 1, count: 0 },
 ];
 
-const Review = () => {
+/* eslint-disable react/prop-types */
+const Review = ({ product }) => {
   return (
     <div className="bg-white p-4 rounded-lg lg:w-[80%] shadow-md max-w-3xl mx-auto mt-4">
       <h2 className="text-sm font-bold mb-4 pl-3">
-        Đánh giá & Nhận xét Laptop Lenovo IdeaPad Slim 5 14IMH9 83DA0020VN
+        Đánh giá & Nhận xét <span>{product.name}</span>
       </h2>
       <div className="md:flex justify-center">
         <div className="flex md:w-1/5 flex-col items-center mb-4">
