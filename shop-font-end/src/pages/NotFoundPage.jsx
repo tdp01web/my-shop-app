@@ -1,4 +1,3 @@
-import React from "react";
 import HeaderLayoutClient from "../layouts/client/components/header";
 import FooterLayoutClient from "../layouts/client/components/footer";
 
