@@ -4,6 +4,7 @@ import HeaderLayoutClient from "./components/header";
 import FooterLayoutClient from "./components/footer";
 import Banner from "./components/banner";
 import Loader from "../../components/Loading";
+import Support from "../../components/Support";
 
 const LayoutClient = () => {
   const [loading, setLoading] = useState(true);
@@ -17,6 +18,7 @@ const LayoutClient = () => {
 
   return (
     <>
+      <Support />
       <div className="max-w-screen-xl mx-auto flex flex-col md:gap-10 bg-[#ECECEC]">
         <HeaderLayoutClient />
         {loading ? (
@@ -26,7 +28,6 @@ const LayoutClient = () => {
             <Outlet />
           </main>
         )}
-
         <Banner />
         <FooterLayoutClient />
       </div>
