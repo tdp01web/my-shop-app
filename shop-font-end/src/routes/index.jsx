@@ -10,19 +10,25 @@ import SigninPage from "../pages/SigninPage";
 import SignupPage from "../pages/SignupPage";
 import ContactPage from "../pages/client/ContactPage";
 import AboutsPage from "../pages/client/AboutsPage";
-import Account from "../pages/client/Account";
 import ProductDetailPage from "../pages/client/ProductsDetailPage/ProductDetailPage";
 import CartPage from "../pages/client/cart/CartPage";
 import OrdersPage from "../pages/client/OrdersPage";
 import Login from "../pages/client/login/Login";
 import Register from "../pages/client/register";
+import AccountLayout from "../layouts/account";
+import AccountInformation from "../pages/client/Account/AccountInformation";
+import AccountAddress from "../pages/client/Account/AccountAddress";
+
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="" element={<LayoutClient />}>
           <Route index element={<HomePage />} />
-          <Route path="account" element={<Account />} />
+          <Route path="account" element={<AccountLayout />}>
+            <Route path="" element={<AccountInformation />} />
+            <Route path="address" element={<AccountAddress />} />
+          </Route>
           <Route path="products">
             <Route index element={<ProductPage />} />
             <Route path=":id" element={<ProductDetailPage />} />
