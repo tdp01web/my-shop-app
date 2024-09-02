@@ -20,6 +20,7 @@ import AccountInformation from "../pages/client/Account/AccountInformation";
 import AccountAddress from "../pages/client/Account/AccountAddress";
 import OrdersHistory from "../pages/client/Account/OrdersHistory";
 import OrderDetail from "../pages/client/Account/OrderDetail";
+import NotFoundSearch from "../pages/NotFoundSearch";
 
 const Router = () => {
   return (
@@ -52,6 +53,7 @@ const Router = () => {
         </Route>
         <Route path="login" element={<Login />}></Route>
         <Route path="register" element={<Register />}></Route>
+        <Route path="not-found-search" element={<NotFoundSearch />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </BrowserRouter>
