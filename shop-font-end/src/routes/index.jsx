@@ -16,6 +16,7 @@ import CartPage from "../pages/client/cart/CartPage";
 import OrdersPage from "../pages/client/OrdersPage";
 import Login from "../pages/client/login/Login";
 import Register from "../pages/client/register";
+import NotFoundSearch from "../pages/NotFoundSearch";
 const Router = () => {
   return (
     <BrowserRouter>
@@ -42,6 +43,7 @@ const Router = () => {
         </Route>
         <Route path="login" element={<Login />}></Route>
         <Route path="register" element={<Register />}></Route>
+        <Route path="not-found-search" element={< NotFoundSearch />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </BrowserRouter>
