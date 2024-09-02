@@ -1,0 +1,20 @@
+.tabItem {
+  @apply text-center uppercase flex-1 font-semibold text-nowrap px-2 pb-2 relative cursor-pointer;
+
+  &.active::after {
+    transform: scale3d(1, 1, 1);
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    bottom: 0;
+    width: 100%;
+    background-color: #e30019;
+    height: 3px;
+    left: 0;
+    transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transform: scale3d(0, 1, 1);
+    transform-origin: left;
+  }
+}

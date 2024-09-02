@@ -10,20 +10,30 @@ import SigninPage from "../pages/SigninPage";
 import SignupPage from "../pages/SignupPage";
 import ContactPage from "../pages/client/ContactPage";
 import AboutsPage from "../pages/client/AboutsPage";
-import Account from "../pages/client/Account";
 import ProductDetailPage from "../pages/client/ProductsDetailPage/ProductDetailPage";
 import CartPage from "../pages/client/cart/CartPage";
 import OrdersPage from "../pages/client/OrdersPage";
 import Login from "../pages/client/login/Login";
 import Register from "../pages/client/register";
+import AccountLayout from "../layouts/account";
+import AccountInformation from "../pages/client/Account/AccountInformation";
+import AccountAddress from "../pages/client/Account/AccountAddress";
+import OrdersHistory from "../pages/client/Account/OrdersHistory";
+import OrderDetail from "../pages/client/Account/OrderDetail";
 import NotFoundSearch from "../pages/NotFoundSearch";
+
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="" element={<LayoutClient />}>
           <Route index element={<HomePage />} />
-          <Route path="account" element={<Account />} />
+          <Route path="account" element={<AccountLayout />}>
+            <Route path="" element={<AccountInformation />} />
+            <Route path="address" element={<AccountAddress />} />
+            <Route path="orders-history" element={<OrdersHistory />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
+          </Route>
           <Route path="products">
             <Route index element={<ProductPage />} />
             <Route path=":id" element={<ProductDetailPage />} />
@@ -43,7 +53,7 @@ const Router = () => {
         </Route>
         <Route path="login" element={<Login />}></Route>
         <Route path="register" element={<Register />}></Route>
-        <Route path="not-found-search" element={< NotFoundSearch />}></Route>
+        <Route path="not-found-search" element={<NotFoundSearch />}></Route>
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </BrowserRouter>
