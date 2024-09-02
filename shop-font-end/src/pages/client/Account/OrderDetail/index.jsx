@@ -66,10 +66,11 @@ const OrderDetail = () => {
             },
           ]}
           labelPlacement="horizontal"
+          responsive={false}
         />
 
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-8 rounded border border-[#CFCFCF] pt-3 px-4 pb-4">
+          <div className="col-span-12 md:col-span-8 rounded border border-[#CFCFCF] pt-3 px-4 pb-4">
             <div className="flex items-center gap-x-3 mb-3">
               <img src="/svg/customer-info.svg" alt="Icon" className="h-7" />
 
@@ -92,7 +93,7 @@ const OrderDetail = () => {
             </div>
           </div>
 
-          <div className="col-span-4 pt-3 px-4 pb-4 border border-[#CFCFCF] rounded">
+          <div className="col-span-12 md:col-span-4 pt-3 px-4 pb-4 border border-[#CFCFCF] rounded">
             <div className="flex items-center gap-x-3 mb-3">
               <img src="/svg/payment-method.svg" alt="Icon" className="h-7" />
 
@@ -195,7 +196,7 @@ const OrderDetail = () => {
           </div>
         </div>
 
-        <div className="ml-[50%] mt-4">
+        <div className="md:ml-[50%] mt-4">
           <div className="flex items-center mb-3">
             <p className="w-1/2">Giá tạm tính:</p>
             <p className="w-1/2 text-right">139.990.000₫</p>
