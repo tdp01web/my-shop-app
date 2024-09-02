@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <aside className="bg-white rounded">
+    <aside className="bg-white rounded h-full">
       <header className="p-4 flex items-center gap-x-6 border-b border-b-[#CFCFCF] mb-1.5">
         <img
           src="https://picsum.photos/200/200"

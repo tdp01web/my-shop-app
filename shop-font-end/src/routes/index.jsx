@@ -18,6 +18,8 @@ import Register from "../pages/client/register";
 import AccountLayout from "../layouts/account";
 import AccountInformation from "../pages/client/Account/AccountInformation";
 import AccountAddress from "../pages/client/Account/AccountAddress";
+import OrdersHistory from "../pages/client/Account/OrdersHistory";
+import OrderDetail from "../pages/client/Account/OrderDetail";
 
 const Router = () => {
   return (
@@ -28,6 +30,8 @@ const Router = () => {
           <Route path="account" element={<AccountLayout />}>
             <Route path="" element={<AccountInformation />} />
             <Route path="address" element={<AccountAddress />} />
+            <Route path="orders-history" element={<OrdersHistory />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
           </Route>
           <Route path="products">
             <Route index element={<ProductPage />} />

@@ -1,0 +1,16 @@
+.activeIcon {
+  circle {
+    fill: #1e9800 !important;
+    stroke: #1e9800;
+  }
+
+  path {
+    stroke: white;
+  }
+}
+
+.icon {
+  circle {
+    fill: white;
+  }
+}
