@@ -3,17 +3,16 @@ import { useState } from "react";
 
 const { Content } = Layout;
 
-const initialCategories = [
+const category = [
   { id: "1", name: "Danh mục 1", description: "Mô tả danh mục 1" },
   { id: "2", name: "Danh mục 2", description: "Mô tả danh mục 2" },
 ];
 
 const ListCategoriesAdmin = () => {
-  const [categories, setCategories] = useState(initialCategories);
+  const [categories, setCategories] = useState(category);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [filteredCategories, setFilteredCategories] =
-    useState(initialCategories);
+  const [filteredCategories, setFilteredCategories] = useState(category);
   const [searchText, setSearchText] = useState("");
 
   const [form] = Form.useForm();
