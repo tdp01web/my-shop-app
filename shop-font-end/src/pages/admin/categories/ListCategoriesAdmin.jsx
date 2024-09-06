@@ -1,5 +1,8 @@
-import { Button, Form, Input, Layout, Modal, Popconfirm, Table } from "antd";
+// ListCategoriesAdmin.jsx
+import { Button, Layout, Popconfirm, Table } from "antd";
 import { useState } from "react";
+import SearchBar from "./component/SearchBar";
+import AddEditCategory from "./component/AddEditCategory";
 
 const { Content } = Layout;
 
@@ -15,13 +18,11 @@ const ListCategoriesAdmin = () => {
   const [filteredCategories, setFilteredCategories] = useState(category);
   const [searchText, setSearchText] = useState("");
 
-  const [form] = Form.useForm();
-
   const showModal = (category) => {
     setEditingCategory(category);
-    form.setFieldsValue(category || { name: "", description: "" });
     setIsModalOpen(true);
   };
+
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchText(value);
@@ -50,18 +51,16 @@ const ListCategoriesAdmin = () => {
       setFilteredCategories(updatedCategories);
     }
     setIsModalOpen(false);
-    form.resetFields();
   };
 
   const handleDelete = (id) => {
     const updatedCategories = categories.filter((cat) => cat.id !== id);
-
     setCategories(updatedCategories);
-
-    const updatedFilteredCategories = updatedCategories.filter((category) =>
-      category.name.toLowerCase().includes(searchText.toLowerCase())
+    setFilteredCategories(
+      updatedCategories.filter((category) =>
+        category.name.toLowerCase().includes(searchText.toLowerCase())
+      )
     );
-    setFilteredCategories(updatedFilteredCategories);
   };
 
   const columns = [
@@ -101,12 +100,7 @@ const ListCategoriesAdmin = () => {
   return (
     <Layout>
       <Content style={{ padding: "50px", marginTop: 64 }}>
-        <Input
-          placeholder="Tìm kiếm danh mục..."
-          value={searchText}
-          onChange={handleSearch}
-          style={{ marginBottom: 16, width: 300 }}
-        />
+        <SearchBar value={searchText} onChange={handleSearch} />
         <Button
           type="primary"
           style={{ marginBottom: 16 }}
@@ -114,38 +108,13 @@ const ListCategoriesAdmin = () => {
         >
           Thêm danh mục
         </Button>
-        <Table columns={columns} dataSource={filteredCategories} />
-        <Modal
-          title={editingCategory ? "Chỉnh sửa danh mục" : "Thêm danh mục"}
+        <Table columns={columns} dataSource={filteredCategories} rowKey="id" />
+        <AddEditCategory
           visible={isModalOpen}
           onCancel={handleCancel}
-          footer={null}
-        >
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleFinish}
-            initialValues={{ name: "", description: "" }}
-          >
-            <Form.Item
-              label="Tên danh mục"
-              name="name"
-              rules={[
-                { required: true, message: "Vui lòng nhập tên danh mục!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item label="Mô tả" name="description">
-              <Input.TextArea rows={4} />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                {editingCategory ? "Cập nhật" : "Thêm"}
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
+          onFinish={handleFinish}
+          editingCategory={editingCategory}
+        />
       </Content>
     </Layout>
   );
