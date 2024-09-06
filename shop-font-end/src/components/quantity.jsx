@@ -39,15 +39,15 @@ const Quantity = () => {
     }
   };
   return (
-    <div className=" mt-4 flex items-center flex-wrap">
-      <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">
+    <div className=" mt-4 flex  flex-col">
+      {/* <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">
         Chọn số lượng
-      </h3>
-      <div className="flex items-center ml-3">
+      </h3> */}
+      <div className="flex items-center ">
         <button
           onClick={handleDecrease}
           disabled={quantity <= 1}
-          className="px-3 py-1 bg-gray-300 border"
+          className="px-3 py-1 rounded-l-md  border border-gray-500"
         >
           -
         </button>
@@ -55,17 +55,17 @@ const Quantity = () => {
           type="text"
           value={quantity}
           onChange={handleQuantityChange}
-          className="w-[50px] py-1 text-center border-t border-b border-gray-300 appearance-none"
+          className="w-[50px] border-gray-500 py-1 text-center border-t border  appearance-none"
           max={maxQuantity}
         />
         <button
           onClick={handleIncrease}
-          className="px-3 py-1 bg-gray-300 border"
+          className="px-3 py-1 rounded-r-md border border-gray-500"
         >
           +
         </button>
       </div>
-      <div className="ml-4 -mt-2">
+      <div className="">
         {notification && <p className="mt-2 text-red-600">{notification}</p>}
       </div>
     </div>
