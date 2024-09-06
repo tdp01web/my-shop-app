@@ -36,7 +36,7 @@ function MainHeader() {
       icon: <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />,
       label: "Giỏ",
       sublabel: "hàng",
-      to: "",
+      to: "/cart",
     },
   ];
 
