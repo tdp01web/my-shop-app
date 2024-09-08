@@ -21,6 +21,7 @@ import AccountAddress from "../pages/client/Account/AccountAddress";
 import OrdersHistory from "../pages/client/Account/OrdersHistory";
 import OrderDetail from "../pages/client/Account/OrderDetail";
 import NotFoundSearch from "../pages/NotFoundSearch";
+import PaymentManual from "../pages/client/PaymentManual/PaymentManual";
 
 const Router = () => {
   return (
@@ -44,6 +45,7 @@ const Router = () => {
           <Route path="orders/bill" element={<OrdersPage />}></Route>
           <Route path="signin" element={<SigninPage />}></Route>
           <Route path="signup" element={<SignupPage />}></Route>
+          <Route path="payment-manual" element={<PaymentManual />} />
         </Route>
         <Route path="admin" element={<LayoutAdmin />}>
           <Route index element={<ListProductAdmin />} />
