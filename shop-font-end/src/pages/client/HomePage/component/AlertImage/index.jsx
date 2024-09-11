@@ -4,7 +4,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { useEffect, useState } from "react";
 
-const imageUrl = "/public/images/alertanh.webp";
+const imageUrl = "/images/alertanh.webp";
 
 const AlertImage = () => {
   const [open, setOpen] = useState(true);

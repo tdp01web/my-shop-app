@@ -20,9 +20,9 @@ const SlideImages = () => {
   };
 
   const slides = [
-    { src: "/public/images/header1.webp", alt: "Header 1" },
-    { src: "/public/images/header2.webp", alt: "Header 2" },
-    { src: "/public/images/header3.webp", alt: "Header 3" },
+    { src: "/images/header1.webp", alt: "Header 1" },
+    { src: "/images/header2.webp", alt: "Header 2" },
+    { src: "/images/header3.webp", alt: "Header 3" },
   ];
 
   return (
