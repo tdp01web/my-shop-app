@@ -5,19 +5,19 @@ const TechnologyNews = () => {
   const ListData = [
     {
       title: "Solidworks là gì? tính năng vượt trội Solidworks mang lại",
-      image: "/public/images/danhmucsp/tintuc1.webp",
+      image: "/images/danhmucsp/tintuc1.webp",
     },
     {
       title: "Cách lấy lại file Excel chưa lưu đảm bảo thành công",
-      image: "/public/images/danhmucsp/tintuc2.webp",
+      image: "/images/danhmucsp/tintuc2.webp",
     },
     {
       title: "Máy in không in được: Nguyên nhân và cách khắc phục",
-      image: "/public/images/danhmucsp/tintuc3.webp",
+      image: "/images/danhmucsp/tintuc3.webp",
     },
     {
       title: "Lắp đặt camera an ninh cho gia đình cần lưu ý điều gì",
-      image: "/public/images/danhmucsp/tintuc4.webp",
+      image: "/images/danhmucsp/tintuc4.webp",
     },
   ];
   return (

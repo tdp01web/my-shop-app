@@ -1,14 +1,14 @@
-import React from 'react'
-import ProductList from '../../../components/ProductList'
-import SliderBanner from './components/SliderBanner';
-import BannerSale from './components/BannerSale';
+import React from "react";
+import ProductList from "../../../components/ProductList";
+import SliderBanner from "./components/SliderBanner";
+import BannerSale from "./components/BannerSale";
 const products = [
   {
     id: 1,
     name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
     price: 25000000,
     priceOld: 30000000,
-    image: "/public/images/product/product1.webp",
+    image: "/images/product/product1.webp",
     sold: 10,
     rating: 5.0,
     reviews: 1,
@@ -18,7 +18,7 @@ const products = [
     name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
     price: 25000000,
     priceOld: 30000000,
-    image: "/public/images/product/product1.webp",
+    image: "/images/product/product1.webp",
     sold: 10,
     rating: 5.0,
     reviews: 1,
@@ -28,7 +28,7 @@ const products = [
     name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
     price: 25000000,
     priceOld: 30000000,
-    image: "/public/images/product/product1.webp",
+    image: "/images/product/product1.webp",
     sold: 10,
     rating: 5.0,
     reviews: 1,
@@ -38,7 +38,7 @@ const products = [
     name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
     price: 25000000,
     priceOld: 30000000,
-    image: "/public/images/product/product1.webp",
+    image: "/images/product/product1.webp",
     sold: 10,
     rating: 5.0,
     reviews: 1,
@@ -73,7 +73,7 @@ const ProductPage = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductPage
+export default ProductPage;
