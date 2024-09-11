@@ -23,6 +23,7 @@ import CartPage from "../pages/client/cart/CartPage";
 import Login from "../pages/client/login/Login";
 import Register from "../pages/client/register";
 import CategoryEditPage from "../pages/admin/categories/component/EditCategory";
+import VoucherPage from "../pages/client/Voucher/VoucherPage";
 
 const Router = () => {
   return (
@@ -47,6 +48,7 @@ const Router = () => {
           <Route path="signin" element={<SigninPage />}></Route>
           <Route path="signup" element={<SignupPage />}></Route>
         </Route>
+        <Route path="voucher" element={<VoucherPage />}></Route>
         <Route path="admin" element={<LayoutAdmin />}>
           <Route index element={<ListProductAdmin />} />
           <Route path="categories">
