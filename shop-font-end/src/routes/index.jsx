@@ -21,7 +21,7 @@ import AccountAddress from "../pages/client/Account/AccountAddress";
 import OrdersHistory from "../pages/client/Account/OrdersHistory";
 import OrderDetail from "../pages/client/Account/OrderDetail";
 import NotFoundSearch from "../pages/NotFoundSearch";
-import PaymentManual from "../pages/client/PaymentManual/PaymentManual";
+import PaymentManual from "../pages/client/PaymentManual";
 
 const Router = () => {
   return (
