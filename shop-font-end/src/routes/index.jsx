@@ -1,26 +1,29 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProductPage from "../pages/client/ProductsPage";
-import LayoutClient from "../layouts/client";
-import HomePage from "../pages/client/HomePage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AccountLayout from "../layouts/account";
 import LayoutAdmin from "../layouts/admin";
+import LayoutClient from "../layouts/client";
 import NotFoundPage from "../pages/NotFoundPage";
-import ListProductAdmin from "../pages/admin/products/ListProductAdmin";
-import ListCategoriesAdmin from "../pages/admin/categories/ListCategoriesAdmin";
+import NotFoundSearch from "../pages/NotFoundSearch";
 import SigninPage from "../pages/SigninPage";
 import SignupPage from "../pages/SignupPage";
-import ContactPage from "../pages/client/ContactPage";
+import ListCategoriesAdmin from "../pages/admin/categories/ListCategoriesAdmin";
+import AddEditCategory from "../pages/admin/categories/component/AddCategory";
+import ListProductAdmin from "../pages/admin/products/ListProductAdmin";
 import AboutsPage from "../pages/client/AboutsPage";
-import ProductDetailPage from "../pages/client/ProductsDetailPage/ProductDetailPage";
-import CartPage from "../pages/client/cart/CartPage";
+import AccountAddress from "../pages/client/Account/AccountAddress";
+import AccountInformation from "../pages/client/Account/AccountInformation";
+import OrderDetail from "../pages/client/Account/OrderDetail";
+import OrdersHistory from "../pages/client/Account/OrdersHistory";
+import ContactPage from "../pages/client/ContactPage";
+import HomePage from "../pages/client/HomePage";
 import OrdersPage from "../pages/client/OrdersPage";
+import ProductDetailPage from "../pages/client/ProductsDetailPage/ProductDetailPage";
+import ProductPage from "../pages/client/ProductsPage";
+import CartPage from "../pages/client/cart/CartPage";
 import Login from "../pages/client/login/Login";
 import Register from "../pages/client/register";
-import AccountLayout from "../layouts/account";
-import AccountInformation from "../pages/client/Account/AccountInformation";
-import AccountAddress from "../pages/client/Account/AccountAddress";
-import OrdersHistory from "../pages/client/Account/OrdersHistory";
-import OrderDetail from "../pages/client/Account/OrderDetail";
-import NotFoundSearch from "../pages/NotFoundSearch";
+import CategoryEditPage from "../pages/admin/categories/component/EditCategory";
+import VoucherPage from "../pages/client/Voucher/VoucherPage";
 import PaymentManual from "../pages/client/PaymentManual/PaymentManual";
 import ProductEditPage from "../pages/admin/products/editProduct";
 import ProductAddPage from "../pages/admin/products/addProduct";
@@ -55,6 +58,7 @@ const Router = () => {
           <Route path="signup" element={<SignupPage />}></Route>
           <Route path="payment-manual" element={<PaymentManual />} />
         </Route>
+        <Route path="voucher" element={<VoucherPage />}></Route>
         <Route path="admin" element={<LayoutAdmin />}>
           <Route index element={<Dashboard />} />
           {/* product */}
@@ -77,6 +81,8 @@ const Router = () => {
 
           <Route path="categories">
             <Route index element={<ListCategoriesAdmin />} />
+            <Route path="add" element={<AddEditCategory />} />
+            <Route path=":id/edit" element={<CategoryEditPage />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />}></Route>
