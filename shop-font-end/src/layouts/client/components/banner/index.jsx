@@ -4,14 +4,14 @@ function Banner() {
       <div className="fixed-left">
         <img
           className="w-[100px] rounded-xl"
-          src="/public/images/banner3.webp"
+          src="/images/banner3.webp"
           alt=""
         />
       </div>
       <div className="fixed-right">
         <img
           className="w-[100px] rounded-xl"
-          src="/public/images/banner4.webp"
+          src="/images/banner4.webp"
           alt=""
         />
       </div>

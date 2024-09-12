@@ -24,6 +24,15 @@ import Login from "../pages/client/login/Login";
 import Register from "../pages/client/register";
 import CategoryEditPage from "../pages/admin/categories/component/EditCategory";
 import VoucherPage from "../pages/client/Voucher/VoucherPage";
+import PaymentManual from "../pages/client/PaymentManual/PaymentManual";
+import ProductEditPage from "../pages/admin/products/editProduct";
+import ProductAddPage from "../pages/admin/products/addProduct";
+import Dashboard from "../pages/admin/dashboard";
+import { UserPage } from "../pages/admin/user/ListUser";
+import { UserAddPage } from "../pages/admin/user/addUser";
+import { CartPageAdmin } from "../pages/admin/carts/ListCart";
+import { ListComment } from "../pages/admin/comments/ListComment";
+import { ListVouchers } from "../pages/admin/vouchers/ListVouchers";
 
 const Router = () => {
   return (
@@ -47,10 +56,29 @@ const Router = () => {
           <Route path="orders/bill" element={<OrdersPage />}></Route>
           <Route path="signin" element={<SigninPage />}></Route>
           <Route path="signup" element={<SignupPage />}></Route>
+          <Route path="payment-manual" element={<PaymentManual />} />
         </Route>
         <Route path="voucher" element={<VoucherPage />}></Route>
         <Route path="admin" element={<LayoutAdmin />}>
-          <Route index element={<ListProductAdmin />} />
+          <Route index element={<Dashboard />} />
+          {/* product */}
+          <Route path="products" element={<ListProductAdmin />} />
+          <Route path="products/add" element={<ProductAddPage />} />
+          <Route path="products/:id/edit" element={<ProductEditPage />} />
+          {/* users */}
+          <Route path="users" element={<UserPage />} />
+          <Route path="users/add" element={<UserAddPage />} />
+          <Route path="users/:id/edit" element={<ProductEditPage />} />
+          {/* cart */}
+          <Route path="carts" element={<CartPageAdmin />} />
+          {/* <Route path="carts/:id/detail" element={<UserAddPage />} /> */}
+          {/* comments */}
+          <Route path="comments" element={<ListComment />} />
+          {/* vouchers */}
+          <Route path="vouchers" element={<ListVouchers />} />
+          {/* <Route path="vouchers/add" element={< />} />
+          <Route path="vouchers/:id/edit" element={< />} /> */}
+
           <Route path="categories">
             <Route index element={<ListCategoriesAdmin />} />
             <Route path="add" element={<AddEditCategory />} />

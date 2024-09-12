@@ -2,10 +2,10 @@ import React from "react";
 
 const FooterCopyright = () => {
   const listImage = [
-    { image: "/public/images/facebook_1.webp", link: "/" },
-    { image: "/public/images/tiktok.webp", link: "/" },
-    { image: "/public/images/icon_zalo__1.webp", link: "/" },
-    { image: "/public/images/youtube_1.webp", link: "/" },
+    { image: "/images/facebook_1.webp", link: "/" },
+    { image: "/images/tiktok.webp", link: "/" },
+    { image: "/images/icon_zalo__1.webp", link: "/" },
+    { image: "/images/youtube_1.webp", link: "/" },
   ];
   return (
     <div className="2xl:w-[80%] px-4 2xl:px-0 mx-auto flex gap-3 md:items-center 2xl:justify-between py-10">
@@ -26,7 +26,7 @@ const FooterCopyright = () => {
         </ul>
       </div>
       <div className=" ">
-        <img src="/public/images/logo-bct.webp" alt="" className="w-[120px]" />
+        <img src="/images/logo-bct.webp" alt="" className="w-[120px]" />
       </div>
     </div>
   );

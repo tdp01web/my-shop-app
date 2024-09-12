@@ -50,21 +50,21 @@ const FooterTop = () => {
   };
 
   const ShipImage = [
-    "/public/images/ship_1.webp",
-    "/public/images/ship_2.webp",
-    "/public/images/ship_3.webp",
-    "/public/images/ship_4.webp",
+    "/images/ship_1.webp",
+    "/images/ship_2.webp",
+    "/images/ship_3.webp",
+    "/images/ship_4.webp",
   ].map((image) => ({ image }));
 
   const PaymentImage = [
-    "/public/images/pay_1.webp",
-    "/public/images/pay_2.webp",
-    "/public/images/pay_3.webp",
-    "/public/images/pay_4.webp",
-    "/public/images/pay_5.webp",
-    "/public/images/pay_6.webp",
-    "/public/images/pay_7.webp",
-    "/public/images/pay_8.webp",
+    "/images/pay_1.webp",
+    "/images/pay_2.webp",
+    "/images/pay_3.webp",
+    "/images/pay_4.webp",
+    "/images/pay_5.webp",
+    "/images/pay_6.webp",
+    "/images/pay_7.webp",
+    "/images/pay_8.webp",
   ].map((image) => ({ image }));
 
   return (

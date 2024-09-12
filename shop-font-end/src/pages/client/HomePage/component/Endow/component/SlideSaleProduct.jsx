@@ -48,7 +48,7 @@ const SlideSaleProduct = () => {
       name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
       price: 25000000,
       priceOld: 30000000,
-      image: "/public/images/product/product1.webp",
+      image: "/images/product/product1.webp",
       sold: 10,
     },
     {
@@ -56,7 +56,7 @@ const SlideSaleProduct = () => {
       name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
       price: 25000000,
       priceOld: 30000000,
-      image: "/public/images/product/product2.webp",
+      image: "/images/product/product2.webp",
       sold: 10,
     },
     {
@@ -64,7 +64,7 @@ const SlideSaleProduct = () => {
       name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
       price: 25000000,
       priceOld: 30000000,
-      image: "/public/images/product/product3.webp",
+      image: "/images/product/product3.webp",
       sold: 10,
     },
     {
@@ -72,7 +72,7 @@ const SlideSaleProduct = () => {
       name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
       price: 25000000,
       priceOld: 30000000,
-      image: "/public/images/product/product1.webp",
+      image: "/images/product/product1.webp",
       sold: 10,
     },
     {
@@ -80,7 +80,7 @@ const SlideSaleProduct = () => {
       name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
       price: 25000000,
       priceOld: 30000000,
-      image: "/public/images/product/product5.webp",
+      image: "/images/product/product5.webp",
       sold: 10,
     },
     {
@@ -88,7 +88,7 @@ const SlideSaleProduct = () => {
       name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
       price: 25000000,
       priceOld: 30000000,
-      image: "/public/images/product/product6.webp",
+      image: "/images/product/product6.webp",
       sold: 10,
     },
     {
@@ -96,7 +96,7 @@ const SlideSaleProduct = () => {
       name: "PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX 4090)",
       price: 25000000,
       priceOld: 30000000,
-      image: "/public/images/product/product8.webp",
+      image: "/images/product/product8.webp",
       sold: 10,
     },
   ];
@@ -109,19 +109,13 @@ const SlideSaleProduct = () => {
       }}
     >
       <div className="w-1/3 hidden md:block">
-        <img
-          src="/public/images/homepage/banner/flash_sale_banner.webp"
-          alt=""
-        />
+        <img src="/images/homepage/banner/flash_sale_banner.webp" alt="" />
       </div>
       <div className="w-full md:w-2/3  h-full">
         <Slider {...settings}>
           {productList.map((item) => (
-            <div>
-              <div
-                key={item.id}
-                className="bg-white flex gap-3  px-2 py-2 flex-col mx-[2px]  rounded-sm shadow-lg"
-              >
+            <div key={item.id}>
+              <div className="bg-white flex gap-3  px-2 py-2 flex-col mx-[2px]  rounded-sm shadow-lg">
                 <div>
                   <img
                     src={item.image}
