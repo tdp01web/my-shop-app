@@ -22,6 +22,14 @@ import OrdersHistory from "../pages/client/Account/OrdersHistory";
 import OrderDetail from "../pages/client/Account/OrderDetail";
 import NotFoundSearch from "../pages/NotFoundSearch";
 import PaymentManual from "../pages/client/PaymentManual/PaymentManual";
+import ProductEditPage from "../pages/admin/products/editProduct";
+import ProductAddPage from "../pages/admin/products/addProduct";
+import Dashboard from "../pages/admin/dashboard";
+import { UserPage } from "../pages/admin/user/ListUser";
+import { UserAddPage } from "../pages/admin/user/addUser";
+import { CartPageAdmin } from "../pages/admin/carts/ListCart";
+import { ListComment } from "../pages/admin/comments/ListComment";
+import { ListVouchers } from "../pages/admin/vouchers/ListVouchers";
 
 const Router = () => {
   return (
@@ -48,7 +56,25 @@ const Router = () => {
           <Route path="payment-manual" element={<PaymentManual />} />
         </Route>
         <Route path="admin" element={<LayoutAdmin />}>
-          <Route index element={<ListProductAdmin />} />
+          <Route index element={<Dashboard />} />
+          {/* product */}
+          <Route path="products" element={<ListProductAdmin />} />
+          <Route path="products/add" element={<ProductAddPage />} />
+          <Route path="products/:id/edit" element={<ProductEditPage />} />
+          {/* users */}
+          <Route path="users" element={<UserPage />} />
+          <Route path="users/add" element={<UserAddPage />} />
+          <Route path="users/:id/edit" element={<ProductEditPage />} />
+          {/* cart */}
+          <Route path="carts" element={<CartPageAdmin />} />
+          {/* <Route path="carts/:id/detail" element={<UserAddPage />} /> */}
+          {/* comments */}
+          <Route path="comments" element={<ListComment />} />
+          {/* vouchers */}
+          <Route path="vouchers" element={<ListVouchers />} />
+          {/* <Route path="vouchers/add" element={< />} />
+          <Route path="vouchers/:id/edit" element={< />} /> */}
+
           <Route path="categories">
             <Route index element={<ListCategoriesAdmin />} />
           </Route>

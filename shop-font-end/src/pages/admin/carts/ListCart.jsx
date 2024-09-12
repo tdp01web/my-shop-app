@@ -6,25 +6,10 @@ import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
 import { instance } from "../../../configs/instance";
 
-const ProductPage = () => {
+export const CartPageAdmin = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
-  const [messageApi, contextHolder] = message.useMessage();
-  const queryClient = useQueryClient();
-  const { data: products } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => instance.get("/product/getAllProduct"),
-  });
-
-  const mutation = useMutation({
-    mutationFn: async (id) => await instance.delete(`/product/deleteProduct/${id}`),
-    onSuccess: () => {
-      messageApi.success("Xóa sản phẩm thành công");
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-    onError: (error) => messageApi.error(error.message),
-  });
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -86,15 +71,43 @@ const ProductPage = () => {
       ),
   });
 
-  const dataSource = products?.data.map((item) => {
-    return {
-      key: item.id,
-      ...item,
-    };
-  });
+  const dataSource = [
+    {
+      key: '1',
+      title: 'Đơn hàng A',
+      count: 3,
+      totalPrice: 150000,
+      users: 'Mike',
+      comple: 'Đang xử lý',
+    },
+    {
+      key: '2',
+      title: 'Đơn hàng B',
+      count: 5,
+      totalPrice: 250000,
+      users: 'John',
+      comple: 'Hoàn thành',
+    },
+    {
+      key: '3',
+      title: 'Đơn hàng C',
+      count: 2,
+      totalPrice: 100000,
+      users: 'Anna',
+      comple: 'Đã hủy',
+    },
+    {
+      key: '4',
+      title: 'Đơn hàng D',
+      count: 1,
+      totalPrice: 50000,
+      users: 'Tom',
+      comple: 'Đang giao',
+    },
+  ];
   const columns = [
     {
-      title: "Tên sản phẩm",
+      title: "Tên đơn hàng",
       dataIndex: "title",
       key: "title",
       width: '30%',
@@ -102,44 +115,36 @@ const ProductPage = () => {
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
-      title: "Giá sản phẩm",
-      dataIndex: "price",
-      key: "price",
-      sorter: (a, b) => a.price - b.price,
+      title: "Số lượng",
+      dataIndex: "count",
+      key: "count",
     },
     {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
+      title: "Giá tiền",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
     },
     {
-      title: "Danh mục",
-      dataIndex: "category",
-      key: "category",
+      title: "Kháng hàng",
+      dataIndex: "users",
+      key: "users",
     },
     {
-      title: "Hãng",
-      dataIndex: "brand",
-      key: "brand",
+      title: "Trạng thái",
+      dataIndex: "comple",
+      key: "comple",
     },
     {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, product) => (
+      render: (_, cart) => (
         <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa sản phẩm"
-            onConfirm={() => mutation.mutate(product._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
-            </Button>
-          </Popconfirm>
           <Button>
-            <Link to={`/admin/products/${product._id}/edit`}>Cập nhật</Link>
+            <Link to={`/admin/carts/${cart._id}/detail`}>Chi tiết đơn hàng</Link>
+          </Button>
+          <Button>
+            <Link to={`/admin/carts/${cart._id}/update`}>Cập nhật đơn hàng</Link>
           </Button>
         </div>
       ),
@@ -148,12 +153,11 @@ const ProductPage = () => {
 
   return (
     <div>
-      {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Quản lý sản phẩm</h1>
+        <h1 className="font-semibold text-2xl">Quản lý đơn hàng</h1>
         <Button type="primary">
-          <Link to="/admin/products/add">
-            <PlusCircleFilled /> Thêm sản phẩm
+          <Link to="/admin/carts">
+            <PlusCircleFilled /> Danh sánh đơn hàng đang giao
           </Link>
         </Button>
       </div>
@@ -161,5 +165,3 @@ const ProductPage = () => {
     </div>
   );
 };
-
-export default ProductPage;
