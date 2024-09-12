@@ -6,25 +6,10 @@ import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
 import { instance } from "../../../configs/instance";
 
-const ProductPage = () => {
+export const ListVouchers = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
-  const [messageApi, contextHolder] = message.useMessage();
-  const queryClient = useQueryClient();
-  const { data: products } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => instance.get("/product/getAllProduct"),
-  });
-
-  const mutation = useMutation({
-    mutationFn: async (id) => await instance.delete(`/product/deleteProduct/${id}`),
-    onSuccess: () => {
-      messageApi.success("Xóa sản phẩm thành công");
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-    onError: (error) => messageApi.error(error.message),
-  });
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -86,15 +71,35 @@ const ProductPage = () => {
       ),
   });
 
-  const dataSource = products?.data.map((item) => {
-    return {
-      key: item.id,
-      ...item,
-    };
-  });
+  const dataSource = [
+    {
+      key: '1',
+      title: 'Voucher Giảm Giá 10%',
+      discounts: 10, // Kiểu số
+      date: '2024-12-31', // Ngày hết hạn
+    },
+    {
+      key: '2',
+      title: 'Voucher Giảm Giá 20%',
+      discounts: 20, // Kiểu số
+      date: '2024-11-30',
+    },
+    {
+      key: '3',
+      title: 'Voucher Giảm Giá 15%',
+      discounts: 15, // Kiểu số
+      date: '2024-10-15',
+    },
+    {
+      key: '4',
+      title: 'Voucher Giảm Giá 5%',
+      discounts: 5, // Kiểu số
+      date: '2025-01-01',
+    },
+  ];
   const columns = [
     {
-      title: "Tên sản phẩm",
+      title: "Tên vouchers",
       dataIndex: "title",
       key: "title",
       width: '30%',
@@ -102,44 +107,28 @@ const ProductPage = () => {
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
-      title: "Giá sản phẩm",
-      dataIndex: "price",
-      key: "price",
-      sorter: (a, b) => a.price - b.price,
+      title: "Discounts",
+      dataIndex: "discounts",
+      key: "discounts",
+      sorter: (a, b) => a.discounts - b.discounts,
     },
     {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
-    },
-    {
-      title: "Danh mục",
-      dataIndex: "category",
-      key: "category",
-    },
-    {
-      title: "Hãng",
-      dataIndex: "brand",
-      key: "brand",
+      title: "Ngày hết hạn",
+      dataIndex: "date",
+      key: "date",
+      sorter: (a, b) => a.date - b.date,
     },
     {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, product) => (
+      render: (_, cart) => (
         <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa sản phẩm"
-            onConfirm={() => mutation.mutate(product._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
-            </Button>
-          </Popconfirm>
           <Button>
-            <Link to={`/admin/products/${product._id}/edit`}>Cập nhật</Link>
+            <Link to={`/admin/`}>Xóa </Link>
+          </Button>
+          <Button>
+            <Link to={`/admin/`}>Cập nhật</Link>
           </Button>
         </div>
       ),
@@ -148,12 +137,11 @@ const ProductPage = () => {
 
   return (
     <div>
-      {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Quản lý sản phẩm</h1>
+        <h1 className="font-semibold text-2xl">Quản lý Vouchers</h1>
         <Button type="primary">
-          <Link to="/admin/products/add">
-            <PlusCircleFilled /> Thêm sản phẩm
+          <Link to="/admin/vouchers">
+            <PlusCircleFilled /> Thêm mới vouchers
           </Link>
         </Button>
       </div>
@@ -161,5 +149,3 @@ const ProductPage = () => {
     </div>
   );
 };
-
-export default ProductPage;

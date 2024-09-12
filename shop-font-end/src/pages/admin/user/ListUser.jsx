@@ -6,25 +6,10 @@ import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
 import { instance } from "../../../configs/instance";
 
-const ProductPage = () => {
+export const UserPage = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
-  const [messageApi, contextHolder] = message.useMessage();
-  const queryClient = useQueryClient();
-  const { data: products } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => instance.get("/product/getAllProduct"),
-  });
-
-  const mutation = useMutation({
-    mutationFn: async (id) => await instance.delete(`/product/deleteProduct/${id}`),
-    onSuccess: () => {
-      messageApi.success("Xóa sản phẩm thành công");
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-    onError: (error) => messageApi.error(error.message),
-  });
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -86,15 +71,39 @@ const ProductPage = () => {
       ),
   });
 
-  const dataSource = products?.data.map((item) => {
-    return {
-      key: item.id,
-      ...item,
-    };
-  });
+  const dataSource = [
+    {
+      key: '1',
+      title: 'Mike',
+      email: 'mike@example.com',
+      phone: '0123456789',
+      address: '10 Downing Street',
+    },
+    {
+      key: '2',
+      title: 'John',
+      email: 'john@example.com',
+      phone: '9876543210',
+      address: '20 Whitehall',
+    },
+    {
+      key: '3',
+      title: 'Anna',
+      email: 'anna@example.com',
+      phone: '1234567890',
+      address: '30 Parliament St',
+    },
+    {
+      key: '4',
+      title: 'Tom',
+      email: 'tom@example.com',
+      phone: '0987654321',
+      address: '40 Baker Street',
+    },
+  ];
   const columns = [
     {
-      title: "Tên sản phẩm",
+      title: "Tên tài khoản",
       dataIndex: "title",
       key: "title",
       width: '30%',
@@ -102,35 +111,29 @@ const ProductPage = () => {
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
-      title: "Giá sản phẩm",
-      dataIndex: "price",
-      key: "price",
-      sorter: (a, b) => a.price - b.price,
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
-      title: "Danh mục",
-      dataIndex: "category",
-      key: "category",
-    },
-    {
-      title: "Hãng",
-      dataIndex: "brand",
-      key: "brand",
+      title: "Địa chỉ",
+      dataIndex: "address",
+      key: "address",
     },
     {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, product) => (
+      render: (_, user) => (
         <div className="flex space-x-3">
           <Popconfirm
-            title="Xóa sản phẩm"
-            onConfirm={() => mutation.mutate(product._id)}
+            title="Xóa tài khoản"
+            onConfirm={() => mutation.mutate(user._id)}
             okText="Yes"
             cancelText="No"
           >
@@ -139,7 +142,7 @@ const ProductPage = () => {
             </Button>
           </Popconfirm>
           <Button>
-            <Link to={`/admin/products/${product._id}/edit`}>Cập nhật</Link>
+            <Link to={`/admin/users/${user._id}/edit`}>Cập nhật</Link>
           </Button>
         </div>
       ),
@@ -148,12 +151,11 @@ const ProductPage = () => {
 
   return (
     <div>
-      {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Quản lý sản phẩm</h1>
+        <h1 className="font-semibold text-2xl">Quản lý tài khoản</h1>
         <Button type="primary">
-          <Link to="/admin/products/add">
-            <PlusCircleFilled /> Thêm sản phẩm
+          <Link to="/admin/users/add">
+            <PlusCircleFilled /> Thêm tài khoản
           </Link>
         </Button>
       </div>
@@ -161,5 +163,3 @@ const ProductPage = () => {
     </div>
   );
 };
-
-export default ProductPage;
