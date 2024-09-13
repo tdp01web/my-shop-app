@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Quantity from "../../../../../components/quantity";
+import Quantity from "../../../../../components/Quantity";
 
 /* eslint-disable react/prop-types */
 const ColorSelector = ({ product, selectedColor, handleColorClick }) => {

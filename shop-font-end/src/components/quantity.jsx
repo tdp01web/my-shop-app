@@ -21,23 +21,6 @@ const Quantity = () => {
     }
   };
 
-  const handleQuantityChange = (e) => {
-    const value = e.target.value;
-
-    if (value === "") {
-      setNotification("Vui lòng điền số lượng phù hợp.");
-      setQuantity("");
-    } else if (isNaN(value)) {
-      setNotification("Vui lòng điền số lượng phù hợp.");
-    } else if (+value >= 1 && +value <= maxQuantity) {
-      setQuantity(+value);
-      setNotification("");
-    } else if (+value > maxQuantity) {
-      setNotification("Số lượng đã đạt giới hạn.");
-    } else if (+value < 1) {
-      setNotification("Số lượng tối thiểu là 1.");
-    }
-  };
   return (
     <div className=" mt-4 flex  flex-col">
       {/* <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">
@@ -54,8 +37,7 @@ const Quantity = () => {
         <input
           type="text"
           value={quantity}
-          onChange={handleQuantityChange}
-          className="w-[50px] border-gray-500 py-1 text-center border-t border  appearance-none"
+          className="w-[50px] py-1 text-center border-t border-b border-gray-300 appearance-none"
           max={maxQuantity}
         />
         <button
