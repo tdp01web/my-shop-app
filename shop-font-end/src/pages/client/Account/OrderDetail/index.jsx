@@ -135,7 +135,9 @@ const OrderDetail = () => {
             </div>
 
             <div className="w-1/4">
-              <p className="text-[#e30019] text-right">116.000.000₫</p>
+              <p className="text-[#e30019] text-right break-words">
+                116.000.000₫
+              </p>
             </div>
           </div>
 
@@ -163,7 +165,9 @@ const OrderDetail = () => {
             </div>
 
             <div className="w-1/4">
-              <p className="text-[#e30019] text-right">116.000.000₫</p>
+              <p className="text-[#e30019] text-right break-words">
+                116.000.000₫
+              </p>
             </div>
           </div>
 
@@ -191,7 +195,9 @@ const OrderDetail = () => {
             </div>
 
             <div className="w-1/4">
-              <p className="text-[#e30019] text-right">116.000.000₫</p>
+              <p className="text-[#e30019] text-right break-words">
+                116.000.000₫
+              </p>
             </div>
           </div>
         </div>
