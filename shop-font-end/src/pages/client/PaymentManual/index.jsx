@@ -1,9 +1,9 @@
 import { useRef } from "react";
-import DirectPayment from "./DirectPayment";
-import HeroSection from "./HeroSection";
-import PaymentList from "./PaymentList";
-import PaymentOnDelivery from "./PaymentOnDelivery";
-import TransferPayment from "./TransferPayment";
+import DirectPayment from "./component/DirectPayment";
+import HeroSection from "./component/HeroSection";
+import PaymentList from "./component/PaymentList";
+import PaymentOnDelivery from "./component/PaymentOnDelivery";
+import TransferPayment from "./component/TransferPayment";
 
 const PaymentManual = () => {
   const paymentListRef = useRef(null);
