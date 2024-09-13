@@ -12,8 +12,8 @@ const HeroSection = ({ onScrollToPaymentList }) => {
       />
 
       <div className="absolute w-full h-full top-0 right-0 bottom-0 left-0 flex justify-center flex-col">
-        <div className="2xl:w-4/5 2xl:mx-auto md:px-10 my-4 md:my-0 px-4 flex">
-          <div className="w-1/2 text-white">
+        <div className="2xl:w-4/5 2xl:mx-auto md:px-10 my-4 md:my-0 px-4 flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2 text-white">
             <img
               src="/images/payment-manual-txt.png"
               alt="Text"

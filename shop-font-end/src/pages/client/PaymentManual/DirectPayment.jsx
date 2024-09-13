@@ -17,7 +17,7 @@ const DirectPayment = (_, ref) => {
           </p>
         </div>
 
-        <div className="mt-40 md:w-4/5 grid grid-cols-12 mx-auto gap-9">
+        <div className="mt-40 grid grid-cols-12 mx-auto gap-y-9 md:gap-x-9">
           <div className="col-span-12 md:col-span-6">
             <p className="text-[#253965] text-[18px] font-bold">
               Showroom Hoàng Hoa Thám - HCM
