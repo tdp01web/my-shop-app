@@ -8,7 +8,7 @@ const AddressItem = (props) => {
   return (
     <div className="py-5 border-t border-[#cfcfcf] flex items-center justify-between gap-x-4">
       <div className="text-[14px] flex-1">
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {isDefault && (
             <p className="border border-[#e30019] rounded h-7 px-2 text-[#e30019] flex items-center">
               Mặc định

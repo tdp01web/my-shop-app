@@ -25,7 +25,7 @@ const OrderCard = () => {
               </p>
             </div>
 
-            <div>
+            <div className="flex-1">
               <p className="text-[#111] font-semibold">
                 PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)
               </p>
@@ -52,7 +52,7 @@ const OrderCard = () => {
               </p>
             </div>
 
-            <div>
+            <div className="flex-1">
               <p className="text-[#111] font-semibold">
                 PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)
               </p>
