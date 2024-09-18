@@ -33,6 +33,7 @@ import { UserAddPage } from "../pages/admin/user/addUser";
 import { CartPageAdmin } from "../pages/admin/carts/ListCart";
 import { ListComment } from "../pages/admin/comments/ListComment";
 import { ListVouchers } from "../pages/admin/vouchers/ListVouchers";
+import Collection from "../pages/client/Collection/Collection";
 
 const Router = () => {
   return (
@@ -57,6 +58,7 @@ const Router = () => {
           <Route path="signin" element={<SigninPage />}></Route>
           <Route path="signup" element={<SignupPage />}></Route>
           <Route path="payment-manual" element={<PaymentManual />} />
+          <Route path="collection/laptop" element = {< Collection />} />
         </Route>
         <Route path="voucher" element={<VoucherPage />}></Route>
         <Route path="admin" element={<LayoutAdmin />}>
