@@ -114,13 +114,8 @@ const Collection = () => {
       <img src="/images/banner-filter.webp" className="w-full h-auto rounded-lg shadow-md" />
       <div className="mx-auto w-full">
 
-        <ProductList
-        
-          
-          products={products}
-          
-        >
-       </ProductList>
+        <ProductList products={products}/>
+      
       </div>
     </div>
   );

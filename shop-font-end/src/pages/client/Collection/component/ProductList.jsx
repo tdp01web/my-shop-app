@@ -21,21 +21,25 @@ const ProductList = ({
  
 }) => {
 
-
+  const filters = [
+    TotalFilter,
+    StatusFilter,
+    PriceFilter,
+    BrandFilter,
+    CPUFilter,
+    RAMFilter,
+    SSDFilter,
+    SizeFilter,
+    NeedFilter,
+    VGAFilter,
+  ];
   return (
     <div className="w-full bg-cover flex bg-white rounded-sm flex-col bg-center gap-3 h-auto p-4">
-         <Box display="flex"  alignItems="center">
-      <TotalFilter /><Box ml={1} />
-      <StatusFilter /><Box ml={1} />
-      <PriceFilter /> <Box ml={1} />
-      <BrandFilter /><Box ml={1} />
-      <CPUFilter /><Box ml={1} />
-      <RAMFilter /><Box ml={1} />
-      <SSDFilter /><Box ml={1} />
-      <SizeFilter /> <Box ml={1} />
-      <NeedFilter /> <Box ml={1} />
-      <VGAFilter /> <Box ml={1} />
-          </Box>
+        <Box display="flex" alignItems="center" sx={{ gap: 1 }}>
+        {filters.map((FilterComponent, index) => (
+        <FilterComponent key={index} />
+  ))}
+</Box>
     
 
 <ArrangeFilter />
