@@ -2,10 +2,16 @@ import React from "react";
 
 const FooterCopyright = () => {
   const listImage = [
-    { image: "/images/facebook_1.webp", link: "/" },
+    {
+      image: "/images/facebook_1.webp",
+      link: "https://www.facebook.com/profile.php?id=61565853103540",
+    },
     { image: "/images/tiktok.webp", link: "/" },
     { image: "/images/icon_zalo__1.webp", link: "/" },
-    { image: "/images/youtube_1.webp", link: "/" },
+    {
+      image: "/images/youtube_1.webp",
+      link: "https://www.youtube.com/@smartcomputer-hn",
+    },
   ];
   return (
     <div className="2xl:w-[80%] px-4 2xl:px-0 mx-auto flex gap-3 md:items-center 2xl:justify-between py-10">
