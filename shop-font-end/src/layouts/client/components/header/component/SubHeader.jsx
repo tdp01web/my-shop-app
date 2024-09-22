@@ -12,8 +12,12 @@ const SubHeader = ({ vertical }) => {
   const navigate = useNavigate();
 
   const listMenu = [
-    { icon: <MdOutlineDiscount />, title: "Săn Voucher GEARVN" },
-    { icon: <HiOutlineNewspaper />, title: "Tin công nghệ" },
+    {
+      icon: <MdOutlineDiscount />,
+      title: "Săn Voucher GEARVN",
+      path: "voucher",
+    },
+    { icon: <HiOutlineNewspaper />, title: "Tin công nghệ", path: "blog" },
     { icon: <SlSocialYoutube />, title: "Video" },
     {
       icon: <FaRegCreditCard />,
