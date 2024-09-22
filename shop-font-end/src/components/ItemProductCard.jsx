@@ -4,7 +4,7 @@ import * as React from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import Quantity from "./Quantity";
+import Quantity from "./quantity";
 const ItemProductCard = ({ item }) => {
   return (
     <div className="flex gap-5">

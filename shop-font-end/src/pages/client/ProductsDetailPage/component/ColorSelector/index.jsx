@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import Quantity from "../../../../../components/Quantity";
+import Quantity from "../../../../../components/quantity";
 
-/* eslint-disable react/prop-types */
 const ColorSelector = ({ product, selectedColor, handleColorClick }) => {
   useEffect(() => {
     if (product && product.colors.length > 0) {
