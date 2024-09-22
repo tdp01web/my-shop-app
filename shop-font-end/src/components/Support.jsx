@@ -5,8 +5,7 @@ import Lottie from "lottie-react";
 import React from "react";
 import { FaYoutube } from "react-icons/fa";
 import { FaSquareFacebook } from "react-icons/fa6";
-import animationData from "../animation/loading.json";
-import { Link } from "react-router-dom";
+import animationData from "../../public/animation/loading.json";
 export const Icon = () => {
   return (
     <div className="w-full  flex justify-center items-center flex-col">
@@ -21,11 +20,15 @@ export const Icon = () => {
 };
 
 const actions = [
-  { icon: <FaYoutube style={{ color: "red" }} />, name: "Youtube", link: "" },
+  {
+    icon: <FaYoutube style={{ color: "red" }} />,
+    name: "Youtube",
+    link: "https://www.youtube.com/@smartcomputer-hn",
+  },
   {
     icon: <FaSquareFacebook style={{ color: "blue" }} />,
     name: "Facebook",
-    link: "",
+    link: "https://www.facebook.com/profile.php?id=61565853103540",
   },
 ];
 
@@ -49,9 +52,14 @@ const Support = () => {
         }}
       >
         {actions.map((action) => (
-          <Link to={action.link} key={action.name}>
-            <SpeedDialAction icon={action.icon} tooltipTitle={action.name} />
-          </Link>
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            onClick={() => {
+              window.open(action.link, "_blank");
+            }}
+          />
         ))}
       </SpeedDial>
     </Box>
