@@ -8,6 +8,7 @@ const LayoutClient = lazy(() => import("../layouts/client"));
 const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 const SigninPage = lazy(() => import("../pages/SigninPage"));
 const SignupPage = lazy(() => import("../pages/SignupPage"));
+const Collection = lazy(()=> import("../pages/client/Collection/Collection"))
 const ListCategoriesAdmin = lazy(() =>
   import("../pages/admin/categories/ListCategoriesAdmin")
 );
@@ -90,6 +91,7 @@ const Router = () => {
             <Route path="signup" element={<SignupPage />} />
             <Route path="payment-manual" element={<PaymentManual />} />
             <Route path="blog" element={<BlogPage />} />
+            <Route path="collection" element={<Collection />} />
           </Route>
 
           {/* Voucher */}
