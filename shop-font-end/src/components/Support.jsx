@@ -5,7 +5,7 @@ import Lottie from "lottie-react";
 import React from "react";
 import { FaYoutube } from "react-icons/fa";
 import { FaSquareFacebook } from "react-icons/fa6";
-import animationData from "../../public/animation/loading.json";
+import animationData from "../../src/animation/loading.json"
 export const Icon = () => {
   return (
     <div className="w-full  flex justify-center items-center flex-col">
