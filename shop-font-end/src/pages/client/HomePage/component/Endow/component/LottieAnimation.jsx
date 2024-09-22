@@ -1,7 +1,7 @@
 // src/component/LottieAnimation.js
 import React from "react";
 import Lottie from "lottie-react";
-import animationData from "../../../../../../../public/animation/Animation.json";
+import animationData from "../../../../../../animation/Animation.json";
 
 const LottieAnimation = () => {
   return (

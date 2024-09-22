@@ -23,9 +23,6 @@ const Quantity = () => {
 
   return (
     <div className=" mt-4 flex  flex-col">
-      {/* <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">
-        Chọn số lượng
-      </h3> */}
       <div className="flex items-center ">
         <button
           onClick={handleDecrease}
@@ -37,7 +34,7 @@ const Quantity = () => {
         <input
           type="text"
           value={quantity}
-          className="w-[50px] py-1 text-center border-t border-b border-gray-300 appearance-none"
+          className="w-[50px] py-1 text-center border-t border-b border-gray-500  appearance-none"
           max={maxQuantity}
         />
         <button
