@@ -30,7 +30,7 @@ function MainHeader() {
       icon: <LuClipboardList style={{ width: "25px", height: "25px" }} />,
       label: "Tra cứu",
       sublabel: "Đơn hàng",
-      to: "",
+      to: "/account",
     },
     {
       icon: <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />,
