@@ -45,7 +45,9 @@ const Quantity = () => {
         </button>
       </div>
       <div className="">
-        {notification && <p className="mt-2 text-red-600">{notification}</p>}
+        {notification && (
+          <p className="mt-2 text-red-600 whitespace-nowrap">{notification}</p>
+        )}
       </div>
     </div>
   );

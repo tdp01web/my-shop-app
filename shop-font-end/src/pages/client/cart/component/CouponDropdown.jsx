@@ -40,7 +40,7 @@ export default function CouponDropdown() {
   };
 
   return (
-    <div className="p-4 w-full">
+    <div className="md:p-4 w-full">
       <div className="relative">
         <button
           className="flex items-center border border-gray-300 text-[#E30019] px-4 py-2 rounded-md"
@@ -101,7 +101,7 @@ export default function CouponDropdown() {
                   </div>
                 </div>
                 <button
-                  className="bg-blue-500 w-[15%] text-white px-4 py-1 rounded-md"
+                  className="bg-blue-500 w-[20%] md:w-[15%] text-white px-4 py-1 rounded-md"
                   onClick={() => handleCouponApply(coupon.code)}
                 >
                   Áp dụng

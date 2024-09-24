@@ -14,17 +14,19 @@ const ItemProductCard = ({ item }) => {
           Xóa <FaRegTrashCan />{" "}
         </Button>
       </div>
-      <div>
-        <Link to={`/product/${item.id}`} className="w-[50%]">
-          <p className="font-semibold text-[14px]">{item.name}</p>
-        </Link>
-      </div>
-      <div className="w-[25%]">
-        <p className="font-semibold text-[20px] text-[#E30019]">
-          {item.price}đ
-        </p>
-        <del className="text-[15px] text-gray-500">{item.priceOld}đ</del>
-        <Quantity />
+      <div className="md:flex">
+        <div>
+          <Link to={`/product/${item.id}`} className="w-[50%]">
+            <p className="font-semibold text-[14px]">{item.name}</p>
+          </Link>
+        </div>
+        <div className="w-[25%]">
+          <p className="font-semibold text-[20px] text-[#E30019]">
+            {item.price}đ
+          </p>
+          <del className="text-[15px] text-gray-500">{item.priceOld}đ</del>
+          <Quantity />
+        </div>
       </div>
     </div>
   );
