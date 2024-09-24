@@ -14,13 +14,13 @@ const ItemProductCard = ({ item }) => {
           Xóa <FaRegTrashCan />{" "}
         </Button>
       </div>
-      <div className="md:flex">
+      <div className="md:flex md:gap-5">
         <div>
           <Link to={`/product/${item.id}`} className="w-[50%]">
             <p className="font-semibold text-[14px]">{item.name}</p>
           </Link>
         </div>
-        <div className="w-[25%]">
+        <div className="w-[25%] md:w-[40%] ">
           <p className="font-semibold text-[20px] text-[#E30019]">
             {item.price}đ
           </p>
