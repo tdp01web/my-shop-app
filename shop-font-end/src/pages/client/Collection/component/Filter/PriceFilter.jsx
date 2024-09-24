@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, Popover, Box } from '@mui/material';
 import { TextField, Slider } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Price from './components/Price';
 
 const theme = createTheme({
   components: {
@@ -75,39 +76,7 @@ const PriceFilter = () => {
         sx={{ marginTop: '10px', width: '900px' }}
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
-          <Box p={2} width="600px">
-          
-            <Box display="flex" justifyContent="space-between" mb={2}>
-              <TextField
-                value={priceRange[0].toLocaleString('vi-VN', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
-                variant="outlined"
-                size="small"
-                sx={{ width: '45%' }}
-              />
-              <TextField
-                value={priceRange[1].toLocaleString('vi-VN', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
-                variant="outlined"
-                size="small"
-                sx={{ width: '45%' }}
-              />
-            </Box>
-
-           
-            <Slider
-              value={priceRange}
-              onChange={handlePriceChange}
-              min={10000000}
-              max={60000000}
-              valueLabelDisplay="auto"
-              sx={{ color: 'green' }}
-            />
-          </Box>
+       <Price />
           <Box mt={2} display="flex" justifyContent="space-between" width="100%">
             <Button variant="outlined" color="error" onClick={handleReset}>
               Bỏ chọn

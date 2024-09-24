@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import { Button, Popover, Box } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Need from './components/Need';
 
 const theme = createTheme({
   components: {
@@ -28,9 +29,9 @@ const NeedFilter = () => {
     setAnchorEl(null); 
   };
 
-  const handleSelect = () => {
-    setSelected((prev) => !prev); 
-  };
+  // const handleSelect = () => {
+  //   setSelected((prev) => !prev); 
+  // };
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -64,19 +65,7 @@ const NeedFilter = () => {
         sx={{ marginTop: '10px', height: '300px' }}
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
-          <Button
-            variant="outlined"
-            onClick={handleSelect}
-            color="primary"
-            fullWidth
-            sx={{
-              color: selected ? '#007bff': 'black',
-              fontWeight: selected ? 700 : 400,
-              width: '200px'
-            }}
-          >
-           Văn phòng
-          </Button>
+         <Need />
           <Box mt={2} display="flex" justifyContent="space-between" width="100%">
             <Button variant="outlined" color="error" onClick={() => setSelected(false)}>
               Bỏ chọn
