@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import { Button, Popover, Box } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import CPUcon from './components/CPU';
 
 const theme = createTheme({
   components: {
@@ -28,13 +29,13 @@ const CPUFilter = () => {
     setAnchorEl(null); 
   };
 
-  const handleSelect = (index) => {
-    setSelectedIndices((prev) =>
-      prev.includes(index)
-        ? prev.filter((i) => i !== index) 
-        : [...prev, index] 
-    );
-  };
+  // const handleSelect = (index) => {
+  //   setSelectedIndices((prev) =>
+  //     prev.includes(index)
+  //       ? prev.filter((i) => i !== index) 
+  //       : [...prev, index] 
+  //   );
+  // };
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -71,24 +72,7 @@ const CPUFilter = () => {
         }}
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
-          <Box display="flex" flexDirection="row" flexWrap="wrap" justifyContent="space-between" width="100%">
-            {['AMD Ryzen 5', 'Intel Core i5', 'AMD Ryzen 7', 'Intel Core i7', 'AMD Ryzen 9'].map((label, index) => (
-              <Button
-                key={index}
-                variant="outlined"
-                onClick={() => handleSelect(index)} 
-                color="primary"
-                sx={{
-                  color: selectedIndices.includes(index) ? '#007bff' : 'black', 
-                  fontWeight: selectedIndices.includes(index) ? 700 : 400,
-                  flex: '1 1 auto', 
-                  margin: '5px', 
-                }}
-              >
-                {label}
-              </Button>
-            ))}
-          </Box>
+         <CPUcon />
           
           <Box mt={2} display="flex" justifyContent="space-between" width="100%">
             <Button variant="outlined" color="error" onClick={() => setSelectedIndices([])}>

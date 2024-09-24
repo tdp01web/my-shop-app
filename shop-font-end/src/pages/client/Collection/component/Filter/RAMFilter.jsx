@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import { Button, Popover, Box } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import RAMcon from './components/RAM';
 
 const theme = createTheme({
   components: {
@@ -28,13 +29,13 @@ const RAMFilter = () => {
     setAnchorEl(null); 
   };
 
-  const handleSelect = (index) => {
-    setSelectedIndices((prev) =>
-      prev.includes(index)
-        ? prev.filter((i) => i !== index)
-        : [...prev, index]
-    );
-  };
+  // const handleSelect = (index) => {
+  //   setSelectedIndices((prev) =>
+  //     prev.includes(index)
+  //       ? prev.filter((i) => i !== index)
+  //       : [...prev, index]
+  //   );
+  // };
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -71,24 +72,7 @@ const RAMFilter = () => {
         }}
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
-          <Box display="flex" flexDirection="row" flexWrap="wrap" justifyContent="space-between" width="100%">
-            {['4GB', '8GB', '16GB', '32GB'].map((label, index) => (
-              <Button
-                key={index}
-                variant="outlined"
-                onClick={() => handleSelect(index)}
-                color="primary"
-                sx={{
-                  color: selectedIndices.includes(index) ? '#007bff' : 'black',
-                  fontWeight: selectedIndices.includes(index) ? 700 : 400,
-                  flex: '1 1 auto',
-                  margin: '5px',
-                }}
-              >
-                {label}
-              </Button>
-            ))}
-          </Box>
+         <RAMcon />
           
           <Box mt={2} display="flex" justifyContent="space-between" width="100%">
             <Button variant="outlined" color="error" onClick={() => setSelectedIndices([])}>
