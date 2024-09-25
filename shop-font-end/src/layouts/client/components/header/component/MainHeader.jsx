@@ -59,8 +59,12 @@ function MainHeader() {
         <Link to="/">
           <img
             fit="contain"
-            className="md:w-[140px] w-[40px]"
-            src={laptop ? "/images/logo.svg" : "/images/logo-mobile.svg"}
+            className="md:w-[160px]  w-[40px]"
+            src={
+              laptop
+                ? "/images/logo/logoDesktop.png"
+                : "/images/logo/logoMobile.png"
+            }
             alt="Logo"
           />
         </Link>
