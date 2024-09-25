@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ProductInfoSection from "./component/comon/ProductInfoSection";
 import ProductMainSection from "./component/comon/ProductMainSection";
 import Review from "./component/Review";
-import BreadcrumbNavigation from "../../../components/BreadcrumbNavigation";
 
 const ProductDetailPage = () => {
   const [product, setProduct] = useState(null);
