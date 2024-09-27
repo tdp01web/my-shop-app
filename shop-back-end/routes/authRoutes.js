@@ -17,10 +17,6 @@ const {
   loginAdmin,
   getWishlist,
   saveUserAddress,
-  userCart,
-  getUserCart,
-  emptyCart,
-  applyCoupon,
   crateOrder,
   getOrder,
   updateOrderStatus,
@@ -61,11 +57,6 @@ router.put("/updatePassword", authMiddleware, updatePassword);
 //! Xóa user
 router.delete("/deleteUser/:id", deleteUser);
 
-//!Giỏ hàng
-router.post("/cart", authMiddleware, userCart);
-router.get("/getUserCart", authMiddleware, getUserCart);
-router.delete("/emptyCart", authMiddleware, emptyCart);
-router.post("/applyCoupon", authMiddleware, applyCoupon);
 //! đơn hàng
 router.post("/crateOrder", authMiddleware, crateOrder);
 router.get("/getOrder", authMiddleware, getOrder);

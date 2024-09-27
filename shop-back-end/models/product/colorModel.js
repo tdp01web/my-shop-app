@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-var prodcategorySchema = new mongoose.Schema(
+var colorSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -14,5 +14,4 @@ var prodcategorySchema = new mongoose.Schema(
   }
 );
 
-//Export the model
-module.exports = mongoose.model("PCategory", prodcategorySchema);
+module.exports = mongoose.model("Color", colorSchema);
