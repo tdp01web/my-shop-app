@@ -10,6 +10,7 @@ import {
   Box,
 } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const HeaderVoucher = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -42,11 +43,13 @@ const HeaderVoucher = () => {
       >
         <Toolbar className="md:container mx-auto flex justify-between items-center p-4 w-full md:w-[80%]">
           <Box className="flex items-center">
-            <img
-              src="/images/voucher/logo-02-20200903083638.svg"
-              alt="GEARVN Logo"
-              className="h-11 mr-4 w-[152px]"
-            />
+            <Link to={"/"}>
+              <img
+                src="/images/logo/logobgrred.png"
+                alt="GAMING GEAR Logo"
+                className="h-11 mr-4 "
+              />
+            </Link>
           </Box>
 
           <Box className="hidden md:flex space-x-8 gap-8 text-[14px] md:text-[16px]">
