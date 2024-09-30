@@ -228,11 +228,10 @@ const ProductDetailPage = () => {
 
   return (
     <>
-      <div className="lg:w-[80%] lg:mx-auto lg:mt-0 ml-3 mt-3 flex gap-3 whitespace-nowrap font-400 overflow-hidden">
-        <span className="text-[#1982F9]">Trang chủ</span> /
-        <span className="text-[#1982F9]">{product.category}</span> /
-        <span className="text-[16px]">{product.name}</span>
-      </div>
+      {/* <div className="lg:w-[80%] lg:mx-auto lg:mt-0 ml-3 mt-3 flex gap-3 whitespace-nowrap font-400 overflow-hidden">
+        <BreadcrumbNavigation />
+      </div> */}
+
       <div className="relative z-20">
         <ProductMainSection
           product={product}

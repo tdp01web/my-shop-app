@@ -47,3 +47,33 @@ nodemailer - để gửi các loại email khác nhau, bao gồm thông báo kí
 <!--! cloudinary là một dịch vụ đám mây dùng để quản lý và lưu trữ hình ảnh và video. Gói cloudinary của npm giúp tích hợp dễ dàng với API của Cloudinary để tải lên, quản lý và biến đổi hình ảnh trên đám mây. -->
 
 Mô-đun fs trong Node.js được sử dụng để tương tác với hệ thống tệp. Nó cung cấp các chức năng để đọc, ghi và thao tác với hệ thống tệp. Trong ngữ cảnh của mã của bạn, mô-đun fs được sử dụng để xóa các tệp khỏi hệ thống tệp cục bộ sau khi chúng đã được tải lên Cloudinary
+
+<!-- SSD (Storage): Bạn đã có mô hình Storage, bao gồm:
+
+capacity: Dung lượng lưu trữ (VD: 256GB, 512GB).
+type: Loại lưu trữ (VD: SSD hoặc HDD).
+CPU (Processor): Bạn đã có mô hình Processor, bao gồm:
+
+name: Tên của bộ xử lý (VD: Intel Core i9-11900K).
+speed: Tốc độ của CPU (VD: 3.6GHz).
+RAM: Bạn đã có mô hình RAM, bao gồm:
+
+size: Kích thước của RAM (VD: 8GB, 16GB).
+VGA (GPU): Bạn đã có mô hình GPU, bao gồm:
+
+name: Tên của card đồ họa (VD: NVIDIA GeForce RTX 3080).
+LCD (Màn hình): Hiện tại, bạn chưa có một mô hình cụ thể nào cho màn hình (LCD). Nếu khách hàng cần thông tin về màn hình, bạn có thể tạo một mô hình mới cho nó. -->
+
+<!-- orderedBy: Là ID người dùng đặt hàng.
+products: Là mảng các sản phẩm được đặt, trong đó mỗi sản phẩm có:
+product: ID sản phẩm.
+variant: ID của biến thể sản phẩm (nếu có).
+count: Số lượng sản phẩm đã đặt.
+price: Giá sản phẩm tại thời điểm mua.
+totalProductPrice: Tổng giá của các sản phẩm trước khi áp dụng mã giảm giá và phí vận chuyển.
+discountApplied: Số tiền được giảm giá (nếu có mã giảm giá).
+shippingFee: Phí vận chuyển.
+totalPrice: Tổng giá trị đơn hàng sau khi cộng phí vận chuyển và giảm giá.
+shippingAddress: Thông tin địa chỉ giao hàng.
+paymentMethod: Phương thức thanh toán (ví dụ: Thanh Toán Khi Nhận Hàng).
+orderStatus: Trạng thái của đơn hàng (mặc định là "Đang Xử Lý"). -->
