@@ -18,7 +18,8 @@ const ListProductAdmin = lazy(() =>
   import("../pages/admin/products/ListProductAdmin")
 );
 const AboutsPage = lazy(() => import("../pages/client/AboutsPage"));
-const BlogPage = lazy(() => import("../pages/client/BlogPage"));
+const BlogPage = lazy(() => import("../pages/client/PlogPage"));
+const Installment = lazy(() => import("../pages/client/Installment"));
 const ContactPage = lazy(() => import("../pages/client/ContactPage"));
 const HomePage = lazy(() => import("../pages/client/HomePage"));
 const OrdersPage = lazy(() => import("../pages/client/OrdersPage"));
@@ -89,6 +90,7 @@ const Router = () => {
             <Route path="signin" element={<SigninPage />} />
             <Route path="signup" element={<SignupPage />} />
             <Route path="payment-manual" element={<PaymentManual />} />
+            <Route path="installment" element={<Installment />} />
             <Route path="blog" element={<BlogPage />} />
           </Route>
 

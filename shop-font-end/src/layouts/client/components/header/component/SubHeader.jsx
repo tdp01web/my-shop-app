@@ -13,19 +13,29 @@ const SubHeader = ({ vertical }) => {
 
   const listMenu = [
     { icon: <MdOutlineDiscount />, title: "Săn Voucher GEARVN" },
-    { icon: <HiOutlineNewspaper />, title: "Tin công nghệ" },
-    { icon: <SlSocialYoutube />, title: "Video" },
+    { icon: <HiOutlineNewspaper />, title: "Tin công nghệ", path: "blog" },
+    {
+      icon: <SlSocialYoutube />,
+      title: "Video",
+      link: "https://www.youtube.com/@smartcomputer-hn",
+    },
     {
       icon: <FaRegCreditCard />,
       title: "Hướng dẫn thanh toán",
       path: "payment-manual",
     },
-    { icon: <LiaCoinsSolid />, title: "Hướng dẫn trả góp" },
+    {
+      icon: <LiaCoinsSolid />,
+      title: "Hướng dẫn trả góp",
+      path: "installment",
+    },
     { icon: <GoShieldCheck />, title: "Tra cứu bảo hành" },
   ];
 
   const onMenuClick = (item) => {
-    if (item.path) {
+    if (item.link) {
+      window.open(item.link, "_blank"); // Mở liên kết trong tab mới
+    } else if (item.path) {
       navigate(item.path);
     }
   };
