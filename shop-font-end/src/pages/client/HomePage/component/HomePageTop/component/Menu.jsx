@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { BsPrinter } from "react-icons/bs";
 import { CiDesktopMouse2, CiSpeaker } from "react-icons/ci";
 import { FaRegKeyboard } from "react-icons/fa6";
@@ -106,16 +106,30 @@ const menuItems = [
 const Menu = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
+  const hoverTimeout = useRef(null); // Ref để giữ timeout ID
+
+  const handleMouseEnter = (index) => {
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current); // Nếu có timeout, xóa nó
+    }
+    setHoveredItem(index);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeout.current = setTimeout(() => {
+      setHoveredItem(null);
+    }, 200); // Thêm độ trễ 200ms trước khi ẩn menu
+  };
 
   return (
-    <div className="flex md:w-full relative gap-4 ">
+    <div className="flex md:w-full relative gap-4">
       <ul className="flex bg-[#E30019] hide-scrollbar w-full overflow-x-auto md:flex-col md:gap-[10px] md:bg-white md:rounded-lg p-2 md:px-5 py-3 md:py-2 md:w-full text-[14px] 2xl:text-[13px] font-500">
         {menuItems.map((item, index) => (
           <li
             key={index}
             className="relative px-3 md:px-0"
-            onMouseEnter={() => setHoveredItem(index)}
-            onMouseLeave={() => setHoveredItem(null)}
+            onMouseEnter={() => handleMouseEnter(index)}
+            onMouseLeave={handleMouseLeave}
           >
             <Link
               to={item.link}
@@ -133,7 +147,11 @@ const Menu = () => {
         ))}
       </ul>
       {hoveredItem !== null && menuItems[hoveredItem].subItems && (
-        <div className="absolute top-0  left-[104%]  bg-white p-4 flex h-full w-[370%]   justify-between rounded-lg shadow-lg z-50">
+        <div
+          className="absolute top-0 left-[104%] bg-white p-4 flex h-full w-[370%] justify-between rounded-lg shadow-lg z-50"
+          onMouseEnter={() => handleMouseEnter(hoveredItem)} // Khi hover vào submenu, giữ lại
+          onMouseLeave={handleMouseLeave} // Thêm hành động rời chuột
+        >
           {menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
             <div key={subIndex} className="mb-2">
               <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>

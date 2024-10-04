@@ -1,6 +1,5 @@
-const mongoose = require("mongoose"); // Erase if already required
+const mongoose = require("mongoose");
 
-// Declare the Schema of the Mongo model
 var productSchema = new mongoose.Schema(
   {
     title: {
@@ -18,25 +17,15 @@ var productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    price: {
-      type: Number,
-      required: true,
-    },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
     },
     brand: {
-      type: String,
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      required: true,
-    },
-    sold: {
-      type: Number,
-      default: 0,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+      // required: true,
     },
     images: [
       {
@@ -44,8 +33,12 @@ var productSchema = new mongoose.Schema(
         url: String,
       },
     ],
-    color: [],
-    tags: [],
+    variants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ProductVariant",
+      },
+    ], // liên kết tới bảng ProductVariant để quản lý các biến thể
     ratings: [
       {
         star: Number,
@@ -54,12 +47,11 @@ var productSchema = new mongoose.Schema(
       },
     ],
     totalrating: {
-      type: String,
+      type: Number,
       default: 0,
     },
   },
   { timestamps: true }
 );
 
-//Export the model
 module.exports = mongoose.model("Product", productSchema);

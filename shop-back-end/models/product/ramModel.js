@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 
-var colorSchema = new mongoose.Schema(
+var ramSchema = new mongoose.Schema(
   {
-    title: {
+    size: {
       type: String,
       required: true,
       unique: true,
-      index: true,
     },
   },
   {
@@ -14,5 +13,4 @@ var colorSchema = new mongoose.Schema(
   }
 );
 
-//Export the model
-module.exports = mongoose.model("Color", colorSchema);
+module.exports = mongoose.model("RAM", ramSchema);

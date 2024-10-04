@@ -59,7 +59,7 @@ const CartPage = () => {
   return (
     <div className="flex gap-5 flex-col w-full md:w-[50%] mx-auto h-auto rounded-lg bg-white p-5">
       {/* Dynamic Link to Navigate Back */}
-      {activeStep > 0 ? (
+      {activeStep > 0 && activeStep < 3 ? (
         <div onClick={handleBack} className="text-[#E30019] cursor-pointer">
           <p>{`< Trở về`}</p>
         </div>

@@ -5,8 +5,11 @@ const {
   deleteBrand,
   getBrand,
   getAllBrand,
-} = require("../controller/brandCtrl");
-const { authMiddleware, isAdmin } = require("../middlewares/authMiddlewares");
+} = require("../../controller/product/brandCtrl");
+const {
+  authMiddleware,
+  isAdmin,
+} = require("../../middlewares/authMiddlewares");
 const router = express.Router();
 
 router.post("/createBrand", authMiddleware, isAdmin, createBrand);
