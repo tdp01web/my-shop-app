@@ -1,9 +1,63 @@
 import { Button, Form, Input, Modal, Select } from "antd";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 import { FaTimes } from "react-icons/fa";
 
 const AddAddressModal = (props) => {
   const { open, onClose } = props;
+
+  const [provinceList, setProvinceList] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [wardList, setWardList] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [selectedWard, setSelectedWard] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          "https://esgoo.net/api-tinhthanh/1/0.htm"
+        );
+        setProvinceList(data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  // Fetch Quận Huyện
+  useEffect(() => {
+    if (selectedProvince) {
+      (async () => {
+        try {
+          const { data } = await axios.get(
+            `https://esgoo.net/api-tinhthanh/2/${selectedProvince}.htm`
+          );
+          setDistrictList(data.data);
+          setWardList([]);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    }
+  }, [selectedProvince]);
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      (async () => {
+        try {
+          const { data } = await axios.get(
+            `https://esgoo.net/api-tinhthanh/3/${selectedDistrict}.htm`
+          );
+          setWardList(data.data);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    }
+  }, [selectedDistrict]);
 
   return (
     <Modal
@@ -43,26 +97,33 @@ const AddAddressModal = (props) => {
           <Form.Item className="col-span-6 m-0">
             <Select
               placeholder="Chọn Tỉnh/Thành phố"
+              onChange={(value) => {
+                setSelectedProvince(value);
+                setSelectedDistrict(null);
+                setSelectedWard(null);
+              }}
               size="large"
-              options={[
-                {
-                  label: "Hà Nội",
-                  value: 1,
-                },
-              ]}
+              options={provinceList.map((it) => ({
+                label: it.name,
+                value: it.id,
+              }))}
             />
           </Form.Item>
 
           <Form.Item className="col-span-6 m-0">
             <Select
               placeholder="Chọn Quận/Huyện"
+              onChange={(value) => {
+                setSelectedDistrict(value);
+                setSelectedWard(null);
+              }}
+              value={selectedDistrict}
+              disabled={!selectedProvince}
               size="large"
-              options={[
-                {
-                  label: "Hà Nội",
-                  value: 1,
-                },
-              ]}
+              options={districtList.map((it) => ({
+                label: it.name,
+                value: it.id,
+              }))}
             />
           </Form.Item>
 
@@ -70,12 +131,13 @@ const AddAddressModal = (props) => {
             <Select
               placeholder="Chọn Xã/Phường"
               size="large"
-              options={[
-                {
-                  label: "Hà Nội",
-                  value: 1,
-                },
-              ]}
+              onChange={(value) => setSelectedWard(value)}
+              value={selectedWard}
+              disabled={!selectedDistrict}
+              options={wardList.map((it) => ({
+                label: it.name,
+                value: it.id,
+              }))}
             />
           </Form.Item>
 

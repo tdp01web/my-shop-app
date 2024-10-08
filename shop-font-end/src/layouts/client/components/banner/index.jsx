@@ -1,14 +1,14 @@
 function Banner() {
   return (
-    <div className="w-full 2xl:flex justify-between fixed top-[200px] hidden z-[0]">
-      <div className="fixed-left">
+    <div className="w-full 2xl:flex justify-between hidden">
+      <div className="fixed-left fixed left-0 top-[200px] z-9999">
         <img
           className="w-[100px] rounded-xl"
           src="/images/banner3.webp"
           alt=""
         />
       </div>
-      <div className="fixed-right">
+      <div className="fixed-right fixed right-0 top-[200px] z-9999">
         <img
           className="w-[100px] rounded-xl"
           src="/images/banner4.webp"
