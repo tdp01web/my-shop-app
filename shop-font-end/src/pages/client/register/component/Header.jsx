@@ -9,7 +9,7 @@ const Header = () => {
           <img
             fit="contain"
             className="md:w-[170px] w-[100px]"
-            src={"/images/logo.svg"}
+            src={"/images/logo/logoDesktop.png"}
             alt="Logo"
           />
         </Link>

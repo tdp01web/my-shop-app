@@ -17,26 +17,26 @@ const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán", "Hoàn t
 const CartPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const cartItems = [
-    {
-      id: 1,
-      name: "PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)",
-      price: 25000000,
-      priceOld: 30000000,
-      image: "/images/product/product1.webp",
-      sold: 10,
-      rating: 5.0,
-      reviews: 1,
-    },
-    {
-      id: 2,
-      name: "PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)",
-      price: 25000000,
-      priceOld: 30000000,
-      image: "/images/product/product1.webp",
-      sold: 10,
-      rating: 5.0,
-      reviews: 1,
-    },
+    // {
+    //   id: 1,
+    //   name: "PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)",
+    //   price: 25000000,
+    //   priceOld: 30000000,
+    //   image: "/images/product/product1.webp",
+    //   sold: 10,
+    //   rating: 5.0,
+    //   reviews: 1,
+    // },
+    // {
+    //   id: 2,
+    //   name: "PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)",
+    //   price: 25000000,
+    //   priceOld: 30000000,
+    //   image: "/images/product/product1.webp",
+    //   sold: 10,
+    //   rating: 5.0,
+    //   reviews: 1,
+    // },
   ];
 
   const handleNext = () => {
@@ -57,7 +57,7 @@ const CartPage = () => {
   ];
 
   return (
-    <div className="flex gap-5 flex-col w-full md:w-[50%] mx-auto h-auto rounded-lg bg-white p-5">
+    <div className="flex gap-5   flex-col w-full md:w-[50%] mx-auto h-auto rounded-lg bg-white p-5">
       {/* Dynamic Link to Navigate Back */}
       {activeStep > 0 && activeStep < 3 ? (
         <div onClick={handleBack} className="text-[#E30019] cursor-pointer">
