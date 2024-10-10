@@ -11,8 +11,21 @@ import { useBreakpoints } from "../../../../../hooks/useBreakpoints";
 import SubHeader from "./SubHeader";
 import { useState } from "react";
 import Menu from "../../../../../pages/client/HomePage/component/HomePageTop/component/Menu";
+import { AiOutlineUser } from "react-icons/ai";
+import { MdWavingHand } from "react-icons/md";
+import { IoIosEye } from "react-icons/io";
+import { PiNotepadBold } from "react-icons/pi";
+import { HiOutlineLogout } from "react-icons/hi";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userName = user?.email ? user.email.split("@")[0] : null;
+  console.log(userName);
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
+
   const links = [
     {
       icon: <RiCustomerServiceLine style={{ width: "25px", height: "25px" }} />,
@@ -86,14 +99,50 @@ function MainHeader() {
             </span>
           </div>
         ))}
-        <Link to={"/login"}>
-          <button className="md:flex hidden items-center gap-2 bg-[#BE1529] px-2 py-1 rounded-lg font-500 text-[13px] leading-4">
-            <FiUser style={{ width: "25px", height: "25px" }} />
-            <p className="2xl:block hidden">
-              Đăng <br /> nhập
-            </p>
-          </button>
-        </Link>
+        {user ? (
+          <div className="user-container">
+            <div className="user-info">
+              <div className="icon">
+                <AiOutlineUser />
+              </div>
+              <div>
+                Xin chào <br /> {userName}
+              </div>
+            </div>
+
+            <div className="user-menu">
+              <Link to={"/account"} className="flex items-center gap-2">
+                <MdWavingHand /> Xin chào {userName}
+              </Link>
+              <hr />
+              <Link to={"/account"} className="flex items-center gap-2">
+                <IoIosEye /> đã xem gần đây
+              </Link>
+              <Link
+                to={"account/orders-history"}
+                className="flex items-center gap-2"
+              >
+                <PiNotepadBold /> đơn hàng của tôi
+              </Link>
+              <hr />
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2"
+              >
+                <HiOutlineLogout /> đăng xuất
+              </button>
+            </div>
+          </div>
+        ) : (
+          <Link to={"/login"}>
+            <button className="md:flex hidden items-center gap-2 bg-[#BE1529] px-2 py-1 rounded-lg font-500 text-[13px] leading-4">
+              <FiUser style={{ width: "25px", height: "25px" }} />
+              <p className="2xl:block hidden">
+                Đăng <br /> nhập
+              </p>
+            </button>
+          </Link>
+        )}
 
         <div className="flex bg-[#BE1529] p-2 rounded-lg items-center md:hidden">
           <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />
