@@ -8,10 +8,6 @@ var processorSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    speed: {
-      type: String, // Tốc độ của CPU (VD: 3.6GHz)
-      required: true,
-    },
   },
   {
     timestamps: true,

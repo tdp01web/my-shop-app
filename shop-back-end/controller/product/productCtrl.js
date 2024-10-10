@@ -76,9 +76,10 @@ const updateProduct = asyncHandler(async (req, res) => {
 
     const product = await Product.findById(id);
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
     }
 
+    // Cập nhật thông tin sản phẩm
     product.title = title || product.title;
     product.slug = slugify(title) || product.slug;
     product.description = description || product.description;
@@ -87,12 +88,12 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.brand = brand || product.brand;
     product.images = images || product.images;
 
-    // Cập nhật các biến thể nếu có
+    // Cập nhật hoặc thêm mới các biến thể
     if (variants && variants.length > 0) {
-      product.variants = []; // Reset danh sách biến thể hiện tại
-
+      // Lặp qua các biến thể được gửi lên
       for (const variant of variants) {
         const {
+          variantId, // Thêm `variantId` để kiểm tra biến thể đã tồn tại
           color,
           ram,
           storage,
@@ -104,20 +105,40 @@ const updateProduct = asyncHandler(async (req, res) => {
           images,
         } = variant;
 
-        const productVariant = await ProductVariant.create({
-          product: product._id,
-          color,
-          ram,
-          storage,
-          processor,
-          gpu,
-          lcd,
-          quantity,
-          price,
-          images,
-        });
+        if (variantId) {
+          // Nếu variantId tồn tại, cập nhật biến thể hiện có
+          const existingVariant = await ProductVariant.findById(variantId);
+          if (existingVariant) {
+            existingVariant.color = color || existingVariant.color;
+            existingVariant.ram = ram || existingVariant.ram;
+            existingVariant.storage = storage || existingVariant.storage;
+            existingVariant.processor = processor || existingVariant.processor;
+            existingVariant.gpu = gpu || existingVariant.gpu;
+            existingVariant.lcd = lcd || existingVariant.lcd;
+            existingVariant.quantity = quantity || existingVariant.quantity;
+            existingVariant.price = price || existingVariant.price;
+            existingVariant.images = images || existingVariant.images;
 
-        product.variants.push(productVariant._id);
+            await existingVariant.save();
+          }
+        } else {
+          // Nếu variantId không tồn tại, tạo biến thể mới
+          const newVariant = await ProductVariant.create({
+            product: product._id,
+            color,
+            ram,
+            storage,
+            processor,
+            gpu,
+            lcd,
+            quantity,
+            price,
+            images,
+          });
+
+          // Thêm biến thể mới vào danh sách các biến thể của sản phẩm
+          product.variants.push(newVariant._id);
+        }
       }
     }
 
