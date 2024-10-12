@@ -31,10 +31,7 @@ var productVariantSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "GPU",
     },
-    lcd: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "LCD",
-    },
+
     quantity: {
       type: Number,
       required: true,

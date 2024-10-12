@@ -13,8 +13,16 @@ const slugify = require("slugify");
 //! Thêm sản phẩm mới
 const createProduct = asyncHandler(async (req, res) => {
   try {
-    const { title, description, basePrice, category, brand, images, variants } =
-      req.body;
+    const {
+      title,
+      description,
+      basePrice,
+      category,
+      brand,
+      lcd,
+      images,
+      variants,
+    } = req.body;
 
     // Tạo product mới
     const product = await Product.create({
@@ -23,24 +31,16 @@ const createProduct = asyncHandler(async (req, res) => {
       description,
       basePrice,
       category,
-      brand: brand,
+      brand,
+      lcd, // lcd is now part of the main product schema
       images,
     });
 
     // Thêm các biến thể cho sản phẩm
     if (variants && variants.length > 0) {
       for (const variant of variants) {
-        const {
-          color,
-          ram,
-          storage,
-          processor,
-          gpu,
-          lcd,
-          quantity,
-          price,
-          images,
-        } = variant;
+        const { color, ram, storage, processor, gpu, quantity, price, images } =
+          variant;
 
         const productVariant = await ProductVariant.create({
           product: product._id,
@@ -49,7 +49,6 @@ const createProduct = asyncHandler(async (req, res) => {
           storage,
           processor,
           gpu,
-          lcd,
           quantity,
           price,
           images,
@@ -70,43 +69,48 @@ const createProduct = asyncHandler(async (req, res) => {
 //! Cập nhật sản phẩm
 const updateProduct = asyncHandler(async (req, res) => {
   try {
-    const { id } = req.params; // ID của sản phẩm cần cập nhật
-    const { title, description, basePrice, category, brand, images, variants } =
-      req.body;
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      basePrice,
+      category,
+      brand,
+      lcd,
+      images,
+      variants,
+    } = req.body;
 
     const product = await Product.findById(id);
     if (!product) {
-      return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
+      return res.status(404).json({ message: "Product not found" });
     }
 
-    // Cập nhật thông tin sản phẩm
     product.title = title || product.title;
     product.slug = slugify(title) || product.slug;
     product.description = description || product.description;
     product.basePrice = basePrice || product.basePrice;
     product.category = category || product.category;
     product.brand = brand || product.brand;
+    product.lcd = lcd || product.lcd; // Update lcd directly
     product.images = images || product.images;
 
-    // Cập nhật hoặc thêm mới các biến thể
+    // Handle variants logic (same as before)
     if (variants && variants.length > 0) {
-      // Lặp qua các biến thể được gửi lên
       for (const variant of variants) {
         const {
-          variantId, // Thêm `variantId` để kiểm tra biến thể đã tồn tại
+          variantId,
           color,
           ram,
           storage,
           processor,
           gpu,
-          lcd,
           quantity,
           price,
           images,
         } = variant;
 
         if (variantId) {
-          // Nếu variantId tồn tại, cập nhật biến thể hiện có
           const existingVariant = await ProductVariant.findById(variantId);
           if (existingVariant) {
             existingVariant.color = color || existingVariant.color;
@@ -114,7 +118,6 @@ const updateProduct = asyncHandler(async (req, res) => {
             existingVariant.storage = storage || existingVariant.storage;
             existingVariant.processor = processor || existingVariant.processor;
             existingVariant.gpu = gpu || existingVariant.gpu;
-            existingVariant.lcd = lcd || existingVariant.lcd;
             existingVariant.quantity = quantity || existingVariant.quantity;
             existingVariant.price = price || existingVariant.price;
             existingVariant.images = images || existingVariant.images;
@@ -122,7 +125,6 @@ const updateProduct = asyncHandler(async (req, res) => {
             await existingVariant.save();
           }
         } else {
-          // Nếu variantId không tồn tại, tạo biến thể mới
           const newVariant = await ProductVariant.create({
             product: product._id,
             color,
@@ -130,13 +132,11 @@ const updateProduct = asyncHandler(async (req, res) => {
             storage,
             processor,
             gpu,
-            lcd,
             quantity,
             price,
             images,
           });
 
-          // Thêm biến thể mới vào danh sách các biến thể của sản phẩm
           product.variants.push(newVariant._id);
         }
       }
@@ -179,7 +179,7 @@ const getaProduct = asyncHandler(async (req, res) => {
       .populate("brand")
       .populate({
         path: "variants",
-        populate: ["color", "ram", "storage", "processor", "gpu", "lcd"],
+        populate: ["color", "ram", "storage", "processor", "gpu"],
       });
 
     if (!product) {
@@ -200,7 +200,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
       .populate("brand")
       .populate({
         path: "variants",
-        populate: ["color", "ram", "storage", "processor", "gpu", "lcd"],
+        populate: ["color", "ram", "storage", "processor", "gpu"],
       });
 
     res.status(200).json(products);
@@ -272,6 +272,92 @@ const rateProduct = asyncHandler(async (req, res) => {
   }
 });
 
+//update biến thể sản phẩm
+const updateProductVariant = asyncHandler(async (req, res) => {
+  try {
+    const { variantId } = req.params;
+    const { color, ram, storage, processor, gpu, quantity, price, images } =
+      req.body;
+
+    const variant = await ProductVariant.findById(variantId);
+    if (!variant) {
+      return res.status(404).json({ message: "Không tìm thấy biến thể" });
+    }
+
+    variant.color = color || variant.color;
+    variant.ram = ram || variant.ram;
+    variant.storage = storage || variant.storage;
+    variant.processor = processor || variant.processor;
+    variant.gpu = gpu || variant.gpu;
+    variant.quantity = quantity || variant.quantity;
+    variant.price = price || variant.price;
+    variant.images = images || variant.images;
+
+    await variant.save();
+    res.status(200).json(variant);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//xóa biến thể của sản phẩm
+const deleteProductVariant = asyncHandler(async (req, res) => {
+  try {
+    const { variantId } = req.params;
+
+    const variant = await ProductVariant.findByIdAndDelete(variantId);
+    if (!variant) {
+      return res.status(404).json({ message: "Không tìm thấy biến thể" });
+    }
+
+    // Xóa biến thể khỏi mảng biến thể của sản phẩm
+    await Product.findByIdAndUpdate(variant.product, {
+      $pull: { variants: variant._id },
+    });
+
+    res.status(200).json({ message: "Đã xóa biến thể thành công" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//! Lấy danh sách tất cả các biến thể
+const getAllVariants = asyncHandler(async (req, res) => {
+  try {
+    const variants = await ProductVariant.find()
+      .populate("color")
+      .populate("ram")
+      .populate("storage")
+      .populate("processor")
+      .populate("gpu");
+
+    res.status(200).json(variants);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//! Lấy chi tiết một biến thể
+const getVariant = asyncHandler(async (req, res) => {
+  try {
+    const { variantId } = req.params;
+    const variant = await ProductVariant.findById(variantId)
+      .populate("color")
+      .populate("ram")
+      .populate("storage")
+      .populate("processor")
+      .populate("gpu");
+
+    if (!variant) {
+      return res.status(404).json({ message: "Không tìm thấy biến thể" });
+    }
+
+    res.status(200).json(variant);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = {
   createProduct,
   getaProduct,
@@ -280,4 +366,8 @@ module.exports = {
   deleteProduct,
   addToWishlist,
   rateProduct,
+  getAllVariants,
+  getVariant,
+  updateProductVariant,
+  deleteProductVariant,
 };
