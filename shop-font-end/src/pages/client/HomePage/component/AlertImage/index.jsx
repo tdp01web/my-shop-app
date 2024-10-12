@@ -3,7 +3,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { useEffect, useState } from "react";
-
+import { Link } from "react-router-dom";
 const imageUrl = "/images/alertanh.webp";
 
 const AlertImage = () => {
@@ -33,7 +33,9 @@ const AlertImage = () => {
         <CancelIcon onClick={handleClose} color="primary" />
       </DialogActions>
       <DialogContent className="text-center">
-        <img src={imageUrl} alt="" className="mt-4 mx-auto w-full" />
+        <Link to={"/"}>
+          <img src={imageUrl} alt="" className="mt-4 mx-auto w-full" />
+        </Link>
       </DialogContent>
     </Dialog>
   );

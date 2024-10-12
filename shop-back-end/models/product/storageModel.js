@@ -8,10 +8,6 @@ var storageSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    type: {
-      type: String, // SSD hoặc HDD
-      required: true,
-    },
   },
   {
     timestamps: true,

@@ -12,33 +12,31 @@ const SubHeader = ({ vertical }) => {
   const navigate = useNavigate();
 
   const listMenu = [
-    {
-      icon: <MdOutlineDiscount />,
-      title: "Săn Voucher GEARVN",
-      path: "voucher",
-    },
+    { icon: <MdOutlineDiscount />, title: "Săn Voucher GEARVN" },
     { icon: <HiOutlineNewspaper />, title: "Tin công nghệ", path: "blog" },
     {
       icon: <SlSocialYoutube />,
       title: "Video",
-      path: "https://www.youtube.com/@smartcomputer-hn", // External link
+      link: "https://www.youtube.com/@smartcomputer-hn",
     },
     {
       icon: <FaRegCreditCard />,
       title: "Hướng dẫn thanh toán",
       path: "payment-manual",
     },
-    { icon: <LiaCoinsSolid />, title: "Hướng dẫn trả góp" },
+    {
+      icon: <LiaCoinsSolid />,
+      title: "Hướng dẫn trả góp",
+      path: "installment",
+    },
     { icon: <GoShieldCheck />, title: "Tra cứu bảo hành" },
   ];
 
   const onMenuClick = (item) => {
-    if (item.path) {
-      if (item.path.startsWith("http")) {
-        window.open(item.path, "_blank");
-      } else {
-        navigate(item.path);
-      }
+    if (item.link) {
+      window.open(item.link, "_blank"); // Mở liên kết trong tab mới
+    } else if (item.path) {
+      navigate(item.path);
     }
   };
 
@@ -49,7 +47,7 @@ const SubHeader = ({ vertical }) => {
       })}
     >
       <div
-        className={clsx("mx-auto md:w-[80%] md:p-3 hide-scrollbar", {
+        className={clsx("mx-auto md:w-[80%] md:p-3  hide-scrollbar", {
           "flex overflow-x-auto": !vertical,
           "flex flex-col": vertical,
         })}
@@ -59,7 +57,7 @@ const SubHeader = ({ vertical }) => {
             <div
               key={index}
               className={clsx(
-                "flex items-center gap-2 text-[14px] font-500 hover:text-[#E30019] cursor-pointer",
+                "flex items-center  gap-2 text-[14px] font-500 hover:text-[#E30019] cursor-pointer",
                 {
                   "px-[32px]": !vertical,
                   "border-r border-gray-700":

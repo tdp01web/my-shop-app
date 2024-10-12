@@ -6,6 +6,7 @@ import {
 import Slider from "react-slick";
 import { LinearProgress, Box, Typography } from "@mui/material";
 import SoldProgressBar from "../../../../../../components/SoldProgressBar";
+import { Link } from "react-router-dom";
 const SlideSaleProduct = () => {
   const settings = {
     dots: true,
@@ -114,7 +115,7 @@ const SlideSaleProduct = () => {
       <div className="w-full md:w-2/3  h-full">
         <Slider {...settings}>
           {productList.map((item) => (
-            <div key={item.id}>
+            <Link to={"/products/2"} key={item.id}>
               <div className="bg-white flex gap-3  px-2 py-2 flex-col mx-[2px]  rounded-sm shadow-lg">
                 <div>
                   <img
@@ -142,7 +143,7 @@ const SlideSaleProduct = () => {
                 </div>
                 <SoldProgressBar sold={item.sold} />
               </div>
-            </div>
+            </Link>
           ))}
         </Slider>
       </div>

@@ -15,16 +15,23 @@ const Order = require("../models/orderModel");
 
 //! Register
 const createUser = asyncHandler(async (req, res) => {
-  const email = req.body.email;
-  const findUser = await User.findOne({ email: email });
-  if (!findUser) {
-    //Create a new user
-    const newUser = await User.create(req.body); // Sử dụng await để đợi hoàn thành việc tạo người dùng
-    res.json(newUser);
-  } else {
-    //User already exists
-    throw new Error("Tài khoản này đã tồi tại");
+  const { email, mobile } = req.body;
+
+  // Check if the email already exists
+  const findUserByEmail = await User.findOne({ email });
+  if (findUserByEmail) {
+    throw new Error("Tài khoản với email này đã tồn tại");
   }
+
+  // Check if the mobile number already exists
+  const findUserByMobile = await User.findOne({ mobile });
+  if (findUserByMobile) {
+    throw new Error("Số điện thoại này đã tồn tại");
+  }
+
+  // Create a new user if neither email nor mobile number exists
+  const newUser = await User.create(req.body);
+  res.json(newUser);
 });
 
 //! Login
