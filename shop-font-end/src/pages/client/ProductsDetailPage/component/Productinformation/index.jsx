@@ -68,29 +68,33 @@ const ProductInformation = ({ product }) => {
 
         {/* Review */}
         <div>
-          {showFullReview ? (
+          {product.review ? (
             <>
-              <div className="mt-4">
-                <h1 className="font-bold mb-2 text-[22px]">
-                  {product.review.title}
-                </h1>
-                <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
-                  <div className="w-full">
-                    <div className="mt-4">
-                      {product.review.content.map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
-                      ))}
+              {showFullReview ? (
+                <div className="mt-4">
+                  <h1 className="font-bold mb-2 text-[22px]">
+                    {product.review.title}
+                  </h1>
+                  <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+                    <div className="w-full">
+                      <div className="mt-4">
+                        {product.review.content.map((paragraph, index) => (
+                          <p key={index}>{paragraph}</p>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="blur-sm">{product.review.title}</div>
+              )}
+              <button className="mt-2 text-blue-500" onClick={toggleReview}>
+                {showFullReview ? "Thu gọn ▲" : "Đọc tiếp bài viết ▼"}
+              </button>
             </>
           ) : (
-            <div className="blur-sm">{product.review.title}</div>
+            <div className="text-gray-500">Sản phẩm này không có mô tả</div>
           )}
-          <button className="mt-2 text-blue-500" onClick={toggleReview}>
-            {showFullReview ? "Thu gọn ▲" : "Đọc tiếp bài viết ▼"}
-          </button>
         </div>
       </div>
     </div>
