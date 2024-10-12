@@ -5,7 +5,6 @@ import React, { useRef, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { instance } from "../../../configs/instance";
 import FooterLayoutClient from "../../../layouts/client/components/footer";
 import Header from "./component/Header";
@@ -22,9 +21,10 @@ const Register = () => {
         return response.data;
       } catch (error) {
         console.log("🚀 ~ mutationFn:async ~ error:", error);
+        throw error;
       }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       message.success("Đăng ký thành công!");
       navigate("/login");
     },
@@ -58,10 +58,10 @@ const Register = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
         }}
-        className="w-full h-[90vh] flex relative z-99 bg-white"
+        className="w-full h-[94vh] flex relative z-99 bg-white"
       >
         <Form
-          className="absolute left-[10%] top-[10%] sm:w-[400px] rounded-xl"
+          className="absolute left-[10%] top-[5%] sm:w-[400px] rounded-xl"
           name="form_item_path"
           layout="vertical"
           onFinish={onFinish}
@@ -74,9 +74,12 @@ const Register = () => {
             label="Email"
             rules={[
               {
-                message: "vui lòng nhập email!",
                 required: true,
+                message: "Vui lòng nhập email!",
+              },
+              {
                 type: "email",
+                message: "Email không đúng định dạng!",
               },
             ]}
           >
@@ -85,15 +88,38 @@ const Register = () => {
               placeholder="Nhập email"
             />
           </Form.Item>
+
+          <Form.Item
+            className="text-black font-bold"
+            name="mobile"
+            label="Số điện thoại"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập số điện thoại!",
+              },
+              {
+                pattern: /^[0-9]{10,11}$/,
+                message: "Số điện thoại phải có 10-11 chữ số!",
+              },
+            ]}
+          >
+            <Input
+              className="border-gray-700 font-mono border h-[48px]"
+              placeholder="Nhập số điện thoại"
+            />
+          </Form.Item>
           <Form.Item
             className="text-black font-bold"
             name="password"
             label="Mật khẩu"
             rules={[
               {
-                message: "Vui lòng nhập mật khẩu!",
                 required: true,
+                message: "Vui lòng nhập mật khẩu!",
                 min: 6,
+                max: 20,
+                message: "Mật khẩu phải dài từ 6 đến 20 ký tự!",
               },
             ]}
           >
@@ -108,14 +134,24 @@ const Register = () => {
           </Form.Item>
           <Form.Item
             className="text-black font-bold"
-            name="confirmpassword"
+            name="confirmPassword"
             label="Nhập lại mật khẩu"
+            dependencies={["password"]}
             rules={[
               {
-                message: "Vui lòng nhập lại mật khẩu!",
                 required: true,
-                min: 6,
+                message: "Vui lòng nhập lại mật khẩu!",
               },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Mật khẩu và xác nhận mật khẩu không trùng khớp!")
+                  );
+                },
+              }),
             ]}
           >
             <Input.Password
