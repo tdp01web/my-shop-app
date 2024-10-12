@@ -7,15 +7,15 @@ const TechNews = ({ product }) => {
       <ul className="list-none space-y-4">
         {techNews && techNews.length > 0 ? (
           techNews.map((item, index) => (
-            <li key={index} className="flex gap-x-4 ">
-              <img src={item.image} alt="" className="w-[88px]" />
+            <li key={index} className="flex gap-x-4">
+              <img src={item.image} alt={item.title} className="w-[88px]" />
               <a href={item.link} className="text-black font-400 text-[16px]">
                 {item.title}
               </a>
             </li>
           ))
         ) : (
-          <li className="text-gray-500">Không có tin tức nào.</li>
+          <li className="text-gray-500 text-center">Không có tin tức nào.</li>
         )}
       </ul>
     </div>

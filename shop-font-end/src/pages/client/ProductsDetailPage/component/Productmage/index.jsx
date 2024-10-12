@@ -4,7 +4,12 @@ import "slick-carousel/slick/slick.css";
 import ImageSale from "../sale/iamgeSale";
 
 /* eslint-disable react/prop-types */
-const ProductImage = ({ product, currentImageIndex, setCurrentImageIndex }) => {
+const ProductImage = ({
+  product,
+  selectedImage,
+  currentImageIndex,
+  setCurrentImageIndex,
+}) => {
   const NextArrow = (props) => {
     const { className, style, onClick } = props;
     return (
@@ -46,46 +51,41 @@ const ProductImage = ({ product, currentImageIndex, setCurrentImageIndex }) => {
     slidesToShow: 5,
     slidesToScroll: 1,
     arrows: true,
+    autoplay: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    autoplay: true,
     autoplaySpeed: 1500,
   };
 
-  if (!product || !product.images || product.images.length === 0) {
-    return <div>Loading...</div>;
-  }
-
-  const safeIndex = Math.max(
-    0,
-    Math.min(currentImageIndex, product.images.length - 1)
-  );
-  const currentImage = product.images[safeIndex];
+  const imagesToShow = selectedImage
+    ? [{ url: selectedImage }, ...product.images]
+    : product.images;
 
   return (
-    <div className="col-span-1">
-      <img
-        className="w-full md:h-[30%] object-cover object-center rounded-lg"
-        src={currentImage.url}
-        alt={product.name}
-      />
+    <div className="col-span-1 w-full">
+      <div className="relative w-full h-0 pb-[100%]">
+        <img
+          className="absolute inset-0 w-full h-full object-cover object-center rounded-lg"
+          src={imagesToShow[currentImageIndex]?.url}
+          alt={product.title}
+        />
+      </div>
+
       <div className="relative mt-10">
         <Slider {...settings}>
-          {product.images.map((image, index) => (
-            <div key={index} className="p-1">
+          {imagesToShow.map((image, index) => (
+            <div key={index} className="w-full h-[0] pb-[100%] relative">
               <img
                 src={image.url}
                 alt={`Slide ${index + 1}`}
-                className="w-[100%] h-[100%] md:h-[60px] object-cover cursor-pointer"
+                className="absolute inset-0 w-full h-full p-1 object-cover cursor-pointer"
                 onClick={() => setCurrentImageIndex(index)}
               />
             </div>
           ))}
         </Slider>
       </div>
-      <div>
-        <ImageSale product={product} />
-      </div>
+      <ImageSale product={product} />
     </div>
   );
 };
