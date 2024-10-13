@@ -5,7 +5,7 @@ import TextArea from "antd/es/input/TextArea";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { instance } from "../../../../configs/instance";
 
-const ProductEditPage = () => {
+const EditUser = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
@@ -118,4 +118,4 @@ const ProductEditPage = () => {
   );
 };
 
-export default ProductEditPage;
+export default EditUser;

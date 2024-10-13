@@ -1,56 +1,62 @@
 import { BackwardFilled, Loading3QuartersOutlined, PlusOutlined } from "@ant-design/icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, InputNumber, message, Select, Upload } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import { Link, useNavigate } from "react-router-dom";
-import { instance } from "../../../../configs/instance";
+import { usePostSSD } from "../../../../../hooks/mutations/usePostSSD";
 
-export const AddUser = () => {
+const AddSSD = () => {
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (user) => {
-      try {
-        return await instance.post(`/user/create`, user);
-      } catch (error) {
-        throw new Error(error);
-      }
-    },
+  const { mutate, isPending } = usePostSSD({
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Thêm tài khoản",
+        content: "Thêm SSD thành công",
       });
       setTimeout(() => {
-        navigate('/admin/users');
+        navigate('/admin/ssd');
       }, 1000);
       form.resetFields();
     },
     onError(error) {
-      messageApi.open({
-        type: "error",
-        content: error.message,
-      });
+      if (error.response?.data) {
+        const { message } = error.response.data;
+        if (message.includes("duplicate key error")) {
+          messageApi.open({
+            type: "error",
+            content: "SSD đã tồn tại. Vui lòng chọn tên khác.",
+          });
+        } else {
+          messageApi.open({
+            type: "error",
+            content: message,
+          });
+        }
+      } else {
+        messageApi.open({
+          type: "error",
+          content: "Đã xảy ra lỗi. Vui lòng thử lại.",
+        });
+      }
     },
   });
   const onFinish = (values) => {
-    // mutate(values);
+    mutate(values);
   };
   return (
     <div className="">
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Thêm tài khoản</h1>
+        <h1 className="font-semibold text-2xl">Thêm SSD</h1>
         <Button type="primary">
-          <Link to="/admin/users">
+          <Link to="/admin/ssd">
             <BackwardFilled /> Quay lại
           </Link>
         </Button>
       </div>
       <div className="mx-auto max-w-3xl">
         <Form
+          form={form}
           name="basic"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
@@ -60,28 +66,9 @@ export const AddUser = () => {
           disabled={isPending}
         >
           <Form.Item
-            label="Tên tài khoản"
-            name="title"
-            rules={[{ required: true, message: "Tên tài khoản bắt buộc phải điền" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: "Giá sản phẩm bắt buộc phải điền" },
-            {
-              type: "email",
-              message: "Mời nhập đúng định dạng email"
-            }
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Mật khẩu bắt buộc phải điền" }]}
+            label="Tên SSD"
+            name="capacity"
+            rules={[{ required: true, message: "Tên SSD bắt buộc phải điền" }]}
           >
             <Input />
           </Form.Item>
@@ -102,3 +89,5 @@ export const AddUser = () => {
     </div>
   );
 };
+
+export default AddSSD;
