@@ -2,7 +2,7 @@ import { Layout } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
 import HeaderLayoutAdmin from './components/header';
-import SidebarLayoutAdmin from './components/sidebar';
+import SidebarLayoutAdmin from './components/sidebar/SidebarLayoutAdmin';
 import MainLayoutAdmin from './components/main';
 const { Footer } = Layout;
 const LayoutAdmin = () => {
@@ -25,7 +25,7 @@ const LayoutAdmin = () => {
         <SidebarLayoutAdmin />
         <MainLayoutAdmin />
       </Layout>
-      <Footer className='text-center font-bold text-[17px]'>MANAGE SNEAKER-CUTI</Footer>
+      <Footer className='font-bold text-[17px] text-center'>MANAGE SNEAKER-CUTI</Footer>
     </Layout>
   );
 };

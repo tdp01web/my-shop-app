@@ -27,6 +27,10 @@ var productSchema = new mongoose.Schema(
       ref: "Brand",
       // required: true,
     },
+    lcd: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "LCD",
+    },
     images: [
       {
         public_id: String,

@@ -1,6 +1,34 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import Loader from "../components/Loading";
+import ListBrand from "../pages/admin/brand";
+import AddBrand from "../pages/admin/brand/addBrand";
+import EditBrand from "../pages/admin/brand/editBrand";
+import ListCategory from "../pages/admin/categories";
+import AddCategory from "../pages/admin/categories/addCategory";
+import EditCategory from "../pages/admin/categories/editCategory";
+import ListProduct from "../pages/admin/products";
+import AddProduct from "../pages/admin/products/addProduct";
+import EditProduct from "../pages/admin/products/editProduct";
+import { ListUser } from "../pages/admin/user";
+import { AddUser } from "../pages/admin/user/addUser";
+import EditUser from "../pages/admin/user/editUser";
+import ListCart from "../pages/admin/carts";
+import Dashboard from "../pages/admin/dashboard";
+import ListComment from "../pages/admin/comments";
+import { ListVouchers } from "../pages/admin/vouchers";
+import ListCPU from "../pages/admin/varriantsProduct/cpu";
+import AddCPU from "../pages/admin/varriantsProduct/cpu/addCPU";
+import EditCPU from "../pages/admin/varriantsProduct/cpu/editCPU";
+import ListGPU from "../pages/admin/varriantsProduct/gpu";
+import AddGPU from "../pages/admin/varriantsProduct/gpu/addGPU";
+import EditGPU from "../pages/admin/varriantsProduct/gpu/editGPU";
+import ListRAM from "../pages/admin/varriantsProduct/ram";
+import AddRAM from "../pages/admin/varriantsProduct/ram/addRAM";
+import EditRAM from "../pages/admin/varriantsProduct/ram/editRAM";
+import ListSSD from "../pages/admin/varriantsProduct/ssd";
+import AddSSD from "../pages/admin/varriantsProduct/ssd/addSSD";
+import EditSSD from "../pages/admin/varriantsProduct/ssd/editSSD";
 
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
@@ -8,16 +36,7 @@ const LayoutClient = lazy(() => import("../layouts/client"));
 const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 const SigninPage = lazy(() => import("../pages/SigninPage"));
 const SignupPage = lazy(() => import("../pages/SignupPage"));
-const Collection = lazy(()=> import("../pages/client/Collection/Collection"))
-const ListCategoriesAdmin = lazy(() =>
-  import("../pages/admin/categories/ListCategoriesAdmin")
-);
-const AddEditCategory = lazy(() =>
-  import("../pages/admin/categories/component/AddCategory")
-);
-const ListProductAdmin = lazy(() =>
-  import("../pages/admin/products/ListProductAdmin")
-);
+const Collection = lazy(() => import("../pages/client/Collection/Collection"))
 const AboutsPage = lazy(() => import("../pages/client/AboutsPage"));
 const BlogPage = lazy(() => import("../pages/client/PlogPage"));
 const Installment = lazy(() => import("../pages/client/Installment"));
@@ -44,20 +63,8 @@ const OrdersHistory = lazy(() =>
 const OrderDetail = lazy(() => import("../pages/client/Account/OrderDetail"));
 const NotFoundSearch = lazy(() => import("../pages/NotFoundSearch"));
 const PaymentManual = lazy(() => import("../pages/client/PaymentManual"));
-const CategoryEditPage = lazy(() =>
-  import("../pages/admin/categories/component/EditCategory")
-);
 const VoucherPage = lazy(() => import("../pages/client/Voucher/VoucherPage"));
-const ProductEditPage = lazy(() =>
-  import("../pages/admin/products/editProduct")
-);
-const ProductAddPage = lazy(() => import("../pages/admin/products/addProduct"));
-const Dashboard = lazy(() => import("../pages/admin/dashboard"));
-const UserPage = lazy(() => import("../pages/admin/user/ListUser"));
-const UserAddPage = lazy(() => import("../pages/admin/user/addUser"));
-const CartPageAdmin = lazy(() => import("../pages/admin/carts/ListCart"));
-const ListComment = lazy(() => import("../pages/admin/comments/ListComment"));
-const ListVouchers = lazy(() => import("../pages/admin/vouchers/ListVouchers"));
+
 
 const Router = () => {
   return (
@@ -99,19 +106,41 @@ const Router = () => {
           {/* Voucher */}
           <Route path="voucher" element={<VoucherPage />} />
 
+          // #region Router admin
           {/* Layout Admin */}
           <Route path="admin" element={<LayoutAdmin />}>
             <Route index element={<Dashboard />} />
+            {/* Brand */}
+            <Route path="brand" element={<ListBrand />} />
+            <Route path="brand/add" element={<AddBrand />} />
+            <Route path="brand/:id/edit" element={<EditBrand />} />
+            {/* Category */}
+            <Route path="categories" element={<ListCategory />} />
+            <Route path="categories/add" element={<AddCategory />} />
+            <Route path="categories/:id/edit" element={<EditCategory />} />
+            {/* Varriants */}
+            <Route path="cpu" element={<ListCPU />} />
+            <Route path="cpu/add" element={<AddCPU />} />
+            <Route path="cpu/:id/edit" element={<EditCPU />} />
+            <Route path="gpu" element={<ListGPU />} />
+            <Route path="gpu/add" element={<AddGPU />} />
+            <Route path="gpu/:id/edit" element={<EditGPU />} />
+            <Route path="ram" element={<ListRAM />} />
+            <Route path="ram/add" element={<AddRAM />} />
+            <Route path="ram/:id/edit" element={<EditRAM />} />
+            <Route path="ssd" element={<ListSSD />} />
+            <Route path="ssd/add" element={<AddSSD />} />
+            <Route path="ssd/:id/edit" element={<EditSSD />} />
             {/* Products */}
-            <Route path="products" element={<ListProductAdmin />} />
-            <Route path="products/add" element={<ProductAddPage />} />
-            <Route path="products/:id/edit" element={<ProductEditPage />} />
+            <Route path="products" element={<ListProduct />} />
+            <Route path="products/add" element={<AddProduct />} />
+            <Route path="products/:id/edit" element={<EditProduct />} />
             {/* Users */}
-            <Route path="users" element={<UserPage />} />
-            <Route path="users/add" element={<UserAddPage />} />
-            <Route path="users/:id/edit" element={<ProductEditPage />} />
+            <Route path="users" element={<ListUser />} />
+            <Route path="users/add" element={<AddUser />} />
+            <Route path="users/:id/edit" element={<EditUser />} />
             {/* Cart */}
-            <Route path="carts" element={<CartPageAdmin />} />
+            <Route path="carts" element={<ListCart />} />
             {/* Comments */}
             <Route path="comments" element={<ListComment />} />
             {/* Vouchers */}

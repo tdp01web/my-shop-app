@@ -1,11 +1,11 @@
-import { BackwardFilled, Loading3QuartersOutlined ,PlusOutlined } from "@ant-design/icons";
+import { BackwardFilled, Loading3QuartersOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, InputNumber, message, Select, Upload } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Link, useNavigate } from "react-router-dom";
 import { instance } from "../../../../configs/instance";
 
-export const UserAddPage = () => {
+export const AddUser = () => {
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();

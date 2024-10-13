@@ -13,6 +13,8 @@ const ProductList = ({
   seeAllLink,
   titleSale,
 }) => {
+  console.log("🚀 ~ file: ProductList.jsx:products", products);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -89,7 +91,7 @@ const ProductList = ({
       <div className="w-full h-full ">
         <Slider {...settings}>
           {products.map((product) => (
-            <Product key={product.id} {...product} />
+            <Product key={product._id} {...product} />
           ))}
         </Slider>
       </div>
