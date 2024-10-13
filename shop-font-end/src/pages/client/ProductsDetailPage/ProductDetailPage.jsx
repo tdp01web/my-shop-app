@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { instance } from "../../../config/instance";
 import ProductMainSection from "./component/comon/ProductMainSection";
 import Review from "./component/Review";
 import ProductInfoSection from "./component/comon/ProductInfoSection";
+import { instance } from "../../../configs/instance";
 
 const ProductDetailPage = () => {
   const [selectedColor, setSelectedColor] = useState("");
@@ -21,7 +21,7 @@ const ProductDetailPage = () => {
     queryKey: ["PRODUCTS", id],
     queryFn: async () => {
       const { data } = await instance.get(`product/getaProduct/${id}`);
-      if (!data) throw new Error("Product does not exist");
+      if (!data) throw new Error("Sản phẩm không tồn tại");
       return data;
     },
   });
