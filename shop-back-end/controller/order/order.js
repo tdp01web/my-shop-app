@@ -56,7 +56,7 @@ const createOrder = asyncHandler(async (req, res) => {
         currency: "vnd",
       };
     } else if (paymentMethod === "Chuyển Khoản Ngân Hàng") {
-      paymentStatus = "Đã Thanh Toán"; // Giả sử thanh toán online thành công
+      paymentStatus = "Đã Thanh Toán";
       paymentIntent = {
         id: uniqid(),
         method: "Chuyển Khoản Ngân Hàng",
@@ -91,7 +91,7 @@ const createOrder = asyncHandler(async (req, res) => {
       },
       paymentMethod: paymentMethod,
       paymentStatus: paymentStatus,
-      orderStatus: "Đang Xử Lý", // Trạng thái ban đầu của đơn hàng
+      orderStatus: "Đang Xử Lý",
       paymentIntent: paymentIntent,
     });
 

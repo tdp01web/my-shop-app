@@ -177,6 +177,7 @@ const getaProduct = asyncHandler(async (req, res) => {
     const product = await Product.findById(id)
       .populate("category")
       .populate("brand")
+      .populate("lcd")
       .populate({
         path: "variants",
         populate: ["color", "ram", "storage", "processor", "gpu"],
@@ -198,6 +199,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
     const products = await Product.find()
       .populate("category")
       .populate("brand")
+      .populate("lcd")
       .populate({
         path: "variants",
         populate: ["color", "ram", "storage", "processor", "gpu"],

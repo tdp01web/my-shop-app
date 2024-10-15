@@ -134,11 +134,7 @@ const Login = () => {
           </Button>
         </Form>
         <div className="absolute right-[10%]  bottom-0 w-[20%]">
-          <img
-            src="/images/dk-dn/untitled-1-03-20220324065349.png"
-            alt=""
-            srcset=""
-          />
+          <img src="/images/dk-dn/untitled-1-03-20220324065349.png" alt="" />
         </div>
         <Fade
           className="absolute bottom-0 left-[55%] w-[13%]"

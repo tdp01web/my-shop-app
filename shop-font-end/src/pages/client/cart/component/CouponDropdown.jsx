@@ -5,38 +5,58 @@ import {
   Cancel as CancelIcon,
 } from "@mui/icons-material";
 import { CiDiscount1 } from "react-icons/ci";
+import { instance } from "../../../../configs/instance";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-const couponData = [
-  {
-    id: 1,
-    code: "DAILY100",
-    discount: 100000,
-    minOrder: 300000,
-    expiry: "Thứ 2, 23:59 30 Thg 09, 2024",
-  },
-  {
-    id: 2,
-    code: "DAILY50",
-    discount: 50000,
-    minOrder: 100000,
-    expiry: "Thứ 2, 23:59 30 Thg 09, 2024",
-  },
-];
-
-export default function CouponDropdown() {
+export default function CouponDropdown({ data }) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedCoupon, setSelectedCoupon] = useState("");
+  const [selectedCoupon, setSelectedCoupon] = useState(null); // Thay đổi sang null
   const [manualCode, setManualCode] = useState("");
 
-  const handleCouponApply = (code) => {
-    setSelectedCoupon(code);
-    alert(`Bán đặt mã giảm giá "${code}" `);
+  const handleCouponApply = (coupon) => {
+    setSelectedCoupon(coupon);
+    alert(`Đã áp dụng mã giảm giá "${coupon.name}"`);
   };
 
-  // Clear the applied coupon
   const handleCouponCancel = () => {
-    setSelectedCoupon("");
+    setSelectedCoupon(null);
     alert(`Mã giảm giá đã được hủy bỏ!`);
+  };
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+    return new Date(dateString).toLocaleString("vi-VN", options);
+  };
+
+  const mutation = useMutation({
+    mutationFn: async (couponId) => {
+      const token = localStorage.getItem("token");
+      try {
+        const { data } = await instance.put(
+          "/cart/applyCoupon",
+          {
+            couponId: couponId,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        return data;
+      } catch (error) {
+        console.log("🚀 ~ mutationFn: ~ error:", error);
+      }
+    },
+  });
+
+  const handleApplyCoupon = (couponId) => {
+    mutation.mutate(couponId);
   };
 
   return (
@@ -56,26 +76,10 @@ export default function CouponDropdown() {
             isDropdownOpen ? "max-h-full" : "max-h-0"
           }`}
         >
-          <div className="mt-2 flex bg-[#ECECEC] rounded-md p-2">
-            <input
-              className="border border-gray-400 p-2 rounded-md flex-grow"
-              type="text"
-              placeholder="Nhập mã giảm giá/Phiếu mua hàng"
-              value={manualCode}
-              onChange={(e) => setManualCode(e.target.value)}
-            />
-            <button
-              className="bg-[#1982F9] text-white font-500 px-4 ml-2 rounded-md"
-              onClick={() => handleCouponApply(manualCode)}
-            >
-              Áp dụng
-            </button>
-          </div>
-
           <div className="h-full mt-2 space-y-2">
-            {couponData.map((coupon) => (
+            {data?.map((coupon) => (
               <div
-                key={coupon.id}
+                key={coupon._id}
                 className="flex items-center justify-between border border-gray-500 p-2 rounded-md"
               >
                 <div className="flex items-center">
@@ -83,26 +87,24 @@ export default function CouponDropdown() {
                     <img
                       src="/images/danhmucsp/ma-giam-gia.webp"
                       alt=""
-                      srcset=""
                       className=" object-cover"
                     />
                   </div>
                   <div className="ml-4">
                     <p className="text-[15px] font-semibold">
-                      Giảm {coupon.discount.toLocaleString()}đ
-                    </p>
-                    <p className="text-[13px] ">
-                      Đơn hàng từ {coupon.minOrder.toLocaleString()}K
+                      Giảm {coupon.discount}%
                     </p>
                     <p className="text-[14px] font-semibold">
-                      Mã {coupon.code}
+                      Mã {coupon.name}
                     </p>
-                    <p className="text-[13px] ">HSD: {coupon.expiry}</p>
+                    <p className="text-[13px]">
+                      HSD: {formatDate(coupon.expiry)}
+                    </p>
                   </div>
                 </div>
                 <button
                   className="bg-blue-500 w-[20%] md:w-[15%] text-white px-4 py-1 rounded-md"
-                  onClick={() => handleCouponApply(coupon.code)}
+                  onClick={() => handleApplyCoupon(coupon._id)}
                 >
                   Áp dụng
                 </button>
@@ -115,7 +117,7 @@ export default function CouponDropdown() {
       {selectedCoupon && (
         <div className="mt-4 p-4 bg-green-100 border border-green-400 rounded-md flex justify-between items-center">
           <p>
-            Mã giảm giá đã áp dụng: <strong>{selectedCoupon}</strong>
+            Mã giảm giá đã áp dụng: <strong>{selectedCoupon.code}</strong>{" "}
           </p>
           <button
             className="bg-red-500 text-white px-4 py-1 rounded-md flex items-center"

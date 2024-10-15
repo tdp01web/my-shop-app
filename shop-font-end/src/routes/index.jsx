@@ -36,7 +36,7 @@ const LayoutClient = lazy(() => import("../layouts/client"));
 const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 const SigninPage = lazy(() => import("../pages/SigninPage"));
 const SignupPage = lazy(() => import("../pages/SignupPage"));
-const Collection = lazy(() => import("../pages/client/Collection/Collection"))
+const Collection = lazy(() => import("../pages/client/Collection/Collection"));
 const AboutsPage = lazy(() => import("../pages/client/AboutsPage"));
 const BlogPage = lazy(() => import("../pages/client/PlogPage"));
 const Installment = lazy(() => import("../pages/client/Installment"));
@@ -64,7 +64,7 @@ const OrderDetail = lazy(() => import("../pages/client/Account/OrderDetail"));
 const NotFoundSearch = lazy(() => import("../pages/NotFoundSearch"));
 const PaymentManual = lazy(() => import("../pages/client/PaymentManual"));
 const VoucherPage = lazy(() => import("../pages/client/Voucher/VoucherPage"));
-
+const ProductDetail = lazy(() => import("../pages/client/ProductDetail"));
 
 const Router = () => {
   return (
@@ -87,10 +87,11 @@ const Router = () => {
               <Route path="orders-history" element={<OrdersHistory />} />
               <Route path="orders/:id" element={<OrderDetail />} />
             </Route>
-            <Route path="products">
+            {/* <Route path="products">
               <Route index element={<ProductPage />} />
-              <Route path=":id" element={<ProductDetailPage />} />
-            </Route>
+              <Route path=":id" element={<ProductDetail />} />
+            </Route> */}
+            <Route path="products/:id" element={<ProductDetail />} />
             <Route path="contacts" element={<ContactPage />} />
             <Route path="abouts" element={<AboutsPage />} />
             <Route path="cart" element={<CartPage />} />
@@ -102,10 +103,8 @@ const Router = () => {
             <Route path="blog" element={<BlogPage />} />
             <Route path="collection" element={<Collection />} />
           </Route>
-
           {/* Voucher */}
           <Route path="voucher" element={<VoucherPage />} />
-
           // #region Router admin
           {/* Layout Admin */}
           <Route path="admin" element={<LayoutAdmin />}>
@@ -146,7 +145,6 @@ const Router = () => {
             {/* Vouchers */}
             <Route path="vouchers" element={<ListVouchers />} />
           </Route>
-
           {/* Authentication */}
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

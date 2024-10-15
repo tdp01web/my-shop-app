@@ -86,10 +86,19 @@ const getCart = asyncHandler(async (req, res) => {
   try {
     let cart = await Cart.findOne({ orderedBy: userId })
       .populate("products.product")
-      .populate("products.variant");
+      .populate({
+        path: "products.variant",
+        populate: [
+          { path: "color", select: "title" },
+          { path: "ram", select: "size" },
+          { path: "storage", select: "capacity" },
+          { path: "processor", select: "name" },
+          { path: "gpu", select: "name" },
+        ],
+      });
 
-    if (!cart) {
-      return res.status(404).json({ message: "Giỏ hàng trống." });
+    if (!cart || cart.products.length === 0) {
+      return res.status(200).json({ message: "Giỏ hàng trống.", products: [] });
     }
 
     // Cập nhật giá sản phẩm nếu có thay đổi
@@ -153,19 +162,24 @@ const clearCart = asyncHandler(async (req, res) => {
 
 // Áp dụng mã giảm giá
 const applyCoupon = asyncHandler(async (req, res) => {
-  const { couponCode } = req.body;
+  const { couponId } = req.body; // Lấy couponId từ yêu cầu
   const userId = req.user._id;
   validateMongoDbId(userId);
 
   try {
-    // Tìm mã giảm giá theo couponCode
-    const coupon = await Coupon.findOne({ name: couponCode });
+    // Tìm mã giảm giá theo couponId
+    const coupon = await Coupon.findById(couponId);
 
     // Kiểm tra mã giảm giá có tồn tại và chưa hết hạn
-    if (!coupon || coupon.expiry < new Date()) {
-      return res
-        .status(400)
-        .json({ message: "Mã giảm giá không hợp lệ hoặc đã hết hạn." });
+    if (!coupon) {
+      return res.status(400).json({ message: "Mã giảm giá không hợp lệ." });
+    }
+
+    const expiryDate = new Date(coupon.expiry);
+    const currentDate = new Date();
+
+    if (expiryDate < currentDate) {
+      return res.status(400).json({ message: "Mã giảm giá đã hết hạn." });
     }
 
     // Kiểm tra nếu trường usedBy có tồn tại và là mảng
@@ -197,6 +211,44 @@ const applyCoupon = asyncHandler(async (req, res) => {
 
     res.status(200).json(cart);
   } catch (error) {
+    console.error("Lỗi khi áp dụng mã giảm giá:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+const updateCart = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const { productId, variantId } = req.params; // Lấy productId và variantId từ tham số
+  const { count } = req.body; // Số lượng mới từ body
+  validateMongoDbId(userId);
+
+  try {
+    let cart = await Cart.findOne({ orderedBy: userId });
+
+    if (!cart) {
+      return res.status(404).json({ message: "Giỏ hàng không tồn tại." });
+    }
+
+    // Tìm sản phẩm trong giỏ hàng
+    const productIndex = cart.products.findIndex(
+      (p) =>
+        p.product.toString() === productId && p.variant.toString() === variantId
+    );
+
+    if (productIndex === -1) {
+      return res
+        .status(404)
+        .json({ message: "Sản phẩm không tồn tại trong giỏ hàng." });
+    }
+
+    // Cập nhật số lượng sản phẩm
+    cart.products[productIndex].count = count;
+
+    await cart.calculateCartTotal(); // Tính lại tổng tiền giỏ hàng
+    await cart.save(); // Lưu giỏ hàng đã cập nhật
+
+    res.status(200).json(cart);
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
@@ -207,4 +259,5 @@ module.exports = {
   removeFromCart,
   clearCart,
   applyCoupon,
+  updateCart,
 };

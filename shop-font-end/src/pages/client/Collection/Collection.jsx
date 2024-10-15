@@ -1,5 +1,5 @@
-import SvgIcon from '@mui/material/SvgIcon';
-import ProductList from './component/ProductList';
+import SvgIcon from "@mui/material/SvgIcon";
+import ProductList from "./component/ProductList";
 function HomeIcon(props) {
   return (
     <SvgIcon {...props}>
@@ -101,24 +101,25 @@ const Collection = () => {
       reviews: 1,
     },
   ];
-  
+
   return (
     <div className="relative z-20 flex flex-col gap-6 2xl:w-[80%] 2xl:mx-auto md:px-10">
       <div className="ml-3 mt-3 flex items-center gap-3 whitespace-nowrap overflow-hidden">
-        <HomeIcon color="primary" /> 
+        <HomeIcon color="primary" />
         <span className="text-[#1982F9] text-[16px] font-bold">Trang chủ</span>
         <span className="text-gray-500">/</span>
         <span className="text-[16px] font-semibold">Laptop</span>
       </div>
 
-      <img src="/images/banner-filter.webp" className="w-full h-auto rounded-lg shadow-md" />
+      <img
+        src="/images/banner-filter.webp"
+        className="w-full h-auto rounded-lg shadow-md"
+      />
       <div className="mx-auto w-full">
-
-        <ProductList products={products}/>
-      
+        <ProductList products={products} />
       </div>
     </div>
   );
-}
+};
 
 export default Collection;
