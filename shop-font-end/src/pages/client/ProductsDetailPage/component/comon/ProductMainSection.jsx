@@ -10,6 +10,10 @@ const ProductMainSection = ({
   currentImageIndex,
   setCurrentImageIndex,
 }) => {
+  console.log(
+    "🚀 ~ file: ProductMainSection.jsx:ProductMainSection:product",
+    product
+  );
   return (
     <div className="bg-white w-full lg:w-[80%] mx-auto lg:p-4 mt-10 rounded-md">
       <main className="p-4">
