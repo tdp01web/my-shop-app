@@ -8,6 +8,12 @@ import useGetProfile from "../../hooks/queries/useGetProfile";
 const Sidebar = () => {
   const { data } = useGetProfile();
 
+  const handleLogOut = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
   if (!data) {
     return <></>;
   }
@@ -65,7 +71,10 @@ const Sidebar = () => {
           <p>Sản phẩm đã xem</p>
         </NavLink>
 
-        <div className="flex items-center py-3 px-5 gap-x-3 text-[#111] hover:text-[#e30019] transition-all cursor-pointer">
+        <div
+          onClick={handleLogOut}
+          className="flex items-center py-3 px-5 gap-x-3 text-[#111] hover:text-[#e30019] transition-all cursor-pointer"
+        >
           <FaSignOutAlt />
 
           <p>Đăng xuất</p>
