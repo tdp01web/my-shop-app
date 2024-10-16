@@ -2,8 +2,16 @@ import { FaUser, FaSignOutAlt, FaEye } from "react-icons/fa";
 import { FaCartShopping, FaLocationDot } from "react-icons/fa6";
 
 import { NavLink } from "react-router-dom";
+import { getFullName } from "../../pages/client/Account/AccountInformation";
+import useGetProfile from "../../hooks/queries/useGetProfile";
 
 const Sidebar = () => {
+  const { data } = useGetProfile();
+
+  if (!data) {
+    return <></>;
+  }
+
   return (
     <aside className="bg-white rounded h-full">
       <header className="p-4 flex items-center gap-x-6 border-b border-b-[#CFCFCF] mb-1.5">
@@ -13,7 +21,9 @@ const Sidebar = () => {
           className="w-[48px] h-[48px] rounded-full object-cover"
         />
 
-        <p className="text-[18px] font-semibold text-[#111]">Bùi Xuân Đạt</p>
+        <p className="text-[18px] font-semibold text-[#111]">
+          {getFullName(data)}
+        </p>
       </header>
 
       <div className="pb-6">
