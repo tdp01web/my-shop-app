@@ -10,7 +10,7 @@ import CartItems from "./component/CartItems";
 import AddressStep from "./component/AddressStep";
 import Pay from "./component/Pay";
 import OrderConfirmation from "./component/OrderConfirmation";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { instance } from "../../../configs/instance";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
@@ -22,6 +22,7 @@ const CartPage = () => {
   const [orderInfo, setOrderInfo] = useState(null);
   const [addressData, setAddressData] = useState(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: cartData, refetch } = useQuery({
     queryKey: ["CartPage"],
@@ -61,12 +62,14 @@ const CartPage = () => {
     },
     onSuccess: (data) => {
       message.success("Đặt hàng thành công");
+      queryClient.invalidateQueries(["cart"]);
       setActiveStep(3);
       setOrderInfo(data.order);
     },
     onError: (error) => {
       message.error("Đặt hàng thất bại, vui lòng thử lại!");
       navigate("/");
+      console.log(error);
     },
   });
 

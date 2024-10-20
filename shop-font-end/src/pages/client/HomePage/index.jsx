@@ -10,20 +10,20 @@ import { useQuery } from "@tanstack/react-query";
 import { instance } from "../../../configs/instance";
 
 const HomePage = () => {
-  const { data, loading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["Data_HomePage"],
     queryFn: async () => {
       const { data } = await instance.get("/product/getAllProduct");
-      // console.log("products", data);
       return data;
     },
-    onSuccess: (data) => {
-      console.log(data);
-    },
+    staleTime: 4 * 60 * 1000, // Dữ liệu sẽ được coi là mới trong 4 phút
+    refetchOnWindowFocus: true, // Lấy lại dữ liệu khi cửa sổ được focus
+    refetchOnMount: true, // Lấy lại dữ liệu khi component được remount
     onError: (error) => {
       console.log(error);
     },
   });
+
   return (
     <div className="relative z-20 flex flex-col gap-4 2xl:w-[80%] 2xl:mx-auto md:px-10">
       <AlertImage />

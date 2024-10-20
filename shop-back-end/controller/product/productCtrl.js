@@ -189,6 +189,32 @@ const getaProduct = asyncHandler(async (req, res) => {
 
     res.status(200).json(product);
   } catch (error) {
+    console.error("Error fetching product:", error); // Log lỗi
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//! API lấy danh sách sản phẩm cùng danh mục (tối đa 5 sản phẩm)
+const getRelatedProducts = asyncHandler(async (req, res) => {
+  try {
+    const { categoryId, excludeId } = req.params;
+
+    // Tìm sản phẩm cùng category, ngoại trừ sản phẩm hiện tại
+    const relatedProducts = await Product.find({
+      category: categoryId,
+      _id: { $ne: excludeId }, // Loại trừ sản phẩm hiện tại
+    })
+      .limit(5)
+      .populate("brand")
+      .populate("lcd")
+      .populate({
+        path: "variants",
+        populate: ["color", "ram", "storage", "processor", "gpu"],
+      });
+
+    res.status(200).json(relatedProducts);
+  } catch (error) {
+    console.error("Error fetching related products:", error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -372,4 +398,5 @@ module.exports = {
   getVariant,
   updateProductVariant,
   deleteProductVariant,
+  getRelatedProducts,
 };

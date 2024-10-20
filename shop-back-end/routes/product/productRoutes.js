@@ -11,6 +11,7 @@ const {
   getVariant,
   updateProductVariant,
   deleteProductVariant,
+  getRelatedProducts,
 } = require("../../controller/product/productCtrl");
 const router = express.Router();
 const {
@@ -28,6 +29,10 @@ router.post("/create", authMiddleware, isAdmin, createProduct);
 router.get("/getaProduct/:id", getaProduct);
 //! Get all products
 router.get("/getAllProduct", getAllProducts);
+
+//! Lấy sản phẩm cùng loại
+router.get("/getRelatedProducts/:categoryId/:excludeId", getRelatedProducts);
+
 //!
 router.put("/wishlist", authMiddleware, addToWishlist);
 router.put("/rating", authMiddleware, rateProduct);

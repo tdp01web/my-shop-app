@@ -5,6 +5,7 @@ const validateMongoDbId = require("../../utils/validateMongodbId");
 const Product = require("../../models/product/productModel");
 const Cart = require("../../models/cartModel");
 const Order = require("../../models/orderModel");
+const productVariantModel = require("../../models/product/productVariantModel");
 
 const createOrder = asyncHandler(async (req, res) => {
   const { paymentMethod, couponApplied, shippingAddress } = req.body;
@@ -29,7 +30,7 @@ const createOrder = asyncHandler(async (req, res) => {
     let userCart = await Cart.findOne({ orderedBy: user._id });
     let finalAmount = 0;
 
-    // Kiểm tra nếu có áp dụng mã giảm giá, nếu không lấy tổng giá trị giỏ hàng
+    // Kiểm tra nếu có áp dụng mã giảm giá
     if (couponApplied && userCart.totalAfterDiscount) {
       finalAmount = userCart.totalAfterDiscount;
     } else {
@@ -38,8 +39,6 @@ const createOrder = asyncHandler(async (req, res) => {
 
     // Logic tính phí vận chuyển (nếu có)
     const shippingFee = 0; // Bạn có thể cập nhật logic tính phí vận chuyển tại đây
-
-    // Tính tổng số tiền phải trả
     const totalPrice = finalAmount + shippingFee;
 
     // Xử lý thông tin thanh toán dựa trên phương thức thanh toán
@@ -98,7 +97,7 @@ const createOrder = asyncHandler(async (req, res) => {
     await newOrder.save();
 
     // Cập nhật kho sản phẩm và số lượng đã bán
-    let update = userCart.products.map((item) => ({
+    let updateProducts = userCart.products.map((item) => ({
       updateOne: {
         filter: { _id: item.product },
         update: {
@@ -107,7 +106,21 @@ const createOrder = asyncHandler(async (req, res) => {
       },
     }));
 
-    await Product.bulkWrite(update, {});
+    await Product.bulkWrite(updateProducts, {});
+
+    // Cập nhật kho sản phẩm cho biến thể (nếu có)
+    let updateVariants = userCart.products
+      .filter((item) => item.variant) // Chỉ cập nhật các sản phẩm có biến thể
+      .map((item) => ({
+        updateOne: {
+          filter: { _id: item.variant },
+          update: {
+            $inc: { quantity: -item.count },
+          },
+        },
+      }));
+
+    await productVariantModel.bulkWrite(updateVariants, {});
 
     // Xóa giỏ hàng sau khi tạo đơn hàng thành công
     await Cart.findOneAndDelete({ orderedBy: user._id });
@@ -118,6 +131,53 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 });
 
+// API lấy danh sách tất cả các đơn hàng của một người dùng
+const getUserOrders = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+
+  validateMongoDbId(_id);
+
+  try {
+    const orders = await Order.find({ orderedBy: _id })
+      .populate("products.product", "name price")
+      .populate("products.variant", "name quantity")
+      .sort({ createdAt: -1 });
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng nào." });
+    }
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// API lấy thông tin chi tiết của một đơn hàng cụ thể
+const getOrderById = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+  const { _id } = req.user;
+
+  validateMongoDbId(orderId);
+  validateMongoDbId(_id);
+
+  try {
+    const order = await Order.findOne({ _id: orderId, orderedBy: _id })
+      .populate("products.product", "name price")
+      .populate("products.variant", "name quantity");
+
+    if (!order) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+    }
+
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = {
   createOrder,
+  getOrderById,
+  getUserOrders,
 };
