@@ -1,4 +1,4 @@
-import { Form, Radio, Input, Button, DatePicker, message } from "antd";
+import { Form, Input, Button, message } from "antd";
 
 import { useMutation } from "@tanstack/react-query";
 import { instance } from "../../../../configs/instance";
@@ -37,10 +37,9 @@ const AccountInformation = () => {
 
   useEffect(() => {
     if (data) {
-      let fullName = getFullName(data);
-
       form.setFieldsValue({
-        name: fullName,
+        firstName: data?.firstName,
+        lastName: data?.lastName,
         phone: data.mobile,
         email: data.email,
       });
@@ -48,18 +47,9 @@ const AccountInformation = () => {
   }, [data]);
 
   const onSubmit = (values) => {
-    if (values.name.trim().split(" ").length <= 1) {
-      message.info("Vui lòng nhập lại họ tên");
-      return;
-    }
-
-    const lastIndex = values.name.lastIndexOf(" ");
-    const lastName = values.name.slice(0, lastIndex);
-    const firstName = values.name.slice(lastIndex + 1);
-
     mutate({
-      firstName,
-      lastName,
+      firstName: values.firstName,
+      lastName: values.lastName,
       email: values.email,
       mobile: values.phone,
     });
@@ -79,29 +69,31 @@ const AccountInformation = () => {
         onFinish={onSubmit}
       >
         <Form.Item
-          name="name"
-          label={<p className="text-[16px]">Họ Tên</p>}
+          name="lastName"
+          label={<p className="text-[16px]">Họ</p>}
           className="mb-3"
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập họ tên",
+              message: "Vui lòng nhập họ",
             },
           ]}
         >
-          <Input placeholder="Họ Tên" className="rounded" />
+          <Input placeholder="Họ" className="rounded" />
         </Form.Item>
 
         <Form.Item
-          name="gender"
-          label={<p className="text-[16px]">Giới tính</p>}
+          name="firstName"
+          label={<p className="text-[16px]">Tên</p>}
           className="mb-3"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập tên",
+            },
+          ]}
         >
-          <Radio.Group>
-            <Radio value={0}>Nam</Radio>
-
-            <Radio value={1}>Nữ</Radio>
-          </Radio.Group>
+          <Input placeholder="Họ" className="rounded" />
         </Form.Item>
 
         <Form.Item
@@ -136,13 +128,6 @@ const AccountInformation = () => {
           ]}
         >
           <Input placeholder="Email" className="rounded" />
-        </Form.Item>
-
-        <Form.Item
-          name="birthday"
-          label={<p className="text-[16px]">Ngày sinh</p>}
-        >
-          <DatePicker placeholder="Ngày sinh" format="DD/MM/YYYY" />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8 }}>
