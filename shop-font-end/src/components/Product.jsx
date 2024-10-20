@@ -8,19 +8,17 @@ import { Link } from "react-router-dom";
 
 const Product = ({
   _id,
-  title, // Tên sản phẩm
+  title,
   price,
   priceOld,
   images,
   variants,
-  totalrating = 0, // Giá trị mặc định là 0 nếu không có rating
+  totalrating = 0,
   ratings,
   description,
 }) => {
-  // Lấy ảnh đầu tiên của sản phẩm
   const productImage = images[0]?.url || "NaN";
 
-  // Lấy biến thể đầu tiên
   const firstVariant = variants[0];
   const variantImage = firstVariant?.images[0]?.url || "NaN";
 

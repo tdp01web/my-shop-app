@@ -1,10 +1,14 @@
 import React from "react";
 import { Button } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../../../components/Loading";
 
 const OrderConfirmation = ({ order }) => {
   const { shippingAddress, totalPrice, paymentMethod, _id } = order || {};
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/");
+  };
 
   return order ? (
     <div className="flex flex-col gap-4">
@@ -64,9 +68,10 @@ const OrderConfirmation = ({ order }) => {
             Chat với GEARVN
           </Button>
         </Link>
-        <Link to={"/"}>
-          <Button block>Tiếp tục mua hàng</Button>
-        </Link>
+
+        <Button block onClick={handleClick}>
+          Tiếp tục mua hàng
+        </Button>
       </div>
     </div>
   ) : (
