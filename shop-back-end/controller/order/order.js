@@ -176,8 +176,59 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
+const updateAddress = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+  const { shippingAddress } = req.body;
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+  }
+
+  // Chỉ cho phép cập nhật địa chỉ khi trạng thái đơn hàng chưa được xác nhận
+  if (order.orderStatus === "Đã Xác Nhận") {
+    return res.status(400).json({
+      message: "Không thể cập nhật địa chỉ sau khi đơn hàng đã được xác nhận.",
+    });
+  }
+
+  // Cập nhật địa chỉ giao hàng
+  order.shippingAddress = { ...shippingAddress };
+  await order.save();
+
+  res
+    .status(200)
+    .json({ message: "Địa chỉ giao hàng đã được cập nhật.", order });
+});
+
+// Cập nhật trạng thái đơn hàng (chỉ dành cho admin)
+const updateStatus = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+  const { orderStatus } = req.body;
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+  }
+
+  // Cập nhật trạng thái đơn hàng nếu được cung cấp, nếu không giữ nguyên trạng thái hiện tại
+  if (orderStatus) {
+    order.orderStatus = orderStatus;
+    await order.save();
+    return res
+      .status(200)
+      .json({ message: "Trạng thái đơn hàng đã được cập nhật.", order });
+  }
+
+  res.status(400).json({ message: "Cần cung cấp trạng thái đơn hàng." });
+});
+
 module.exports = {
   createOrder,
   getOrderById,
   getUserOrders,
+  updateStatus,
+  updateAddress,
 };
