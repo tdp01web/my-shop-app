@@ -70,16 +70,8 @@ const createProduct = asyncHandler(async (req, res) => {
 const updateProduct = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      title,
-      description,
-      basePrice,
-      category,
-      brand,
-      lcd,
-      images,
-      variants,
-    } = req.body;
+    const { title, description, basePrice, category, brand, lcd, images } =
+      req.body;
 
     const product = await Product.findById(id);
     if (!product) {
@@ -92,55 +84,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.basePrice = basePrice || product.basePrice;
     product.category = category || product.category;
     product.brand = brand || product.brand;
-    product.lcd = lcd || product.lcd; // Update lcd directly
+    product.lcd = lcd || product.lcd;
     product.images = images || product.images;
-
-    // Handle variants logic (same as before)
-    if (variants && variants.length > 0) {
-      for (const variant of variants) {
-        const {
-          variantId,
-          color,
-          ram,
-          storage,
-          processor,
-          gpu,
-          quantity,
-          price,
-          images,
-        } = variant;
-
-        if (variantId) {
-          const existingVariant = await ProductVariant.findById(variantId);
-          if (existingVariant) {
-            existingVariant.color = color || existingVariant.color;
-            existingVariant.ram = ram || existingVariant.ram;
-            existingVariant.storage = storage || existingVariant.storage;
-            existingVariant.processor = processor || existingVariant.processor;
-            existingVariant.gpu = gpu || existingVariant.gpu;
-            existingVariant.quantity = quantity || existingVariant.quantity;
-            existingVariant.price = price || existingVariant.price;
-            existingVariant.images = images || existingVariant.images;
-
-            await existingVariant.save();
-          }
-        } else {
-          const newVariant = await ProductVariant.create({
-            product: product._id,
-            color,
-            ram,
-            storage,
-            processor,
-            gpu,
-            quantity,
-            price,
-            images,
-          });
-
-          product.variants.push(newVariant._id);
-        }
-      }
-    }
 
     await product.save();
     res.status(200).json(product);
