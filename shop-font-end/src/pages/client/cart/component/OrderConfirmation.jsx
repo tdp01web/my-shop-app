@@ -20,8 +20,8 @@ const OrderConfirmation = ({ order }) => {
       </div>
 
       <p className="text-black">
-        Cảm ơn quý khách đã cho GEARVN có cơ hội được phục vụ. <br />
-        Nhân viên GEARVN sẽ liên hệ với quý khách trong thời gian sớm nhất.
+        Cảm ơn quý khách đã cho GAMING GEAR có cơ hội được phục vụ. <br />
+        Nhân viên GAMING GEAR sẽ liên hệ với quý khách trong thời gian sớm nhất.
       </p>
 
       <div className="border border-gray-300 flex flex-col gap-4 bg-gray-200 rounded-md p-4">
