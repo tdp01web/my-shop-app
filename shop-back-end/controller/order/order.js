@@ -176,6 +176,25 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
+// API lấy tất cả đơn hàng dành cho admin
+const getAllOrdersForAdmin = asyncHandler(async (req, res) => {
+  try {
+    const orders = await Order.find({})
+      .populate("products.product", "name price")
+      .populate("products.variant", "name quantity")
+      .populate("orderedBy", "name email") // Hiển thị thêm thông tin người đặt hàng
+      .sort({ createdAt: -1 });
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng nào." });
+    }
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 //Hủy đơn hàng cho người dùng
 const cancelOrderForUser = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
