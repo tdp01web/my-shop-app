@@ -176,30 +176,123 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
-const updateAddress = asyncHandler(async (req, res) => {
+//Hủy đơn hàng cho người dùng
+const cancelOrderForUser = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
-  const { shippingAddress } = req.body;
+  const { _id } = req.user;
+  const { cancellationReason } = req.body; // Nhận lý do hủy từ người dùng
 
-  const order = await Order.findById(orderId);
+  validateMongoDbId(orderId);
+  validateMongoDbId(_id);
 
-  if (!order) {
-    return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+  // Kiểm tra nếu không có lý do hủy đơn hàng
+  if (!cancellationReason || cancellationReason.trim() === "") {
+    return res.status(400).json({ message: "Lý do hủy đơn hàng là bắt buộc." });
   }
 
-  // Chỉ cho phép cập nhật địa chỉ khi trạng thái đơn hàng chưa được xác nhận
-  if (order.orderStatus === "Đã Xác Nhận") {
-    return res.status(400).json({
-      message: "Không thể cập nhật địa chỉ sau khi đơn hàng đã được xác nhận.",
-    });
+  try {
+    const order = await Order.findOne({ _id: orderId, orderedBy: _id });
+
+    if (!order) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+    }
+
+    // Người dùng chỉ có thể hủy đơn hàng nếu chưa được xác nhận
+    if (order.orderStatus === "Đã Xác Nhận") {
+      return res
+        .status(400)
+        .json({ message: "Không thể hủy đơn hàng đã xác nhận." });
+    }
+
+    // Cộng lại số lượng sản phẩm đã trừ
+    let revertProducts = order.products.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product },
+        update: {
+          $inc: { quantity: +item.count, sold: -item.count },
+        },
+      },
+    }));
+
+    await Product.bulkWrite(revertProducts, {});
+
+    let revertVariants = order.products
+      .filter((item) => item.variant)
+      .map((item) => ({
+        updateOne: {
+          filter: { _id: item.variant },
+          update: {
+            $inc: { quantity: +item.count },
+          },
+        },
+      }));
+
+    await productVariantModel.bulkWrite(revertVariants, {});
+
+    // Cập nhật trạng thái đơn hàng thành 'Đã Hủy' và lưu lý do
+    order.orderStatus = "Đã Hủy";
+    order.cancellationReason = cancellationReason; // Lưu lý do hủy
+    await order.save();
+
+    res.json({ message: "Đơn hàng đã được hủy thành công.", order });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Hủy đơn hàng cho admin
+const cancelOrderForAdmin = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+  const { cancellationReason } = req.body; // Nhận lý do hủy từ admin
+
+  validateMongoDbId(orderId);
+
+  // Kiểm tra nếu không có lý do hủy đơn hàng
+  if (!cancellationReason || cancellationReason.trim() === "") {
+    return res.status(400).json({ message: "Lý do hủy đơn hàng là bắt buộc." });
   }
 
-  // Cập nhật địa chỉ giao hàng
-  order.shippingAddress = { ...shippingAddress };
-  await order.save();
+  try {
+    const order = await Order.findById(orderId);
 
-  res
-    .status(200)
-    .json({ message: "Địa chỉ giao hàng đã được cập nhật.", order });
+    if (!order) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+    }
+
+    // Cộng lại số lượng sản phẩm đã trừ
+    let revertProducts = order.products.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product },
+        update: {
+          $inc: { quantity: +item.count, sold: -item.count },
+        },
+      },
+    }));
+
+    await Product.bulkWrite(revertProducts, {});
+
+    let revertVariants = order.products
+      .filter((item) => item.variant)
+      .map((item) => ({
+        updateOne: {
+          filter: { _id: item.variant },
+          update: {
+            $inc: { quantity: +item.count },
+          },
+        },
+      }));
+
+    await productVariantModel.bulkWrite(revertVariants, {});
+
+    // Cập nhật trạng thái đơn hàng thành 'Đã Hủy' và lưu lý do
+    order.orderStatus = "Đã Hủy";
+    order.cancellationReason = cancellationReason; // Lưu lý do hủy
+    await order.save();
+
+    res.json({ message: "Đơn hàng đã được hủy bởi admin.", order });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Cập nhật trạng thái đơn hàng (chỉ dành cho admin)
@@ -230,5 +323,6 @@ module.exports = {
   getOrderById,
   getUserOrders,
   updateStatus,
-  updateAddress,
+  cancelOrderForUser,
+  cancelOrderForAdmin,
 };

@@ -3,8 +3,9 @@ const {
   createOrder,
   getUserOrders,
   getOrderById,
-  updateAddress,
   updateStatus,
+  cancelOrderForAdmin,
+  cancelOrderForUser,
 } = require("../../controller/order/order");
 const {
   authMiddleware,
@@ -21,9 +22,19 @@ router.get("/", authMiddleware, getUserOrders);
 router.get("/:orderId", authMiddleware, getOrderById);
 
 // Cập nhật địa chỉ đơn hàng nếu chưa xác nhận
-router.put("/update-address/:orderId", authMiddleware, updateAddress);
 
 // Cập nhật trạng thái đơn hàng (chỉ dành cho admin)
 router.put("/update-status/:orderId", authMiddleware, isAdmin, updateStatus);
+
+// hủy đơn hàng cho admin
+router.put(
+  "/cancel-admin/:orderId",
+  authMiddleware,
+  isAdmin,
+  cancelOrderForAdmin
+);
+
+// Hủy đơn hàng cho người dùng
+router.put("/cancel-user/:orderId", authMiddleware, cancelOrderForUser);
 
 module.exports = router;

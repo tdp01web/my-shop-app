@@ -102,6 +102,9 @@ var orderSchema = new mongoose.Schema(
         "Đã Hủy",
       ],
     },
+    cancellationReason: {
+      type: String,
+    }, // Lý do hủy đơn hàng
 
     // Thông tin thêm
     paymentIntent: {}, // Tùy chọn: Dùng để lưu thông tin thanh toán (nếu dùng Stripe hoặc các cổng thanh toán khác)

@@ -16,7 +16,6 @@ const ProductDetail = () => {
     queryKey: ["PRODUCTS", id],
     queryFn: async () => {
       const { data } = await instance.get(`product/getaProduct/${id}`);
-      console.log(data);
       return data;
     },
     staleTime: 0,
@@ -26,7 +25,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     refetch();
-  }, [id, refetch]);
+  }, [refetch, data]);
 
   const {
     data: relatedProductsData,
