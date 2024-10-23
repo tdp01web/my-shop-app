@@ -1,41 +1,51 @@
-import { useState } from 'react';
-import { Button, Box } from '@mui/material';
-const RAMcon = () => {
-  const [selectedIndices, setSelectedIndices] = useState([]);
-
-
-
+import { Button, Box } from "@mui/material";
+/* eslint-disable react/prop-types */
+const RAMcon = ({
+  ramSizes = [],
+  selectedIndices = [],
+  setSelectedIndices,
+}) => {
   const handleSelect = (index) => {
     setSelectedIndices((prev) =>
-      prev.includes(index)
-        ? prev.filter((i) => i !== index)
-        : [...prev, index]
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
 
-
   return (
     <div>
-       <Box display="flex" flexDirection="row" flexWrap="wrap" justifyContent="space-between" width="100%">
-            {['4GB', '8GB', '16GB', '32GB'].map((label, index) => (
-              <Button
-                key={index}
-                variant="outlined"
-                onClick={() => handleSelect(index)}
-                color="primary"
-                sx={{
-                  color: selectedIndices.includes(index) ? '#007bff' : 'black',
-                  fontWeight: selectedIndices.includes(index) ? 700 : 400,
-                  flex: '1 1 auto',
-                  margin: '5px',
-                }}
-              >
-                {label}
-              </Button>
-            ))}
-          </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        flexWrap="wrap"
+        justifyContent="space-between"
+        width="100%"
+      >
+        {ramSizes.length > 0 ? (
+          ramSizes.map((label, index) => (
+            <Button
+              key={index}
+              variant="outlined"
+              onClick={() => handleSelect(index)}
+              sx={{
+                borderColor: selectedIndices.includes(index)
+                  ? "success.main"
+                  : "grey.500",
+                color: selectedIndices.includes(index)
+                  ? "success.main"
+                  : "black",
+                fontWeight: selectedIndices.includes(index) ? 450 : 400,
+                margin: "5px",
+              }}
+            >
+              {label}
+            </Button>
+          ))
+        ) : (
+          <div>Không có RAM để hiển thị.</div>
+        )}
+      </Box>
     </div>
-  )
-}
+  );
+};
 
-export default RAMcon
+export default RAMcon;
