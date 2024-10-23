@@ -16,13 +16,14 @@ import { MdWavingHand } from "react-icons/md";
 import { IoIosEye } from "react-icons/io";
 import { PiNotepadBold } from "react-icons/pi";
 import { HiOutlineLogout } from "react-icons/hi";
+import useGetProfile from "../../../../../hooks/queries/useGetProfile";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userName = user?.email ? user.email.split("@")[0] : null;
-  console.log(userName);
+  const { data } = useGetProfile();
+
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     window.location.reload();
   };
 
@@ -99,20 +100,20 @@ function MainHeader() {
             </span>
           </div>
         ))}
-        {user ? (
+        {data ? (
           <div className="user-container">
             <div className="user-info">
               <div className="icon">
                 <AiOutlineUser />
               </div>
               <div>
-                Xin chào <br /> {userName}
+                Xin chào <br /> {data.email.split("@")[0]}
               </div>
             </div>
 
             <div className="user-menu">
               <Link to={"/account"} className="flex items-center gap-2">
-                <MdWavingHand /> Xin chào {userName}
+                <MdWavingHand /> Xin chào {data.email.split("@")[0]}
               </Link>
               <hr />
               <Link to={"/account"} className="flex items-center gap-2">

@@ -3,17 +3,9 @@ import React, { useState } from "react";
 import { FcMoneyTransfer } from "react-icons/fc";
 import { GiReceiveMoney } from "react-icons/gi";
 
-const Pay = ({ handleNext }) => {
+const Pay = ({ addressData, handleNext, cartTotal }) => {
   const [gender, setGender] = useState(1);
-  const orderInfo = {
-    customerName: "Ph Y",
-    phoneNumber: "0778528845",
-    deliveryAddress:
-      "Tòa hha chung cư tân tây do, Xã Tân Lập, Huyện Đan Phượng, Hà Nội",
-    subtotal: 100000,
-    shippingFee: 25000,
-    total: 125000,
-  };
+
   return (
     <div className="  rounded-lg p-6 w-full max-w-md flex flex-col gap-4">
       <div className="flex flex-col gap-4">
@@ -23,37 +15,52 @@ const Pay = ({ handleNext }) => {
 
         <div className="">
           <span className="font-bold">Khách hàng: </span>
-          <span>{orderInfo.customerName}</span>
+          <span>{addressData.fullName}</span>
         </div>
 
         <div className="">
           <span className="font-bold">Số điện thoại: </span>
-          <span>{orderInfo.phoneNumber}</span>
+          <span>{addressData.phoneNumber}</span>
         </div>
 
         <div className="">
           <span className="font-bold">Địa chỉ nhận hàng: </span>
-          <span>{orderInfo.deliveryAddress}</span>
+          <span>
+            {addressData.addressDetail}, {addressData.phuong} ,
+            {addressData.quan} , {addressData.tinh}
+          </span>
         </div>
 
         <div className="">
           <span className="font-bold">Tạm tính: </span>
           <span className="text-red-600">
-            {orderInfo.subtotal.toLocaleString()}đ
+            {" "}
+            {new Intl.NumberFormat("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }).format(cartTotal)}
           </span>
         </div>
 
         <div className="">
           <span className="font-bold">Phí vận chuyển: </span>
           <span className="text-red-600">
-            {orderInfo.shippingFee.toLocaleString()}đ
+            {" "}
+            {new Intl.NumberFormat("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }).format(addressData.deliveryFee)}{" "}
           </span>
         </div>
 
         <div className="">
           <span className="font-bold">Tổng tiền: </span>
           <span className="text-red-600">
-            {orderInfo.total.toLocaleString()}đ
+            {" "}
+            {new Intl.NumberFormat("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }).format(addressData.totalPrice)}{" "}
           </span>
         </div>
         <hr className="border-3 border-solid border-gray-500" />
@@ -78,8 +85,28 @@ const Pay = ({ handleNext }) => {
         <Button
           type="primary"
           size="large"
-          className=" bg-red-600"
-          onClick={handleNext}
+          className="bg-red-600"
+          onClick={() =>
+            handleNext({
+              paymentMethod:
+                gender === 1
+                  ? "Thanh Toán Khi Nhận Hàng"
+                  : "Chuyển Khoản Ngân Hàng",
+              shippingAddress: {
+                name: addressData.fullName,
+                phone: addressData.phoneNumber,
+                addressLine1: addressData.addressDetail,
+                city: addressData.tinh,
+                district: addressData.quan,
+                ward: addressData.phuong,
+                postalCode: addressData.postalCode || "",
+              },
+              couponApplied: false,
+              cartTotal: cartTotal,
+              deliveryFee: addressData.deliveryFee,
+              totalPrice: cartTotal + addressData.deliveryFee,
+            })
+          }
         >
           ĐẶT HÀNG NGAY
         </Button>

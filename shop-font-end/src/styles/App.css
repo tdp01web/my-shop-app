@@ -61,3 +61,17 @@
   opacity: 1;
   visibility: visible;
 }
+.slider-product .slick-slider .slick-prev {
+  background-color: rgb(208, 208, 208);
+  left: 0px !important;
+  z-index: 9999 !important;
+  width: 25px !important;
+  height: 40px !important;
+}
+.slider-product .slick-slider .slick-next {
+  background-color: rgb(208, 208, 208);
+  right: 0px !important;
+  z-index: 9999 !important;
+  width: 25px !important;
+  height: 40px !important;
+}

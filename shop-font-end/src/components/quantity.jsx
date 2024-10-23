@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const Quantity = () => {
+const Quantity = ({ maxQuantity, onChange, initialQuantity = 1 }) => {
   const [notification, setNotification] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const maxQuantity = 10;
+  const [quantity, setQuantity] = useState(initialQuantity);
 
   const handleIncrease = () => {
     if (quantity < maxQuantity) {
-      setQuantity(quantity + 1);
+      const newQuantity = quantity + 1;
+      setQuantity(newQuantity);
       setNotification("");
+      onChange(newQuantity); // Chỉ gọi onChange khi thực sự có thay đổi
     } else {
       setNotification("Số lượng đã đạt giới hạn.");
     }
@@ -16,26 +17,28 @@ const Quantity = () => {
 
   const handleDecrease = () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
       setNotification("");
+      onChange(newQuantity); // Chỉ gọi onChange khi thực sự có thay đổi
     }
   };
 
   return (
-    <div className=" mt-4 flex  flex-col">
-      <div className="flex items-center ">
+    <div className="mt-4 flex flex-col">
+      <div className="flex items-center">
         <button
           onClick={handleDecrease}
           disabled={quantity <= 1}
-          className="px-3 py-1 rounded-l-md  border border-gray-500"
+          className="px-3 py-1 rounded-l-md border border-gray-500"
         >
           -
         </button>
         <input
           type="text"
           value={quantity}
-          className="w-[50px] py-1 text-center border-t border-b border-gray-500  appearance-none"
-          max={maxQuantity}
+          className="w-[50px] py-1 text-center border-t border-b border-gray-500 appearance-none"
+          readOnly
         />
         <button
           onClick={handleIncrease}
@@ -44,11 +47,7 @@ const Quantity = () => {
           +
         </button>
       </div>
-      <div className="">
-        {notification && (
-          <p className="mt-2 text-red-600 whitespace-nowrap">{notification}</p>
-        )}
-      </div>
+      {notification && <p className="mt-2 text-red-600">{notification}</p>}
     </div>
   );
 };

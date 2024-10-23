@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { instance } from "./../../../configs/instance";
 import ProductList from "./component/ProductList";
 
+import ProductList from "./component/ProductList";
 function HomeIcon(props) {
   return (
     <SvgIcon {...props}>

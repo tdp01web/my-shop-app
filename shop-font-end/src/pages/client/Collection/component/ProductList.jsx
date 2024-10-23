@@ -112,67 +112,72 @@ const ProductList = ({ products }) => {
     }
   }, [selectedBrand, Brand, products]);
 
-  const filters = [
-    TotalFilter,
-    StatusFilter,
-    PriceFilter,
-    (props) => (
-      <BrandFilter
-        Brand={Brand}
-        selectedBrand={selectedBrand}
-        setSelectedBrand={setSelectedBrand}
-      />
-    ),
-    (props) => (
-      <CPUFilter
-        Gpunames={Gpunames}
-        selectedGpu={selectedGpu}
-        setSelectedGpu={setSelectedGpu}
-      />
-    ),
-    (props) => (
-      <RAMFilter
-        ramSizes={ramSizes}
-        selectedIndices={selectedIndices}
-        setSelectedIndices={setSelectedIndices}
-      />
-    ),
-    SSDFilter,
-    SizeFilter,
-    NeedFilter,
-    VGAFilter,
-  ];
+  const ProductList = ({ products }) => {
+    const filters = [
+      TotalFilter,
+      StatusFilter,
+      PriceFilter,
+      (props) => (
+        <BrandFilter
+          Brand={Brand}
+          selectedBrand={selectedBrand}
+          setSelectedBrand={setSelectedBrand}
+        />
+      ),
+      (props) => (
+        <CPUFilter
+          Gpunames={Gpunames}
+          selectedGpu={selectedGpu}
+          setSelectedGpu={setSelectedGpu}
+        />
+      ),
+      (props) => (
+        <RAMFilter
+          ramSizes={ramSizes}
+          selectedIndices={selectedIndices}
+          setSelectedIndices={setSelectedIndices}
+        />
+      ),
+      SSDFilter,
+      SizeFilter,
+      NeedFilter,
+      VGAFilter,
+    ];
 
-  return (
-    <div className="w-full bg-cover flex bg-white rounded-sm flex-col bg-center gap-3 h-auto p-4">
-      <Box
-        display="flex"
-        alignItems="center"
-        className="w-full mb-4"
-        justifyContent="space-between"
-        flexWrap="wrap"
-      >
-        <div className="block md:hidden w-full flex justify-between">
-          <TotalFilter />
+    return (
+      <div className="w-full bg-cover flex bg-white rounded-sm flex-col bg-center gap-3 h-auto p-4">
+        <Box
+          display="flex"
+          alignItems="center"
+          className="w-full mb-4"
+          justifyContent="space-between"
+          flexWrap="wrap"
+        >
+          <div className="block md:hidden w-full flex justify-between">
+            <TotalFilter />
+            <ArrangeFilter />
+          </div>
+          <div className="hidden md:flex gap-2 flex-wrap">
+            {filters.map((FilterComponent, index) => (
+              <FilterComponent key={index} />
+            ))}
+          </div>
+        </Box>
+        <div className="md:flex hidden" style={{ marginLeft: "auto" }}>
           <ArrangeFilter />
         </div>
-        <div className="hidden md:flex gap-2 flex-wrap">
-          {filters.map((FilterComponent, index) => (
-            <FilterComponent key={index} />
-          ))}
-        </div>
-      </Box>
-      <div className="md:flex hidden" style={{ marginLeft: "auto" }}>
-        <ArrangeFilter />
-      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-5">
-        {filteredProducts.map((product, index) => (
-          <Product key={product.id || index} {...product} />
-        ))}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-5">
+          {filteredProducts.map((product, index) => (
+            <Product key={product.id || index} {...product} />
+          ))}
+          {/* {products.map((product) => (
+            <Product key={product.id} {...product} />
+          ))} */}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 };
 
 export default ProductList;

@@ -4,47 +4,74 @@ import { Button, Typography } from "antd";
 import { Link } from "react-router-dom";
 import ItemProductCard from "../../../../components/ItemProductCard";
 import CouponDropdown from "./CouponDropdown";
+import { useQuery } from "@tanstack/react-query";
+import { instance } from "../../../../configs/instance";
+import Loader from "../../../../components/Loading";
 
 const CartItems = ({ cartItems, handleNext }) => {
-  return cartItems.length === 0 ? (
-    <div className="text-center flex flex-col gap-5">
-      <Typography variant="h6">Giỏ hàng của bạn đang trống</Typography>
-      <Button
-        variant="outlined"
-        className="w-[50%] mx-auto"
-        color="primary"
-        component={Link}
-        to="/"
-      >
-        Tiếp tục mua hàng
-      </Button>
-    </div>
-  ) : (
-    <React.Fragment>
-      <div className="flex flex-col gap-3">
-        {cartItems.map((item) => (
-          <ItemProductCard key={item.id} item={item} />
-        ))}
-        <hr className="border border-gray-300" />
-        <CouponDropdown />
-        <hr className="border border-gray-300" />
-        <div className="flex justify-between items-center">
-          <p className="text-[#535353] text-[20px] font-medium">
-            Tổng thanh toán
-          </p>
-          <p className="text-[#E30019] font-bold text-[25px] ">500.000đ</p>
-        </div>
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["Mã Giảm Giá"],
+    queryFn: async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const { data } = await instance.get("/coupon/getallCoupons", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return data;
+      } catch (error) {
+        console.log("🚀 ~ queryFn: ~ error:", error);
+      }
+    },
+  });
 
-        <Button
-          type="primary"
-          size="large"
-          className="mt-4 bg-red-600"
-          onClick={handleNext}
-        >
-          ĐẶT HÀNG NGAY
-        </Button>
+  return cartItems ? (
+    cartItems.products.length === 0 ? (
+      <div className="text-center flex flex-col gap-5">
+        <Typography variant="h6">Giỏ hàng của bạn đang trống</Typography>
+        <Link to={"/"}>
+          <Button
+            variant="outlined"
+            className="w-[50%] mx-auto"
+            color="primary"
+          >
+            Tiếp tục mua hàng
+          </Button>
+        </Link>
       </div>
-    </React.Fragment>
+    ) : (
+      <React.Fragment>
+        <div className="flex flex-col gap-3">
+          {cartItems.products.map((item) => (
+            <ItemProductCard key={item._id} item={item} />
+          ))}
+          <hr className="border border-gray-300" />
+          <CouponDropdown data={data} />
+          <hr className="border border-gray-300" />
+          <div className="flex justify-between items-center">
+            <p className="text-[#535353] text-[20px] font-medium">
+              Tổng thanh toán
+            </p>
+            <p className="text-[#E30019] font-bold text-[25px] ">
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(cartItems.cartTotal)}
+            </p>
+          </div>
+
+          <Button
+            type="primary"
+            size="large"
+            className="mt-4 bg-red-600"
+            onClick={handleNext}
+          >
+            ĐẶT HÀNG NGAY
+          </Button>
+        </div>
+      </React.Fragment>
+    )
+  ) : (
+    <Loader />
   );
 };
 

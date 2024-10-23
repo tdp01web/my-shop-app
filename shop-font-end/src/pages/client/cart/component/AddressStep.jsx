@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Input, Select, Radio, Button } from "antd";
+import { Form, Input, Select, Radio, Button } from "antd";
 import axios from "axios";
 
 const { Option } = Select;
 
-const AddressStep = ({ handleNext }) => {
+const AddressStep = ({ handleNext, cartTotal }) => {
   const [tinhList, setTinhList] = useState([]);
   const [quanList, setQuanList] = useState([]);
   const [phuongList, setPhuongList] = useState([]);
+
   const [selectedTinh, setSelectedTinh] = useState(null);
   const [selectedQuan, setSelectedQuan] = useState(null);
+  const [selectedPhuong, setSelectedPhuong] = useState(null);
 
-  const [gender, setGender] = useState(1);
   const [deliveryOption, setDeliveryOption] = useState(4);
   const [deliveryFee, setDeliveryFee] = useState(25000);
-  const [totalPrice, setTotalPrice] = useState(100000);
+  const [totalPrice, setTotalPrice] = useState(cartTotal + deliveryFee);
 
   useEffect(() => {
     (async () => {
@@ -24,12 +25,11 @@ const AddressStep = ({ handleNext }) => {
         );
         setTinhList(data.data);
       } catch (error) {
-        console.log("🚀 ~ useEffect ~ error:", error);
+        console.error("Lỗi khi lấy danh sách tỉnh:", error);
       }
     })();
   }, []);
 
-  // Fetch Quận Huyện
   useEffect(() => {
     if (selectedTinh) {
       (async () => {
@@ -40,7 +40,7 @@ const AddressStep = ({ handleNext }) => {
           setQuanList(data.data);
           setPhuongList([]);
         } catch (error) {
-          console.log("🚀 ~ useEffect ~ error:", error);
+          console.error("Lỗi khi lấy danh sách quận:", error);
         }
       })();
     }
@@ -55,137 +55,175 @@ const AddressStep = ({ handleNext }) => {
           );
           setPhuongList(data.data);
         } catch (error) {
-          console.log("🚀 ~ useEffect ~ error:", error);
+          console.error("Lỗi khi lấy danh sách phường:", error);
         }
       })();
     }
   }, [selectedQuan]);
 
-  const handleDeliveryChange = (e) => {
-    const selectedOption = e.target.value;
-    setDeliveryOption(selectedOption);
+  useEffect(() => {
+    setTotalPrice(cartTotal + deliveryFee);
+  }, [deliveryFee, cartTotal]);
 
-    if (selectedOption === 3) {
-      setDeliveryFee(40000);
-    } else {
-      setDeliveryFee(25000);
-    }
+  const handleDeliveryChange = (e) => {
+    const option = e.target.value;
+    setDeliveryOption(option);
+    setDeliveryFee(option === 3 ? 40000 : 25000);
   };
 
-  useEffect(() => {
-    setTotalPrice(100000 + deliveryFee);
-  }, [deliveryFee]);
+  const handleSubmit = (values) => {
+    const { fullName, phoneNumber, addressDetail } = values;
+    const addressData = {
+      fullName,
+      phoneNumber,
+      tinh: tinhList.find((tinh) => tinh.id === selectedTinh)?.full_name || "",
+      quan: quanList.find((quan) => quan.id === selectedQuan)?.full_name || "",
+      phuong:
+        phuongList.find((phuong) => phuong.id === selectedPhuong)?.full_name ||
+        "",
+      addressDetail,
+      deliveryOption,
+      deliveryFee,
+      totalPrice,
+    };
+    handleNext(addressData);
+  };
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-3">
-        <h2 className="text-[24px] font-semibold text-[#333]">
-          Thông tin khách mua hàng
-        </h2>
-        <Radio.Group onChange={(e) => setGender(e.target.value)} value={gender}>
-          <Radio value={1}>Nam</Radio>
-          <Radio value={2}>Nữ</Radio>
-        </Radio.Group>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <Input placeholder="Nhập họ tên" />
-          <Input placeholder="Nhập số điện thoại" />
-        </div>
+    <Form layout="vertical" onFinish={handleSubmit}>
+      <h2 className="text-[24px] font-semibold text-[#333]">
+        Thông tin khách mua hàng
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Form.Item
+          name="fullName"
+          rules={[
+            { required: true, message: "Vui lòng nhập họ tên" },
+            { min: 6, message: "Họ tên phải có ít nhất 6 ký tự" },
+          ]}
+        >
+          <Input placeholder="Nhập họ tên" />
+        </Form.Item>
+
+        <Form.Item
+          name="phoneNumber"
+          rules={[
+            { required: true, message: "Vui lòng nhập số điện thoại" },
+            {
+              pattern: /^0\d{9}$/,
+              message:
+                "Số điện thoại không hợp lệ (phải bắt đầu bằng 0 và có 10 chữ số)",
+            },
+          ]}
+        >
+          <Input placeholder="Nhập số điện thoại" />
+        </Form.Item>
       </div>
-      <div className="flex flex-col gap-3">
-        <h2 className="text-[24px] font-semibold text-[#333]">
-          Địa chỉ giao hàng
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+      <h2 className="text-[24px] font-semibold text-[#333]">
+        Địa chỉ giao hàng
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Form.Item
+          name="tinh"
+          rules={[{ required: true, message: "Vui lòng chọn tỉnh thành" }]}
+        >
           <Select
             placeholder="Chọn Tỉnh Thành"
+            value={selectedTinh}
             onChange={(value) => {
               setSelectedTinh(value);
               setSelectedQuan(null);
+              setSelectedPhuong(null);
             }}
-            value={selectedTinh}
           >
-            <Option value={null}>Tỉnh Thành</Option>
             {tinhList.map((tinh) => (
               <Option key={tinh.id} value={tinh.id}>
                 {tinh.full_name}
               </Option>
             ))}
           </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="quan"
+          rules={[{ required: true, message: "Vui lòng chọn quận huyện" }]}
+        >
           <Select
             placeholder="Chọn Quận Huyện"
-            onChange={(value) => setSelectedQuan(value)}
             value={selectedQuan}
+            onChange={(value) => setSelectedQuan(value)}
             disabled={!selectedTinh}
           >
-            <Option value={null}>Quận Huyện</Option>
             {quanList.map((quan) => (
               <Option key={quan.id} value={quan.id}>
                 {quan.full_name}
               </Option>
             ))}
           </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="phuong"
+          rules={[{ required: true, message: "Vui lòng chọn phường xã" }]}
+        >
           <Select
             placeholder="Chọn Phường Xã"
-            value={null}
+            value={selectedPhuong}
+            onChange={(value) => setSelectedPhuong(value)}
             disabled={!selectedQuan}
           >
-            <Option value={null}>Phường Xã</Option>
             {phuongList.map((phuong) => (
               <Option key={phuong.id} value={phuong.id}>
                 {phuong.full_name}
               </Option>
             ))}
           </Select>
-          <Input placeholder="Số nhà tên đường" />
-        </div>
-      </div>
-      <div>
-        <h2 className="text-[24px] font-semibold text-[#333]">
-          Dịch vụ giao hàng
-        </h2>
-        <Radio.Group
-          onChange={handleDeliveryChange}
-          className="flex flex-col w-full"
-          value={deliveryOption}
+        </Form.Item>
+
+        <Form.Item
+          name="addressDetail"
+          rules={[
+            { required: true, message: "Vui lòng nhập số nhà, tên đường" },
+          ]}
         >
-          <Radio value={3} className="w-full flex items-center">
-            <div className="flex justify-between">
-              <p>Giao hàng nhanh (2 - 4h)</p>
-              <span>40.000₫</span>
-            </div>
-          </Radio>
-          <Radio value={4} className="w-full flex items-center">
-            <div className="flex justify-between">
-              <p>Giao hàng tiêu chuẩn</p>
-              <span>25.000₫</span>
-            </div>
-          </Radio>
-        </Radio.Group>
+          <Input placeholder="Số nhà, tên đường" />
+        </Form.Item>
       </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex justify-between">
-          <p>Phí vận chuyển:</p>
-          <span>{deliveryFee.toLocaleString()}₫</span>
-        </div>
-        <div className="flex justify-between">
-          <p>Tổng tiền:</p>
-          <span className="text-red-500 font-semibold">
-            {totalPrice.toLocaleString()}₫
-          </span>
-        </div>
-        <Button
-          type="primary"
-          size="large"
-          className=" bg-red-600"
-          onClick={handleNext}
-        >
-          ĐẶT HÀNG NGAY
-        </Button>
+
+      <h2 className="text-[24px] font-semibold text-[#333]">
+        Dịch vụ giao hàng
+      </h2>
+      <Radio.Group
+        onChange={handleDeliveryChange}
+        value={deliveryOption}
+        className="flex flex-col gap-2"
+      >
+        <Radio value={3}>Giao hàng nhanh (2 - 4h) - 40.000₫</Radio>
+        <Radio value={4}>Giao hàng tiêu chuẩn - 25.000₫</Radio>
+      </Radio.Group>
+
+      <div className="flex justify-between">
+        <p>Phí vận chuyển:</p>
+        <span>{deliveryFee.toLocaleString()}₫</span>
       </div>
-      <p className="text-center  text-gray-500">
-        Bạn có thể chọn hình thức thanh toán sau khi đặt hàng
-      </p>
-    </div>
+
+      <div className="flex justify-between">
+        <p>Tổng tiền:</p>
+        <span className="text-red-500 font-semibold">
+          {totalPrice.toLocaleString()}₫
+        </span>
+      </div>
+
+      <Button
+        type="primary"
+        size="large"
+        className="w-full mt-2"
+        htmlType="submit"
+      >
+        ĐẶT HÀNG NGAY
+      </Button>
+    </Form>
   );
 };
 

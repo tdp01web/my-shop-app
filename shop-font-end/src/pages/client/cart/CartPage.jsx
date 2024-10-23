@@ -8,63 +8,79 @@ import {
 } from "react-icons/fa";
 import CartItems from "./component/CartItems";
 import AddressStep from "./component/AddressStep";
-import { Link } from "react-router-dom";
 import Pay from "./component/Pay";
 import OrderConfirmation from "./component/OrderConfirmation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { instance } from "../../../configs/instance";
+import { Link, useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán", "Hoàn tất"];
 
 const CartPage = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const cartItems = [
-    // {
-    //   id: 1,
-    //   name: "PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)",
-    //   price: 25000000,
-    //   priceOld: 30000000,
-    //   image: "/images/product/product1.webp",
-    //   sold: 10,
-    //   rating: 5.0,
-    //   reviews: 1,
-    // },
-    // {
-    //   id: 2,
-    //   name: "PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)",
-    //   price: 25000000,
-    //   priceOld: 30000000,
-    //   image: "/images/product/product1.webp",
-    //   sold: 10,
-    //   rating: 5.0,
-    //   reviews: 1,
-    // },
-  ];
+  const [orderInfo, setOrderInfo] = useState(null);
+  const [addressData, setAddressData] = useState(null);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const { data: cartData, refetch } = useQuery({
+    queryKey: ["CartPage"],
+    queryFn: async () => {
+      const token = localStorage.getItem("token");
+      const { data } = await instance.get("/cart/getCart", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return data;
+    },
+  });
+
+  const handleNext = (data) => {
+    if (activeStep === 1) {
+      setAddressData(data);
+    }
+    if (activeStep === 2) {
+      createOrderMutation.mutate(data);
+    }
+    setActiveStep((prevStep) => prevStep + 1);
   };
 
   const handleBack = () => {
-    if (activeStep > 0) {
-      setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    }
+    if (activeStep > 0) setActiveStep((prevStep) => prevStep - 1);
   };
 
-  const stepIcons = [
-    <FaShoppingCart />,
-    <FaClipboardList />,
-    <FaCreditCard />,
-    <FaCheckCircle />,
-  ];
+  const createOrderMutation = useMutation({
+    mutationFn: async (orderDetails) => {
+      console.log("Order Details:", orderDetails);
+
+      const token = localStorage.getItem("token");
+      const { data } = await instance.post("/order", orderDetails, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      await refetch();
+      return data;
+    },
+    onSuccess: (data) => {
+      message.success("Đặt hàng thành công");
+      queryClient.invalidateQueries(["cart"]);
+      setActiveStep(3);
+      setOrderInfo(data.order);
+    },
+    onError: (error) => {
+      message.error("Đặt hàng thất bại, vui lòng thử lại!");
+      navigate("/");
+      console.log(error);
+    },
+  });
 
   return (
-    <div className="flex gap-5   flex-col w-full md:w-[50%] mx-auto h-auto rounded-lg bg-white p-5">
-      {/* Dynamic Link to Navigate Back */}
+    <div className="flex flex-col gap-5 w-full md:w-[50%] mx-auto bg-white p-5 rounded-lg">
       {activeStep > 0 && activeStep < 3 ? (
         <div onClick={handleBack} className="text-[#E30019] cursor-pointer">
           <p>{`< Trở về`}</p>
         </div>
       ) : (
-        <Link to={"/"} className="text-[#E30019]">
+        <Link to="/" className="text-[#E30019]">
           <p>{"< Mua thêm sản phẩm khác"}</p>
         </Link>
       )}
@@ -76,21 +92,11 @@ const CartPage = () => {
       >
         {steps.map((label, index) => (
           <Step key={label}>
-            <StepLabel
-              StepIconComponent={() => (
-                <div
-                  className={`${
-                    activeStep >= index ? "text-[#E30019]" : "text-gray-400"
-                  } `}
-                >
-                  {stepIcons[index]}
-                </div>
-              )}
-            >
+            <StepLabel>
               <p
                 className={`${
                   activeStep >= index ? "text-[#E30019]" : "text-gray-400"
-                } text-[18px] `}
+                } text-[18px]`}
               >
                 {label}
               </p>
@@ -99,13 +105,20 @@ const CartPage = () => {
         ))}
       </Stepper>
 
-      {/* Step Content */}
-      {activeStep === 0 && (
-        <CartItems cartItems={cartItems} handleNext={handleNext} />
+      {activeStep === 0 && cartData && (
+        <CartItems cartItems={cartData} handleNext={handleNext} />
       )}
-      {activeStep === 1 && <AddressStep handleNext={handleNext} />}
-      {activeStep === 2 && <Pay handleNext={handleNext} />}
-      {activeStep === 3 && <OrderConfirmation />}
+      {activeStep === 1 && (
+        <AddressStep cartTotal={cartData.cartTotal} handleNext={handleNext} />
+      )}
+      {activeStep === 2 && (
+        <Pay
+          addressData={addressData}
+          handleNext={handleNext}
+          cartTotal={cartData.cartTotal}
+        />
+      )}
+      {activeStep === 3 && <OrderConfirmation order={orderInfo} />}
     </div>
   );
 };

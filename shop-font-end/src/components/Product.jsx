@@ -7,19 +7,18 @@ import { FaMicrochip } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 const Product = ({
-  title, // Tên sản phẩm
+  _id,
+  title,
   price,
   priceOld,
   images,
   variants,
-  totalrating = 0, // Giá trị mặc định là 0 nếu không có rating
+  totalrating = 0,
   ratings,
   description,
 }) => {
-  // Lấy ảnh đầu tiên của sản phẩm
   const productImage = images[0]?.url || "NaN";
 
-  // Lấy biến thể đầu tiên
   const firstVariant = variants[0];
   const variantImage = firstVariant?.images[0]?.url || "NaN";
 
@@ -32,16 +31,16 @@ const Product = ({
 
   return (
     <Link
-      to={`/products/${title.toLowerCase().replace(/ /g, "-")}`}
+      to={`/products/${_id}`}
       className="bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm"
     >
       <div>
         <img src={productImage} alt={title} className="w-full h-auto" />
       </div>
       <p className="line-clamp-2 font-600 text-[14px]">{title}</p>
-      <del className=" text-[12px] text-[#6D6E72] md:text-[14px] font-600 leading-none">
-        {/* {priceOld ? `$${priceOld.toLocaleString()}` : "NaN"} */}
-      </del>
+      {/* <del className=" text-[12px] text-[#6D6E72] md:text-[14px] font-600 leading-none">
+        {priceOld ? `$${priceOld.toLocaleString()}` : "NaN"}
+      </del> */}
       <div className="leading-none text-gray-500 flex items-center gap-2">
         <p className="text-red-500 font-600 text-[14px] md:text-[18px]">
           {firstVariant?.price.toLocaleString()}đ
