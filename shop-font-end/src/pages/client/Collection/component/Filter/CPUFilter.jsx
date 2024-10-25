@@ -36,11 +36,11 @@ const CPUFilter = ({ Gpunames, selectedGpu, setSelectedGpu }) => {
       <Button
         variant="outlined"
         onClick={handleClick}
-        // sx={{
-        //   borderColor: selectedGpu.length > 0 ? "#007bff" : "grey.500",
-        //   color: selectedGpu.length > 0 ? "#007bff" : "black",
-        //   fontWeight: selectedGpu.length > 0 ? 450 : 400,
-        // }}
+        sx={{
+          borderColor: selectedGpu.length > 0 ? "#007bff" : "grey.500",
+          color: selectedGpu.length > 0 ? "#007bff" : "black",
+          fontWeight: selectedGpu.length > 0 ? 450 : 400,
+        }}
       >
         CPU
         <ArrowDropDownIcon />

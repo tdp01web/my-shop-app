@@ -2,7 +2,7 @@
   "products": [
     {
       "_id": "670be2906f956e13d2701f85",
-      "title": "Laptop Gaming 1",
+      "title": "Laptop a",
       "slug": "laptop-gaming-1",
       "brand": {
         "_id": "670be1dd6f956e13d2701ece",
@@ -60,7 +60,7 @@
     },
     {
       "_id": "670be2906f956e13d2701f85",
-      "title": "Laptop Gaming 2",
+      "title": "Laptop b",
       "slug": "laptop-gaming-2",
       "brand": {
         "_id": "670be1dd6f956e13d2701ece",
@@ -98,7 +98,7 @@
             "name": "3080"
           },
           "images": [{ "public_id": "variant_image_id_1" }],
-          "price": 1111000000,
+          "price": 11110000,
           "processor": {
             "_id": "670be11f6f956e13d2701e96",
             "name": "Intel"
@@ -118,7 +118,7 @@
     },
     {
       "_id": "670be2906f956e13d2701f85",
-      "title": "Laptop Gaming 3",
+      "title": "Laptop c",
       "slug": "laptop-gaming-3",
       "brand": {
         "_id": "670be1dd6f956e13d2701ece",
@@ -156,7 +156,7 @@
             "name": "GTX 3080"
           },
           "images": [{ "public_id": "variant_image_id_1" }],
-          "price": 10000,
+          "price": 20000000,
           "processor": {
             "_id": "670be11f6f956e13d2701e96",
             "name": "i3-11666K"
@@ -176,7 +176,7 @@
     },
     {
       "_id": "670be2906f956e13d2701f85",
-      "title": "Laptop Gaming 3",
+      "title": "Laptop d",
       "slug": "laptop-gaming-3",
       "brand": {
         "_id": "670be1dd6f956e13d2701ece",

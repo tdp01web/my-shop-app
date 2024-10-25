@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { instance } from "./../../../configs/instance";
 import ProductList from "./component/ProductList";
 
-import ProductList from "./component/ProductList";
 function HomeIcon(props) {
   return (
     <SvgIcon {...props}>
@@ -20,7 +19,8 @@ const Collection = () => {
   } = useQuery({
     queryKey: ["PRODUCTS"],
     queryFn: async () => {
-      const { data } = await instance.get("/product/getAllProduct/");
+      const { data } = await instance.get("http://localhost:3000/products");
+      // const { data } = await instance.get("/product/getAllProduct");
       console.log(data);
 
       return data;

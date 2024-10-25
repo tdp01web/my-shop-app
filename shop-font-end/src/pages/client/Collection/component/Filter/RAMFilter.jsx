@@ -36,11 +36,11 @@ const RAMFilter = ({ ramSizes, selectedIndices, setSelectedIndices }) => {
       <Button
         variant="outlined"
         onClick={handleClick}
-        // sx={{
-        //   borderColor: selectedIndices.length > 0 ? "#007bff" : "grey.500",
-        //   color: selectedIndices.length > 0 ? "#007bff" : "black",
-        //   fontWeight: selectedIndices.length > 0 ? 450 : 400,
-        // }}
+        sx={{
+          borderColor: selectedIndices.length > 0 ? "#007bff" : "grey.500",
+          color: selectedIndices.length > 0 ? "#007bff" : "black",
+          fontWeight: selectedIndices.length > 0 ? 450 : 400,
+        }}
       >
         RAM
         <ArrowDropDownIcon />

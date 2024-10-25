@@ -36,11 +36,11 @@ const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
       <Button
         variant="outlined"
         onClick={handleClick}
-        // sx={{
-        //   borderColor: selectedBrand.length > 0 ? "#007bff" : "grey.500",
-        //   color: selectedBrand.length > 0 ? "#007bff" : "black",
-        //   fontWeight: selectedBrand.length > 0 ? 450 : 400,
-        // }}
+        sx={{
+          borderColor: selectedBrand.length > 0 ? "#007bff" : "grey.500",
+          color: selectedBrand.length > 0 ? "#007bff" : "black",
+          fontWeight: selectedBrand.length > 0 ? 450 : 400,
+        }}
       >
         Hãng <ArrowDropDownIcon />
       </Button>
