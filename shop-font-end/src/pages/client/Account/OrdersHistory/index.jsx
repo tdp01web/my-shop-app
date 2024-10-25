@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import styles from "./index.module.css";
 import { Empty, Input } from "antd";
 import { IoSearchSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import OrderList from "./OrderList";
+import { useQuery } from "@tanstack/react-query";
+import { instance } from "../../../../configs/instance";
 
 const TABS = [
   {
@@ -12,28 +14,49 @@ const TABS = [
   },
   {
     id: 2,
-    label: "Mới",
+    label: "Đang Xử Lý",
   },
   {
     id: 3,
-    label: "Đang xử lý",
+    label: "Đã Xác Nhận",
   },
   {
     id: 4,
-    label: "Đang vận chuyển",
+    label: "Đang Đóng Gói",
   },
   {
     id: 5,
-    label: "Hoàn thành",
+    label: "Đang Giao Hàng",
   },
   {
     id: 6,
-    label: "Huỷ",
+    label: "Đã Giao Hàng",
+  },
+  {
+    id: 7,
+    label: "Đã Hủy",
   },
 ];
 
 const OrdersHistory = () => {
-  const [activeTab, setActiveTab] = useState(TABS[0].id);
+  const [activeTab, setActiveTab] = useState(TABS[0].label);
+
+  const { data: orders } = useQuery({
+    queryKey: ["USER_ORDERS_HISTORY"],
+    queryFn: async () => {
+      const r = await instance.get("/order");
+
+      return r.data;
+    },
+  });
+
+  const selectedOrders = useMemo(() => {
+    if (activeTab === TABS[0].label) {
+      return orders;
+    }
+
+    return orders?.filter((it) => it.orderStatus === activeTab);
+  }, [activeTab, orders]);
 
   return (
     <>
@@ -47,14 +70,17 @@ const OrdersHistory = () => {
           <p
             key={idx}
             className={`${styles.tabItem} ${
-              activeTab === it.id && styles.active
+              activeTab === it.label && styles.active
             }`}
-            onClick={() => setActiveTab(it.id)}
+            onClick={() => setActiveTab(it.label)}
           >
             <span>{it.label}</span>
 
-            {activeTab === it.id && (
-              <span className="text-[#ff3c53]"> (1)</span>
+            {activeTab === it.label && (
+              <span className="text-[#ff3c53]">
+                {" "}
+                {selectedOrders?.length > 1 && `(${selectedOrders.length})`}
+              </span>
             )}
           </p>
         ))}
@@ -72,7 +98,7 @@ const OrdersHistory = () => {
       </div>
 
       {/* not found */}
-      {activeTab === 1 && (
+      {selectedOrders?.length === 0 && (
         <div className="py-6">
           <Empty
             description={
@@ -88,7 +114,7 @@ const OrdersHistory = () => {
         </div>
       )}
 
-      {activeTab !== 1 && <OrderList />}
+      {selectedOrders?.length > 0 && <OrderList data={selectedOrders} />}
     </>
   );
 };

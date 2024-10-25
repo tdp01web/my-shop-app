@@ -5,8 +5,12 @@ import OrderStep3Icon from "../../../../components/JSXIcon/OrderStep3Icon";
 import OrderStep5Icon from "../../../../components/JSXIcon/OrderStep5Icon";
 import { FaCheckCircle } from "react-icons/fa";
 
+import { useQuery } from "@tanstack/react-query";
+
 import styles from "./index.module.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { instance } from "../../../../configs/instance";
+import dayjs from "dayjs";
 
 const ORDER_ICONS = [
   OrderStep1Icon,
@@ -31,15 +35,31 @@ const customDot = (dot, { status, index }) => {
 };
 
 const OrderDetail = () => {
+  const { id } = useParams();
+
+  const { data, isFetching } = useQuery({
+    queryKey: ["ORDER_DETAIL", id],
+    queryFn: async () => {
+      const r = await instance.get(`/order/${id}`);
+
+      return r.data;
+    },
+    enabled: !!id,
+  });
+
+  if (isFetching) return;
+
   return (
     <>
       <div className="px-6 py-4 flex items-center justify-between gap-x-2">
         <p className="text-[24px] font-semibold text-[#333]">
-          <span>Chi tiết đơn hàng #206542 - </span>
-          <span className="text-[#FF7A00]">Chưa nhận hàng</span>
+          <span>Chi tiết đơn hàng #{data._id} - </span>
+          <span className="text-[#FF7A00]">{data.orderStatus}</span>
         </p>
 
-        <p className="text-[#111]">Đặt lúc: 11:32 Chủ Nhật, 01.09.2024</p>
+        <p className="text-[#111]">
+          Đặt lúc: {dayjs(data.createdAt).format("HH:mm DD.MM.YYYY")}
+        </p>
       </div>
 
       <div className="px-6 py-4">
@@ -50,7 +70,12 @@ const OrderDetail = () => {
           items={[
             {
               title: <p className="mt-3">Đơn hàng đã đặt</p>,
-              description: <p>16:45 - 1.9.2024</p>,
+              description: (
+                <p>
+                  {dayjs(data.createdAt).format("HH:mm")} -{" "}
+                  {dayjs(data.createdAt).format("DD.MM.YYYY")}
+                </p>
+              ),
             },
             {
               title: <p className="mt-3">Tiếp nhận và chờ xử lý</p>,
@@ -79,12 +104,17 @@ const OrderDetail = () => {
 
             <div className="flex items-center mb-3 gap-x-3">
               <p className="w-1/3">Người nhận:</p>
-              <p className="flex-1">Bùi Xuân Đạt - 0983983983</p>
+              <p className="flex-1">
+                Bùi Xuân Đạt - {data.shippingAddress.phone}
+              </p>
             </div>
 
             <div className="flex items-center mb-3 gap-x-3">
               <p className="w-1/3">Địa chỉ nhận hàng:</p>
-              <p className="flex-1">Hồ Tùng Mậu, Phú Diễn, Bắc Từ Liêm, HN</p>
+              <p className="flex-1">
+                {data.shippingAddress.addressLine1}, {data.shippingAddress.ward}
+                , {data.shippingAddress.district}, {data.shippingAddress.city}
+              </p>
             </div>
 
             <div className="flex items-center mb-3 gap-x-3">
@@ -100,7 +130,7 @@ const OrderDetail = () => {
               <p className="text-[#333] font-semibold">Hình thức thanh toán</p>
             </div>
 
-            <p className="text-[#ff7300]">Chưa thanh toán</p>
+            <p className="text-[#ff7300]">{data.paymentMethod}</p>
           </div>
         </div>
 
@@ -111,116 +141,68 @@ const OrderDetail = () => {
             <p className="text-[#333] font-semibold">Thông tin sản phẩm</p>
           </div>
 
-          <div className="p-2 flex gap-x-4">
-            <div className="w-3/4 flex gap-x-3 items-center">
-              <img
-                src="https://picsum.photos/200/200"
-                alt="Product image"
-                className="w-[60px] h-[60px] object-cover"
-              />
+          {data.products.map((it) => (
+            <div key={it._id} className="p-2 flex gap-x-4">
+              <div className="w-3/4 flex gap-x-3 items-center">
+                <img
+                  src="https://picsum.photos/200/200"
+                  alt="Product image"
+                  className="w-[60px] h-[60px] object-cover"
+                />
 
-              <div>
-                <p className="text-[#111]">
-                  PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
-                  4090)
+                <div>
+                  <p className="text-[#111]">
+                    PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
+                    4090)
+                  </p>
+
+                  {/* <p className="text-[14px] text-[#535353] mt-1">
+                    PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
+                    4090)
+                  </p> */}
+
+                  <p className="text-[14px] text-[#535353] mt-1">
+                    Số lượng: {it.count}
+                  </p>
+                </div>
+              </div>
+
+              <div className="w-1/4">
+                <p className="text-[#e30019] text-right break-words">
+                  {(it.count * it.price).toLocaleString()}đ
                 </p>
-
-                <p className="text-[14px] text-[#535353] mt-1">
-                  PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
-                  4090)
-                </p>
-
-                <p className="text-[14px] text-[#535353] mt-1">Số lượng: 1</p>
               </div>
             </div>
-
-            <div className="w-1/4">
-              <p className="text-[#e30019] text-right break-words">
-                116.000.000₫
-              </p>
-            </div>
-          </div>
-
-          <div className="p-2 flex gap-x-4">
-            <div className="w-3/4 flex gap-x-3 items-center">
-              <img
-                src="https://picsum.photos/200/200"
-                alt="Product image"
-                className="w-[60px] h-[60px] object-cover"
-              />
-
-              <div>
-                <p className="text-[#111]">
-                  PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
-                  4090)
-                </p>
-
-                <p className="text-[14px] text-[#535353] mt-1">
-                  PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
-                  4090)
-                </p>
-
-                <p className="text-[14px] text-[#535353] mt-1">Số lượng: 1</p>
-              </div>
-            </div>
-
-            <div className="w-1/4">
-              <p className="text-[#e30019] text-right break-words">
-                116.000.000₫
-              </p>
-            </div>
-          </div>
-
-          <div className="p-2 flex gap-x-4">
-            <div className="w-3/4 flex gap-x-3 items-center">
-              <img
-                src="https://picsum.photos/200/200"
-                alt="Product image"
-                className="w-[60px] h-[60px] object-cover"
-              />
-
-              <div>
-                <p className="text-[#111]">
-                  PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
-                  4090)
-                </p>
-
-                <p className="text-[14px] text-[#535353] mt-1">
-                  PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
-                  4090)
-                </p>
-
-                <p className="text-[14px] text-[#535353] mt-1">Số lượng: 1</p>
-              </div>
-            </div>
-
-            <div className="w-1/4">
-              <p className="text-[#e30019] text-right break-words">
-                116.000.000₫
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className="md:ml-[50%] mt-4">
           <div className="flex items-center mb-3">
             <p className="w-1/2">Giá tạm tính:</p>
-            <p className="w-1/2 text-right">139.990.000₫</p>
+            <p className="w-1/2 text-right">
+              {data.totalPrice.toLocaleString()}đ
+            </p>
           </div>
 
           <div className="flex items-center mb-3">
             <p className="w-1/2">Phí vận chuyển:</p>
-            <p className="w-1/2 text-right">Miễn phí</p>
+            <p className="w-1/2 text-right">
+              {data.shippingFee === 0
+                ? "Miễn phí"
+                : data.shippingFee.toLocaleString() + "đ"}
+            </p>
           </div>
 
-          <div className="flex items-center mb-3">
+          {/* <div className="flex items-center mb-3">
             <p className="w-1/2">Giảm giá trên đơn hàng:</p>
             <p className="w-1/2 text-right">- 50.000₫</p>
-          </div>
+          </div> */}
 
           <div className="flex items-center mb-3">
             <p className="w-1/2">Tổng tiền:</p>
-            <p className="w-1/2 text-right">139.940.000₫</p>
+            <p className="w-1/2 text-right">
+              {data.totalPrice.toLocaleString()}đ
+            </p>
           </div>
 
           <div className="flex items-center mb-3">
