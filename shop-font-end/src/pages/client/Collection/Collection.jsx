@@ -19,8 +19,7 @@ const Collection = () => {
   } = useQuery({
     queryKey: ["PRODUCTS"],
     queryFn: async () => {
-      const { data } = await instance.get("http://localhost:3000/products");
-      // const { data } = await instance.get("/product/getAllProduct");
+      const { data } = await instance.get("/product/getAllProduct");
       console.log(data);
 
       return data;
