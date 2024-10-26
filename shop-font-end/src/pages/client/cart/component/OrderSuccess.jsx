@@ -1,21 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Loader from "../../../../components/Loading";
+import { instance } from "../../../../configs/instance";
 
-const OrderConfirmation = ({ order }) => {
-  console.log(
-    "🚀 ~ file: OrderConfirmation.jsx:OrderConfirmation ~ order:",
-    order
-  );
-  const { shippingAddress, totalPrice, paymentMethod, _id } = order || {};
+const OrderSuccess = () => {
+  const [order, setOrder] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const resultCode = params.get("resultCode");
+    const orderId = params.get("orderId");
+
+    if (resultCode === "0" && orderId) {
+      fetchOrderDetails(orderId);
+    }
+  }, [location]);
+
+  const fetchOrderDetails = async (orderId) => {
+    try {
+      const { data } = await instance.get(`/order/${orderId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setOrder(data);
+    } catch (error) {
+      console.error("Không thể lấy thông tin đơn hàng:", error);
+    }
+  };
+
   const handleClick = () => {
     navigate("/");
   };
 
-  return order ? (
-    <div className="flex flex-col gap-4">
+  if (!order) {
+    return <Loader />;
+  }
+
+  const { shippingAddress, totalPrice, paymentMethod, _id, paymentIntent } =
+    order;
+
+  return (
+    <div className="flex flex-col gap-4 md:w-[40%] mx-auto bg-white p-5 rounded-md">
       <div className="bg-green-100 text-green-700 font-semibold py-2 px-5 rounded-md text-center">
         <span role="img" aria-label="success">
           🎁
@@ -52,7 +79,7 @@ const OrderConfirmation = ({ order }) => {
             {shippingAddress.city}
           </li>
           <li className="flex gap-2 md:gap-5">
-            <strong>Tổng tiền:</strong>{" "}
+            <strong>Tổng tiền:</strong>
             <span className="text-red-500">
               {new Intl.NumberFormat("vi-VN", {
                 style: "currency",
@@ -63,24 +90,24 @@ const OrderConfirmation = ({ order }) => {
           <li className="flex gap-2 md:gap-5">
             <strong>Hình thức thanh toán:</strong> {paymentMethod}
           </li>
+          <li className="flex gap-2 md:gap-5">
+            <strong>Trạng thái:</strong> {paymentIntent.message}
+          </li>
         </ul>
       </div>
 
       <div className="space-y-2 flex flex-col gap-2">
-        <Link to={"/contacts"}>
+        <Link to="/contacts">
           <Button type="primary" block>
             Chat với GEARVN
           </Button>
         </Link>
-
         <Button block onClick={handleClick}>
           Tiếp tục mua hàng
         </Button>
       </div>
     </div>
-  ) : (
-    <Loader />
   );
 };
 
-export default OrderConfirmation;
+export default OrderSuccess;

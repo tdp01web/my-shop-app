@@ -82,12 +82,18 @@ var orderSchema = new mongoose.Schema(
     // Trạng thái thanh toán và đơn hàng
     paymentMethod: {
       type: String,
-      enum: ["Thanh Toán Khi Nhận Hàng", "Chuyển Khoản Ngân Hàng"],
+      enum: ["Thanh Toán Khi Nhận Hàng", "MOMO"],
       required: true,
     }, // Phương thức thanh toán
     paymentStatus: {
       type: String,
-      enum: ["Chưa Thanh Toán", "Đã Thanh Toán", "Hoàn Tiền"],
+      enum: [
+        "Đang Xử lý",
+        "Chờ Thanh Toán",
+        "Chưa Thanh Toán",
+        "Đã Thanh Toán",
+        "Hoàn Tiền",
+      ],
       default: "Chưa Thanh Toán",
     }, // Trạng thái thanh toán của đơn hàng
     orderStatus: {
