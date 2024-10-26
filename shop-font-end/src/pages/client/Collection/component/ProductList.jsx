@@ -1,32 +1,91 @@
+// components/ProductList/ProductList.js
+
+import { useState } from "react";
 import Product from "../../../../components/Product";
-import StatusFilter from "./Filter/StatusFilter";
-import TotalFilter from "./Filter/TotalFilter";
 import { Box } from "@mui/material";
-import PriceFilter from "./Filter/PriceFilter";
 import BrandFilter from "./Filter/BrandFilter";
 import CPUFilter from "./Filter/CPUFilter";
 import RAMFilter from "./Filter/RAMFilter";
-import SSDFilter from "./Filter/SSDFilter";
 import SizeFilter from "./Filter/SizeFilter";
 import NeedFilter from "./Filter/NeedFilter";
 import VGAFilter from "./Filter/VGAFilter";
+import SSDFilter from "./Filter/SSDFilter";
+import TotalFilter from "./Filter/TotalFilter";
+import StatusFilter from "./Filter/StatusFilter";
+import PriceFilter from "./Filter/PriceFilter";
 import ArrangeFilter from "./Filter/ArrangeFilter";
+import useProductFilters from "../../../../hooks/useFilter/useProductFilters";
 
-// import { SampleNextArrow, SamplePrevArrow } from "./CarouselSlider";
-
+/* eslint-disable react/prop-types */
 const ProductList = ({ products }) => {
+  const [selectedIndices, setSelectedIndices] = useState([]);
+  const [selectedGpu, setSelectedGpu] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState([]);
+  const [selectedLcd, setSelectedLcd] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 10000000000]);
+
+  const {
+    ProductsMessage,
+    noProductsMessage,
+    ramSizes,
+    Gpunames,
+    Brand,
+    LCD,
+    priceNames,
+    sortedProducts,
+    sortProducts,
+  } = useProductFilters(
+    products,
+    priceRange,
+    selectedIndices,
+    selectedGpu,
+    selectedBrand,
+    selectedLcd
+  );
+
   const filters = [
     TotalFilter,
     StatusFilter,
-    PriceFilter,
-    BrandFilter,
-    CPUFilter,
-    RAMFilter,
+    (props) => (
+      <PriceFilter
+        priceNames={priceNames}
+        priceRange={priceRange}
+        setPriceRange={setPriceRange}
+      />
+    ),
+    (props) => (
+      <BrandFilter
+        Brand={Brand}
+        selectedBrand={selectedBrand}
+        setSelectedBrand={setSelectedBrand}
+      />
+    ),
+    (props) => (
+      <CPUFilter
+        Gpunames={Gpunames}
+        selectedGpu={selectedGpu}
+        setSelectedGpu={setSelectedGpu}
+      />
+    ),
+    (props) => (
+      <RAMFilter
+        ramSizes={ramSizes}
+        selectedIndices={selectedIndices}
+        setSelectedIndices={setSelectedIndices}
+      />
+    ),
     SSDFilter,
-    SizeFilter,
+    (props) => (
+      <SizeFilter
+        LCD={LCD}
+        selectedLcd={selectedLcd}
+        setSelectedLcd={setSelectedLcd}
+      />
+    ),
     NeedFilter,
     VGAFilter,
   ];
+
   return (
     <div className="w-full bg-cover flex bg-white rounded-sm flex-col bg-center gap-3 h-auto p-4">
       <Box
@@ -38,7 +97,7 @@ const ProductList = ({ products }) => {
       >
         <div className="block md:hidden w-full flex justify-between">
           <TotalFilter />
-          <ArrangeFilter />
+          <ArrangeFilter onSortChange={sortProducts} />
         </div>
         <div className="hidden md:flex gap-2 flex-wrap">
           {filters.map((FilterComponent, index) => (
@@ -47,13 +106,14 @@ const ProductList = ({ products }) => {
         </div>
       </Box>
       <div className="md:flex hidden" style={{ marginLeft: "auto" }}>
-        <ArrangeFilter />
+        <ArrangeFilter onSortChange={sortProducts} />
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-5">
-        {/* {products.map((product) => (
-            <Product key={product.id} {...product} />
-          ))} */}
+        {noProductsMessage && <div>{noProductsMessage}</div>}
+        {sortedProducts.map((product, index) => (
+          <Product key={product.id || index} {...product} />
+        ))}
       </div>
     </div>
   );
