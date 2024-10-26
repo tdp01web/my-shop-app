@@ -1,10 +1,13 @@
 import React, { useRef, useState } from "react";
-import { PlusCircleFilled, SearchOutlined } from "@ant-design/icons";
+import { DownOutlined, PlusCircleFilled, SearchOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Input, message, Popconfirm, Space, Table } from "antd";
+import { Button, Dropdown, Input, message, Popconfirm, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
 import { instance } from "../../../configs/instance";
+import { useGetAllProducts } from "../../../hooks/queries/useGetAllProduct";
+import { useDeleteProduct } from "../../../hooks/mutations/useDeleteProduct";
+import { useDeleteVarriantsProuduct } from "../../../hooks/mutations/useDeleteVarriantProduct";
 
 const ListProduct = () => {
   const [searchText, setSearchText] = useState('');
@@ -12,19 +15,51 @@ const ListProduct = () => {
   const searchInput = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
-  const { data: products } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => instance.get("/product/getAllProduct"),
-  });
 
-  const mutation = useMutation({
-    mutationFn: async (id) => await instance.delete(`/product/deleteProduct/${id}`),
-    onSuccess: () => {
-      messageApi.success("Xóa sản phẩm thành công");
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-    onError: (error) => messageApi.error(error.message),
-  });
+  const { mutate: deleteProduct } = useDeleteProduct(
+    {
+      onSuccess: () => {
+        messageApi.open({
+          type: "success",
+          content: "Xoá sản phẩm thành công",
+        });
+        queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
+      },
+      onError(error) {
+        messageApi.open({
+          type: "error",
+          content: error.message,
+        });
+      },
+    }
+  )
+  const { mutate: deleteVrProduct } = useDeleteVarriantsProuduct(
+    {
+      onSuccess: () => {
+        messageApi.open({
+          type: "success",
+          content: "Xoá biến thể thành công",
+        });
+        queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
+      },
+      onError(error) {
+        messageApi.open({
+          type: "error",
+          content: error.message,
+        });
+      },
+    }
+  )
+  const { data: product } = useGetAllProducts(
+    {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        console.log(error);
+      }
+    }
+  )
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -86,10 +121,17 @@ const ListProduct = () => {
       ),
   });
 
-  const dataSource = products?.data.map((item) => {
+  const dataSource = product?.data.map((item, index) => {
     return {
-      key: item.id,
-      ...item,
+      id: item._id,
+      key: item._id,
+      title: item.title,
+      image: item?.images,
+      description: item.description,
+      brand: item?.brand?.title,
+      category: item?.category?.name,
+      price: item.title,
+      variants: item?.variants || [],
     };
   });
   const columns = [
@@ -97,9 +139,21 @@ const ListProduct = () => {
       title: "Tên sản phẩm",
       dataIndex: "title",
       key: "title",
-      width: '30%',
+      width: '15%',
       ...getColumnSearchProps('title'),
       sorter: (a, b) => a.title.localeCompare(b.title),
+    },
+    {
+      title: "Ảnh",
+      dataIndex: "image",
+      key: "image",
+      render: (images) => (
+        images && images.length > 0 ? (
+          <img src={images[0].url} alt="product" style={{ width: 100, height: 100, borderRadius: 5 }} />
+        ) : (
+          'Không có ảnh'
+        )
+      ),
     },
     {
       title: "Giá sản phẩm",
@@ -130,7 +184,7 @@ const ListProduct = () => {
         <div className="flex space-x-3">
           <Popconfirm
             title="Xóa sản phẩm"
-            onConfirm={() => mutation.mutate(product._id)}
+            onConfirm={() => deleteProduct(product.id)}
             okText="Yes"
             cancelText="No"
           >
@@ -139,13 +193,56 @@ const ListProduct = () => {
             </Button>
           </Popconfirm>
           <Button>
-            <Link to={`/admin/products/${product._id}/edit`}>Cập nhật</Link>
+            <Link to={`/admin/products/${product.id}/edit`}>Cập nhật</Link>
           </Button>
         </div>
       ),
     },
   ];
 
+  const expandColumns = [
+    { title: 'CPU', dataIndex: 'cpu', key: 'cpu' },
+    { title: 'GPU', dataIndex: 'gpu', key: 'gpu' },
+    { title: 'RAM', dataIndex: 'ram', key: 'ram' },
+    { title: 'SSD', dataIndex: 'ssd', key: 'ssd' },
+    { title: 'Giá', dataIndex: 'price', key: 'price' },
+    { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
+    {
+      title: "Hành động",
+      dataIndex: "action",
+      width: 250,
+      render: (_, record) => (
+        <div className="flex space-x-3">
+          <Popconfirm
+            title="Xóa biến thể"
+            onConfirm={() => {
+              deleteVrProduct(record.id);
+            }}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>
+              Xóa
+            </Button>
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+  const expandedRowRender = (record) => {
+    const variantsData = record.variants.map((variant) => ({
+      id: variant._id,
+      key: variant._id,
+      cpu: variant?.processor?.name,
+      gpu: variant?.gpu?.name,
+      ram: variant?.ram?.size,
+      ssd: variant?.storage?.capacity,
+      quantity: variant.quantity,
+      price: variant.price,
+    }));
+
+    return <Table columns={expandColumns} dataSource={variantsData} pagination={false} />;
+  };
   return (
     <div>
       {contextHolder}
@@ -157,7 +254,13 @@ const ListProduct = () => {
           </Link>
         </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <>
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          expandable={{ expandedRowRender }}
+        />
+      </>
     </div>
   );
 };

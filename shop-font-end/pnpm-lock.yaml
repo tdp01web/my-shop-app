@@ -29,6 +29,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.59.8
         version: 5.59.13(react@18.3.1)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.59.13
+        version: 5.59.15(@tanstack/react-query@5.59.13(react@18.3.1))(react@18.3.1)
       antd:
         specifier: ^5.19.1
         version: 5.20.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -822,6 +825,15 @@ packages:
 
   '@tanstack/query-core@5.59.13':
     resolution: {integrity: sha512-Oou0bBu/P8+oYjXsJQ11j+gcpLAMpqW42UlokQYEz4dE7+hOtVO9rVuolJKgEccqzvyFzqX4/zZWY+R/v1wVsQ==}
+
+  '@tanstack/query-devtools@5.58.0':
+    resolution: {integrity: sha512-iFdQEFXaYYxqgrv63ots+65FGI+tNp5ZS5PdMU1DWisxk3fez5HG3FyVlbUva+RdYS5hSLbxZ9aw3yEs97GNTw==}
+
+  '@tanstack/react-query-devtools@5.59.15':
+    resolution: {integrity: sha512-rX28KTivkA2XEn3Fj9ckDtnTPY8giWYgssySSAperpVol4+th+NCij/MhLylfB+Mfg2JfCxOcwnM/fwzS8iSog==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.59.15
+      react: ^18 || ^19
 
   '@tanstack/react-query@5.59.13':
     resolution: {integrity: sha512-GB2ELtiH8tL0rcFiM4sWvnXhazt1xRXX/LolMEV12kfEKu58aNA4lQoieslP61PO4vZO9JJMwm+6lqyS0E1HOA==}
@@ -3238,6 +3250,14 @@ snapshots:
 
   '@tanstack/query-core@5.59.13': {}
 
+  '@tanstack/query-devtools@5.58.0': {}
+
+  '@tanstack/react-query-devtools@5.59.15(@tanstack/react-query@5.59.13(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-devtools': 5.58.0
+      '@tanstack/react-query': 5.59.13(react@18.3.1)
+      react: 18.3.1
+
   '@tanstack/react-query@5.59.13(react@18.3.1)':
     dependencies:
       '@tanstack/query-core': 5.59.13
@@ -5052,6 +5072,7 @@ snapshots:
       '@mui/styled-engine-sc': 6.1.0(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@reduxjs/toolkit': 2.2.7(react-redux@9.1.2(@types/react@18.3.5)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
       '@tanstack/react-query': 5.59.13(react@18.3.1)
+      '@tanstack/react-query-devtools': 5.59.15(@tanstack/react-query@5.59.13(react@18.3.1))(react@18.3.1)
       antd: 5.20.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       axios: 1.7.7
       clsx: 2.1.1
