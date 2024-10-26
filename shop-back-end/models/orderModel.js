@@ -1,33 +1,44 @@
 const mongoose = require("mongoose");
 
-// Khai báo Schema của mô hình Order trong Mongo
 var orderSchema = new mongoose.Schema(
   {
     orderedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    }, // Tham chiếu đến người dùng đã đặt hàng
+    },
     products: [
       {
-        product: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        }, // Tham chiếu đến mô hình Sản phẩm
-        variant: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "ProductVariant",
-          required: false,
-        }, // Nếu có biến thể sản phẩm được chọn
+        title: String,
+        slug: String,
+        description: String,
+        category: String,
+        brand: String,
+        lcd: String,
+        images: [
+          {
+            public_id: String,
+            url: String,
+          },
+        ],
+        variants: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ProductVariant",
+          },
+        ],
+        color: String,
+        ram: String,
+        storage: String,
+        processor: String,
+        gpu: String,
+
+        price: Number,
+        quantity: Number,
         count: {
           type: Number,
           required: true,
-        }, // Số lượng sản phẩm đã đặt
-        price: {
-          type: Number,
-          required: true,
-        }, // Giá sản phẩm tại thời điểm mua
+        },
       },
     ],
     totalProductPrice: {
@@ -120,5 +131,4 @@ var orderSchema = new mongoose.Schema(
   }
 );
 
-// Xuất mô hình
 module.exports = mongoose.model("Order", orderSchema);

@@ -16,15 +16,24 @@ const createOrder = asyncHandler(async (req, res) => {
   validateMongoDbId(_id);
 
   try {
-    const validPaymentMethods = ["Thanh Toán Khi Nhận Hàng", "MOMO"];
-    if (!validPaymentMethods.includes(paymentMethod)) {
-      return res
-        .status(400)
-        .json({ message: "Phương thức thanh toán không hợp lệ." });
-    }
-
     const user = await User.findById(_id);
-    let userCart = await Cart.findOne({ orderedBy: user._id });
+    let userCart = await Cart.findOne({ orderedBy: user._id })
+      .populate({
+        path: "products.product",
+        populate: [{ path: "category" }, { path: "brand" }, { path: "lcd" }],
+        strictPopulate: false,
+      })
+      .populate({
+        path: "products.variant",
+        populate: [
+          { path: "color" },
+          { path: "ram" },
+          { path: "storage" },
+          { path: "processor" },
+          { path: "gpu" },
+        ],
+        strictPopulate: false,
+      });
 
     if (!userCart || userCart.products.length === 0) {
       return res.status(400).json({ message: "Giỏ hàng của bạn đang trống." });
@@ -40,10 +49,23 @@ const createOrder = asyncHandler(async (req, res) => {
 
     let newOrder = new Order({
       products: userCart.products.map((item) => ({
-        product: item.product,
+        title: item.product.title,
+        slug: item.product.slug,
+        description: item.product.description,
+        category: item.product.category?.name || null,
+        brand: item.product.brand?.title || null,
+        lcd: item.product.lcd?.size || null,
+        images: item.product.images,
+        // Attributes from variant
+        color: item.variant?.color?.title || null,
+        ram: item.variant?.ram?.size || null,
+        storage: item.variant?.storage?.capacity || null,
+        processor: item.variant?.processor?.name || null,
+        gpu: item.variant?.gpu?.name || null,
+
+        price: item.variant ? item.variant.price : item.product.price,
+        quantity: item.variant ? item.variant.quantity : item.product.quantity,
         count: item.count,
-        price: item.price,
-        variant: item.variant || null,
       })),
       orderedBy: user._id,
       totalProductPrice: finalAmount,
@@ -252,10 +274,7 @@ const getUserOrders = asyncHandler(async (req, res) => {
   validateMongoDbId(_id);
 
   try {
-    const orders = await Order.find({ orderedBy: _id })
-      .populate("products.product", "name price")
-      .populate("products.variant", "name quantity")
-      .sort({ createdAt: -1 });
+    const orders = await Order.find({ orderedBy: _id }).sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng nào." });
@@ -276,9 +295,7 @@ const getOrderById = asyncHandler(async (req, res) => {
   validateMongoDbId(_id);
 
   try {
-    const order = await Order.findOne({ _id: orderId, orderedBy: _id })
-      .populate("products.product", "name price")
-      .populate("products.variant", "name quantity");
+    const order = await Order.findOne({ _id: orderId, orderedBy: _id });
 
     if (!order) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
@@ -293,11 +310,7 @@ const getOrderById = asyncHandler(async (req, res) => {
 // API lấy tất cả đơn hàng dành cho admin
 const getAllOrdersForAdmin = asyncHandler(async (req, res) => {
   try {
-    const orders = await Order.find({})
-      .populate("products.product", "name price")
-      .populate("products.variant", "name quantity")
-      .populate("orderedBy", "name email") // Hiển thị thêm thông tin người đặt hàng
-      .sort({ createdAt: -1 });
+    const orders = await Order.find({}).sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng nào." });
