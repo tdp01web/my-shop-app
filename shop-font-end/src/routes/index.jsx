@@ -29,6 +29,7 @@ import EditRAM from "../pages/admin/varriantsProduct/ram/editRAM";
 import ListSSD from "../pages/admin/varriantsProduct/ssd";
 import AddSSD from "../pages/admin/varriantsProduct/ssd/addSSD";
 import EditSSD from "../pages/admin/varriantsProduct/ssd/editSSD";
+import DetailCart from "../pages/admin/carts/detailCart";
 
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
@@ -140,6 +141,7 @@ const Router = () => {
             <Route path="users/:id/edit" element={<EditUser />} />
             {/* Cart */}
             <Route path="carts" element={<ListCart />} />
+            <Route path="carts/:id/detail" element={<DetailCart />} />
             {/* Comments */}
             <Route path="comments" element={<ListComment />} />
             {/* Vouchers */}
