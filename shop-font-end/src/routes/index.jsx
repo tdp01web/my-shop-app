@@ -65,6 +65,9 @@ const NotFoundSearch = lazy(() => import("../pages/NotFoundSearch"));
 const PaymentManual = lazy(() => import("../pages/client/PaymentManual"));
 const VoucherPage = lazy(() => import("../pages/client/Voucher/VoucherPage"));
 const ProductDetail = lazy(() => import("../pages/client/ProductDetail"));
+const OrderSuccess = lazy(() =>
+  import("../pages/client/cart/component/OrderSuccess")
+);
 
 const Router = () => {
   return (
@@ -95,6 +98,7 @@ const Router = () => {
             <Route path="contacts" element={<ContactPage />} />
             <Route path="abouts" element={<AboutsPage />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
             <Route path="orders/bill" element={<OrdersPage />} />
             <Route path="signin" element={<SigninPage />} />
             <Route path="signup" element={<SignupPage />} />

@@ -88,10 +88,7 @@ const Pay = ({ addressData, handleNext, cartTotal }) => {
           className="bg-red-600"
           onClick={() =>
             handleNext({
-              paymentMethod:
-                gender === 1
-                  ? "Thanh Toán Khi Nhận Hàng"
-                  : "Chuyển Khoản Ngân Hàng",
+              paymentMethod: gender === 1 ? "Thanh Toán Khi Nhận Hàng" : "MOMO",
               shippingAddress: {
                 name: addressData.fullName,
                 phone: addressData.phoneNumber,

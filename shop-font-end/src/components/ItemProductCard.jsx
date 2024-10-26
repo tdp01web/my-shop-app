@@ -9,10 +9,6 @@ import { instance } from "../configs/instance";
 import Swal from "sweetalert2";
 const ItemProductCard = ({ item }) => {
   const queryClient = useQueryClient();
-  console.log(
-    "🚀 ~ file: ItemProductCard.jsx ~ line 9 ~ ItemProductCard ~ item:",
-    item.variant
-  );
 
   const mutationDelete = useMutation({
     mutationFn: async (cartData) => {
