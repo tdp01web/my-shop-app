@@ -59,6 +59,7 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
       firstName: findUser?.firstName,
       lastName: findUser?.lastName,
       mobile: findUser?.mobile,
+      role: findUser?.role,
       email: findUser?.email,
       token: generateToken(findUser?._id),
     });
@@ -229,8 +230,8 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
   try {
     const token = await user.createPasswordResetToken();
     await user.save();
-    const resetURL = `Hi, Please follow this link to reset your password. 
-    This link is valid till 10 minutes from now. 
+    const resetURL = `Hi, Please follow this link to reset your password.
+    This link is valid till 10 minutes from now.
     <a href='http://localhost:3000/api/user/reset-password/${token}'>Click here</a>`;
     const data = {
       to: email,
