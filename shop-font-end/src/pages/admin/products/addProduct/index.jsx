@@ -152,7 +152,7 @@ const AddProduct = () => {
             <Input />
           </Form.Item>
           <Form.Item label="Images" name="images" valuePropName="fileList" getValueFromEvent={normFile}>
-            <Upload action="/upload.do" listType="picture-card">
+            <Upload action="http://localhost:3000/api/upload" name="images" listType="picture-card">
               <button style={{ border: 0, background: 'none' }} type="button">
                 <PlusOutlined />
                 <div style={{ marginTop: 8 }}>Upload</div>

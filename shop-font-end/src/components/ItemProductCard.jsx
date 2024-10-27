@@ -101,12 +101,12 @@ const ItemProductCard = ({ item }) => {
         <img src={item.product.images[1].url} alt="" />
         <Button
           onClick={handleDelete}
-          className="flex text-[12px] text-gray-500 hover:text-[#E30019] w-[20%] mx-auto gap-2 items-center"
+          className="flex items-center gap-2 mx-auto w-[20%] text-[12px] text-gray-500 hover:text-[#E30019]"
         >
           Xóa <FaRegTrashCan />
         </Button>
       </div>
-      <div className="md:flex flex-col md:gap-2 justify-center">
+      <div className="md:flex flex-col justify-center md:gap-2">
         <div>
           <Link to={`/product/${item.id}`} className="w-[50%]">
             <p className="font-semibold text-[14px]">
@@ -116,8 +116,8 @@ const ItemProductCard = ({ item }) => {
             </p>
           </Link>
         </div>
-        <div className="w-[25%] md:w-[40%] ">
-          <p className="font-semibold text-[20px] text-[#E30019]">
+        <div className="w-[25%] md:w-[40%]">
+          <p className="font-semibold text-[#E30019] text-[20px]">
             {new Intl.NumberFormat("vi-VN", {
               style: "currency",
               currency: "VND",
