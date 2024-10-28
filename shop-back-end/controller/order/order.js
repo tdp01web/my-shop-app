@@ -44,7 +44,7 @@ const createOrder = asyncHandler(async (req, res) => {
         ? userCart.totalAfterDiscount
         : userCart.cartTotal;
 
-    const shippingFee = 0;
+    const shippingFee = req.body.deliveryFee;
     const totalPrice = finalAmount + shippingFee;
 
     let newOrder = new Order({

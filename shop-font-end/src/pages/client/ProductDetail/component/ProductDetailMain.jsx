@@ -16,6 +16,7 @@ const ProductDetailMain = ({ product }) => {
   let sliderRef2 = useRef(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const user = localStorage.getItem("user");
 
   useEffect(() => {
     setNav1(sliderRef1);
@@ -164,29 +165,42 @@ const ProductDetailMain = ({ product }) => {
               ))}
             </div>
 
-            {selectedVariant.quantity <= 0 ? (
-              <Link to={"/"}>
+            {user ? (
+              <>
+                {selectedVariant.quantity <= 0 ? (
+                  <Link to={"/"}>
+                    <Button
+                      variant="contained"
+                      className="w-[50%] p-4 bg-[#E30019]"
+                    >
+                      Sản phẩm này hiện đang hết hàng
+                    </Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Quantity
+                      maxQuantity={selectedVariant.quantity}
+                      onChange={setCount}
+                    />
+                    <Button
+                      variant="contained"
+                      onClick={handleAddToCart}
+                      className="w-[40%] p-4 bg-[#E30019]"
+                    >
+                      Thêm vào giỏ hàng
+                    </Button>
+                  </>
+                )}
+              </>
+            ) : (
+              <Link to={"/login"}>
                 <Button
                   variant="contained"
                   className="w-[50%] p-4 bg-[#E30019]"
                 >
-                  Sản phẩm này hiện đang hết hàng
+                  Vui lòng đăng nhập để mua hàng
                 </Button>
               </Link>
-            ) : (
-              <>
-                <Quantity
-                  maxQuantity={selectedVariant.quantity}
-                  onChange={setCount}
-                />
-                <Button
-                  variant="contained"
-                  onClick={handleAddToCart}
-                  className="w-[40%] p-4 bg-[#E30019]"
-                >
-                  Thêm vào giỏ hàng
-                </Button>
-              </>
             )}
           </>
         )}
