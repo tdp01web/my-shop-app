@@ -9,6 +9,8 @@ import { instance } from "../../../../configs/instance";
 import Loader from "../../../../components/Loading";
 
 const CartItems = ({ cartItems, handleNext }) => {
+  console.log("🚀 ~ CartItems ~ cartItems:", cartItems);
+
   // const { data, isLoading, isError } = useQuery({
   //   queryKey: ["Mã Giảm Giá"],
   //   queryFn: async () => {

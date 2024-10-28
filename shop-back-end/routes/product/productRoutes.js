@@ -24,7 +24,7 @@ const {
 } = require("../../middlewares/uploadImages");
 
 //! Create a new product
-router.post("/create", authMiddleware, isAdmin, createProduct);
+router.post("/create", createProduct);
 //! Get a product
 router.get("/getaProduct/:id", getaProduct);
 //! Get all products

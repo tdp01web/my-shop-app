@@ -8,6 +8,8 @@ import Quantity from "../../../../components/quantity";
 import { instance } from "../../../../configs/instance";
 
 const ProductDetailMain = ({ product }) => {
+  console.log("🚀 ~ ProductDetailMain ~ product:", product);
+
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
   const [count, setCount] = useState(1);
   const [nav1, setNav1] = useState(null);
@@ -116,30 +118,34 @@ const ProductDetailMain = ({ product }) => {
           <tbody>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">SSD</td>
-              <td className="p-3">{selectedVariant.storage.capacity}</td>
+              <td className="p-3">
+                {selectedVariant.storage?.capacity || "N/A"}
+              </td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">CPU</td>
-              <td className="p-3">{selectedVariant.processor.name}</td>
+              <td className="p-3">
+                {selectedVariant.processor?.name || "N/A"}
+              </td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">VGA</td>
-              <td className="p-3">{selectedVariant.gpu.name}</td>
+              <td className="p-3">{selectedVariant.gpu?.name || "N/A"}</td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">RAM</td>
-              <td className="p-3">{selectedVariant.ram.size}</td>
+              <td className="p-3">{selectedVariant.ram?.size || "N/A"}</td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">LCD</td>
               <td className="p-3">
-                {product.lcd.resolution} | {product.lcd.size}{" "}
+                {product.lcd?.resolution || "N/A"} |{" "}
+                {product.lcd?.size || "N/A"}
               </td>
             </tr>
-
             <tr>
               <td className="p-3 bg-gray-100 font-semibold">Số lượng</td>
-              <td className="p-3">{selectedVariant.quantity}</td>
+              <td className="p-3">{selectedVariant.quantity || "N/A"}</td>
             </tr>
           </tbody>
         </table>
