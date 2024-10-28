@@ -16,6 +16,8 @@ const ProductDetail = () => {
     queryKey: ["PRODUCTS", id],
     queryFn: async () => {
       const { data } = await instance.get(`product/getaProduct/${id}`);
+
+      console.log("🚀 ~ queryFn: ~ data:", data);
       return data;
     },
     staleTime: 0,

@@ -9,7 +9,7 @@ const SearchProduct = () => {
   const { mobile } = useBreakpoints();
 
   return (
-    <div className=" w-[60%] sm:w-[80%] md:w-[50%] 2xl:w-[35%]">
+    <div className=" w-[40%] sm:w-[70%] md:w-[50%] 2xl:w-[35%]">
       <Paper
         component="form"
         sx={{

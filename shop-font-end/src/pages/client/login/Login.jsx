@@ -59,7 +59,7 @@ const Login = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
         }}
-        className="w-full h-[70vh]  flex  relative  z-99 bg-white"
+        className="w-full h-[75vh]  flex  relative  z-99 bg-white"
       >
         <Form
           className="absolute left-[10%] top-[10%] sm:w-[400px] rounded-xl"
@@ -122,6 +122,9 @@ const Login = () => {
               </p>
             )}
           </Form.Item>
+          <Link to={"/forgot-password"}>
+            <p>Quên mật khẩu</p>
+          </Link>
           <Link to={"/register"}>
             <p>Bạn chưa có tài khoản. Đăng ký</p>
           </Link>

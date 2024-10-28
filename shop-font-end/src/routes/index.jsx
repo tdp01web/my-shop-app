@@ -30,8 +30,10 @@ import ListSSD from "../pages/admin/varriantsProduct/ssd";
 import AddSSD from "../pages/admin/varriantsProduct/ssd/addSSD";
 import EditSSD from "../pages/admin/varriantsProduct/ssd/editSSD";
 import DetailCart from "../pages/admin/carts/detailCart";
+const ResetPassword = lazy(() =>
+  import("../pages/client/ForgotPassword/component/ResetPassword")
+);
 import PrivateRoute from "./privateRouter";
-
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
 const LayoutClient = lazy(() => import("../layouts/client"));
@@ -71,6 +73,8 @@ const OrderSuccess = lazy(() =>
   import("../pages/client/cart/component/OrderSuccess")
 );
 
+const ForgotPassword = lazy(() => import("../pages/client/ForgotPassword"));
+
 const Router = () => {
   return (
     <BrowserRouter>
@@ -108,6 +112,8 @@ const Router = () => {
             <Route path="installment" element={<Installment />} />
             <Route path="blog" element={<BlogPage />} />
             <Route path="collection" element={<Collection />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="forgot-password/:token" element={<ResetPassword />} />
           </Route>
           {/* Voucher */}
           <Route path="voucher" element={<VoucherPage />} />

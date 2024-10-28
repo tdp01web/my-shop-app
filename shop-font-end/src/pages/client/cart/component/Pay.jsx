@@ -4,6 +4,9 @@ import { FcMoneyTransfer } from "react-icons/fc";
 import { GiReceiveMoney } from "react-icons/gi";
 
 const Pay = ({ addressData, handleNext, cartTotal }) => {
+  console.log("🚀 ~ Pay ~ cartTotal:", cartTotal);
+  console.log("🚀 ~ Pay ~ handleNext:", handleNext);
+  console.log("🚀 ~ Pay ~ addressData:", addressData);
   const [gender, setGender] = useState(1);
 
   return (
