@@ -31,7 +31,7 @@ const OrderCard = ({ data }) => {
             <div className="p-2 w-3/4 flex items-center gap-x-2">
               <div className="w-[90px] h-[90px] border border-[#eee] rounded overflow-hidden relative">
                 <img
-                  src="https://picsum.photos/200/300"
+                  src={product?.images?.[0]?.url}
                   alt="Product image"
                   className="block w-full h-full object-cover"
                 />
@@ -46,7 +46,7 @@ const OrderCard = ({ data }) => {
                   to={`/products/${data._id}`}
                   className="text-[#111] font-semibold"
                 >
-                  PC GVN x AORUS MASTER (Intel i9-14900K/ VGA RTX 4090)
+                  {product?.title}
                 </Link>
               </div>
             </div>
@@ -61,7 +61,7 @@ const OrderCard = ({ data }) => {
 
       {data.products.length > MAX_SHOW && (
         <Button className="rounded" onClick={onToggleShow}>
-          {isShowFull ? "Xem thêm " : "Ẩn bớt "}{" "}
+          {isShowFull ? "Ẩn bớt" : "Xem thêm "}{" "}
           {data.products.length - MAX_SHOW} sản phẩm
         </Button>
       )}

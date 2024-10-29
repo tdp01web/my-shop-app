@@ -79,7 +79,7 @@ const OrdersHistory = () => {
             {activeTab === it.label && (
               <span className="text-[#ff3c53]">
                 {" "}
-                {selectedOrders?.length > 1 && `(${selectedOrders.length})`}
+                {selectedOrders?.length > 0 && `(${selectedOrders.length})`}
               </span>
             )}
           </p>
