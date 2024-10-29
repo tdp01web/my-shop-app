@@ -17,9 +17,11 @@ import { IoIosEye } from "react-icons/io";
 import { PiNotepadBold } from "react-icons/pi";
 import { HiOutlineLogout } from "react-icons/hi";
 import useGetProfile from "../../../../../hooks/queries/useGetProfile";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
+  console.log("🚀 ~ MainHeader ~ data:", data);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -116,8 +118,14 @@ function MainHeader() {
 
             <div className="user-menu">
               <Link to={"/account"} className="flex items-center gap-2">
-                <MdWavingHand /> <p>Xin chào</p> {data.email.split("@")[0]}
+                <MdWavingHand /> {data.email.split("@")[0]}
               </Link>
+
+              {data.role === "admin" && (
+                <Link to={"/admin"} className="flex items-center gap-2">
+                  <MdOutlineAdminPanelSettings /> Vào trang quản lý
+                </Link>
+              )}
               <hr />
               <Link to={"/account"} className="flex items-center gap-2">
                 <IoIosEye /> đã xem gần đây
