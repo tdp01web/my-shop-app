@@ -25,7 +25,7 @@ const Method3 = () => {
               />
             </a>
           </div>
-          <button className="h-[400px] w-[0.2px] bg-black"></button>
+          <button className="h-[400px] w-[0.2px] bg-black mx-3"></button>
           <div className="text-[18px]">
             <span className="font-bold ">Bước 2:</span>
             <br />
