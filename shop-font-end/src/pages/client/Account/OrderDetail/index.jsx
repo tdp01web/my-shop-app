@@ -105,7 +105,7 @@ const OrderDetail = () => {
             <div className="flex items-center mb-3 gap-x-3">
               <p className="w-1/3">Người nhận:</p>
               <p className="flex-1">
-                Bùi Xuân Đạt - {data.shippingAddress.phone}
+                {data.shippingAddress.name} - {data.shippingAddress.phone}
               </p>
             </div>
 
