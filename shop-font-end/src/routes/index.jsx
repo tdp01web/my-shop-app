@@ -74,6 +74,7 @@ const OrderSuccess = lazy(() =>
 );
 
 const ForgotPassword = lazy(() => import("../pages/client/ForgotPassword"));
+const UpdatePassword = lazy(() => import("../pages/client/UpdatePassword"));
 
 const Router = () => {
   return (
@@ -95,6 +96,10 @@ const Router = () => {
               <Route path="address" element={<AccountAddress />} />
               <Route path="orders-history" element={<OrdersHistory />} />
               <Route path="orders/:id" element={<OrderDetail />} />
+              <Route
+                path="/account/update-password"
+                element={<UpdatePassword />}
+              />
             </Route>
             {/* <Route path="products">
               <Route index element={<ProductPage />} />

@@ -4,6 +4,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import { getFullName } from "../../pages/client/Account/AccountInformation";
 import useGetProfile from "../../hooks/queries/useGetProfile";
+import { GoPasskeyFill } from "react-icons/go";
 
 const Sidebar = () => {
   const { data } = useGetProfile();
@@ -41,6 +42,15 @@ const Sidebar = () => {
           <FaUser />
 
           <p>Thông tin tài khoản</p>
+        </NavLink>
+
+        <NavLink
+          to="/account/update-password"
+          className="flex items-center py-3 px-5 gap-x-3 text-[#111] hover:text-[#e30019] transition-all [&.active]:text-[#e30019]"
+          end
+        >
+          <GoPasskeyFill />
+          <p>Thay đổi mật khẩu</p>
         </NavLink>
 
         {/* <NavLink
