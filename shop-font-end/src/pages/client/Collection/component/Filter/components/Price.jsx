@@ -4,7 +4,7 @@ import { TextField, Slider } from "@mui/material";
 /* eslint-disable react/prop-types */
 const Price = ({ priceRange = [0, 60000000], onPriceChange }) => {
   const handleSliderChange = (event, newValue) => {
-    onPriceChange(newValue); // Cập nhật giá trị giá
+    onPriceChange(newValue); 
   };
 
   return (

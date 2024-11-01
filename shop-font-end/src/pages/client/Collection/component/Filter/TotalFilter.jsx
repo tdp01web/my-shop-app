@@ -83,14 +83,13 @@ const TotalFilter = () => {
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
           <Paper sx={{ marginTop: 2, width: '100%' }}>
-            {/* Grid Layout để làm giao diện responsive */}
             <Grid container spacing={2} sx={{ px: 2, py: 2 }}>
               {filters.map((filter, index) => (
                 <Grid
                   item
-                  xs={12} // Mobile full width
-                  sm={12}  // Tablet full width (thay đổi từ 6 thành 12)
-                  md={4}   // Desktop chia 3 cột
+                  xs={12}
+                  sm={12}  
+                  md={4}   
                   key={index}
                   sx={{ borderBottom: '1px solid #e0e0e0' }}
                 >

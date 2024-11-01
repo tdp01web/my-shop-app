@@ -1,4 +1,3 @@
-// hooks/useBrandFilter.js
 import { useEffect, useState } from "react";
 
 const useBrandFilter = (products, selectedBrand) => {
@@ -19,7 +18,7 @@ const useBrandFilter = (products, selectedBrand) => {
 
   useEffect(() => {
     if (selectedBrand.length === 0) {
-      setFilteredProducts(products); // Không chọn thương hiệu thì hiển thị tất cả
+      setFilteredProducts(products); 
     } else {
       const selectedBrandTitles = selectedBrand
         .map((index) => Brand[index])

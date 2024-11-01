@@ -20,7 +20,7 @@ const useCpuFilter = (products, selectedCpu) => {
 
   useEffect(() => {
     if (selectedCpu.length === 0) {
-      setFilteredProducts(products); // Không chọn CPU thì hiển thị tất cả
+      setFilteredProducts(products); 
     } else {
       const selectedCPU = selectedCpu.map((index) => Cpunames[index]);
       const newFilteredCpu = products.filter((product) =>

@@ -20,7 +20,7 @@ const useRamFilter = (products, selectedIndices) => {
 
   useEffect(() => {
     if (selectedIndices.length === 0) {
-      setFilteredProducts(products); // Không chọn RAM thì hiển thị tất cả
+      setFilteredProducts(products); 
     } else {
       const selectedRAMs = selectedIndices.map((index) => ramSizes[index]);
       const newFilteredProducts = products.filter((product) =>

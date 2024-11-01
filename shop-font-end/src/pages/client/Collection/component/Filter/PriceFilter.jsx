@@ -31,7 +31,7 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
   };
 
   const handlePriceChange = (newValue) => {
-    setPriceRange(newValue); // Cập nhật giá trị giá
+    setPriceRange(newValue);
   };
 
   const handleReset = () => {
@@ -41,7 +41,6 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
   const open = Boolean(anchorEl);
   const id = open ? "price-popover" : undefined;
 
-  // Đoạn mã này sẽ đảm bảo popover không tắt khi click vào bên trong
   const popoverRef = useRef(null);
 
   useEffect(() => {
@@ -51,10 +50,8 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
       }
     };
 
-    // Thêm sự kiện click cho document
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Cleanup event listener khi component unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -77,7 +74,7 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
         id={id}
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose} // Giữ lại để có thể tắt nếu click bên ngoài
+        onClose={handleClose} 
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left",
@@ -86,10 +83,10 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
           vertical: "top",
           horizontal: "left",
         }}
-        sx={{ marginTop: "10px", width: "400px" }} // Chiều rộng popover
+        sx={{ marginTop: "10px", width: "400px" }} 
         disableRestoreFocus
         disableEnforceFocus
-        ref={popoverRef} // Tham chiếu đến popover
+        ref={popoverRef} 
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
           <Price

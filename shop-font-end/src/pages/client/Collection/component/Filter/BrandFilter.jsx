@@ -1,4 +1,3 @@
-// components/Filter/BrandFilter.js
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { Button, Popover, Box } from "@mui/material";
