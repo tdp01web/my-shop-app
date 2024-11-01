@@ -1,58 +1,73 @@
-// hooks/useProductFilters.js
-
 import useRamFilter from "./component/useRamFilter";
-import useGpuFilter from "./component/useGpuFilter";
+import usePriceFilter from "./component/usePriceFilter";
+import useCpuFilter from "./component/useCpuFilter";
+import useVgaFilter from "./component/useVgaFilter";
 import useBrandFilter from "./component/useBrandFilter";
 import useLcdFilter from "./component/useLcdFilter";
-import usePriceFilter from "./component/usePriceFilter";
+import useSSDFilter from "./component/useSSDFilter";
 import useArrangeFilter from "./component/useArrangeFilter";
 
 const useProductFilters = (
   products,
   priceRange,
   selectedIndices,
-  selectedGpu,
+  selectedCpu,
+  selectedVga,
   selectedBrand,
-  selectedLcd
+  selectedLcd,
+  selectedSSD
 ) => {
-  const { ProductsMessage, noProductsMessage } = usePriceFilter(
-    products,
-    priceRange
-  );
+  const {
+    priceNames,
+    filteredProducts: filteredByPrice,
+    noProductsMessage,
+  } = usePriceFilter(products, priceRange);
 
   const { ramSizes, filteredProducts: filteredByRam } = useRamFilter(
-    products,
+    filteredByPrice,
     selectedIndices
   );
-  const { Gpunames, filteredProducts: filteredByGpu } = useGpuFilter(
+
+  const { Cpunames, filteredProducts: filteredByCpu } = useCpuFilter(
     filteredByRam,
-    selectedGpu
+    selectedCpu
   );
+
+  const { Vganames, filteredProducts: filteredByVga } = useVgaFilter(
+    filteredByCpu,
+    selectedVga
+  );
+
   const { Brand, filteredProducts: filteredByBrand } = useBrandFilter(
-    filteredByGpu,
+    filteredByVga,
     selectedBrand
   );
+
   const { LCD, filteredProducts: filteredByLcd } = useLcdFilter(
     filteredByBrand,
     selectedLcd
   );
-  const { priceNames, filteredProducts } = usePriceFilter(
+
+  const { SSDnames, filteredProducts: filteredBySSD } = useSSDFilter(
     filteredByLcd,
-    priceRange
+    selectedSSD
   );
-  const { sortedProducts, sortProducts } = useArrangeFilter(filteredProducts);
+
+  const { sortedProducts, sortProducts } = useArrangeFilter(filteredBySSD);
 
   return {
-    ProductsMessage,
     noProductsMessage,
     ramSizes,
-    Gpunames,
+    Cpunames,
+    Vganames,
     Brand,
     LCD,
+    SSDnames,
     priceNames,
-    filteredProducts,
+    filteredProducts: filteredBySSD,
     sortedProducts,
     sortProducts,
   };
 };
+
 export default useProductFilters;

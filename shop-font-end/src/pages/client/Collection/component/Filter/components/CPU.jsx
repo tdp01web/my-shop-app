@@ -1,8 +1,8 @@
 import { Box, Button } from "@mui/material";
 /* eslint-disable react/prop-types */
-const CPUcon = ({ Gpunames = [], selectedGpu = [], setSelectedGpu }) => {
+const CPUcon = ({ Cpunames = [], selectedCpu = [], setSelectedCpu }) => {
   const handleSelect = (index) => {
-    setSelectedGpu((prev) =>
+    setSelectedCpu((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
@@ -16,16 +16,16 @@ const CPUcon = ({ Gpunames = [], selectedGpu = [], setSelectedGpu }) => {
         justifyContent="flex-start"
         width="100%"
       >
-        {Gpunames.length > 0 ? (
-          Gpunames.map((label, index) => (
+        {Cpunames.length > 0 ? (
+          Cpunames.map((label, index) => (
             <Button
               key={index}
               variant="outlined"
               onClick={() => handleSelect(index)}
               color="primary"
               sx={{
-                color: selectedGpu.includes(index) ? "#007bff" : "black",
-                fontWeight: selectedGpu.includes(index) ? 700 : 400,
+                color: selectedCpu.includes(index) ? "#007bff" : "black",
+                fontWeight: selectedCpu.includes(index) ? 700 : 400,
                 flexBasis: "40%",
                 margin: "5px",
                 width: "5px",
@@ -35,7 +35,7 @@ const CPUcon = ({ Gpunames = [], selectedGpu = [], setSelectedGpu }) => {
             </Button>
           ))
         ) : (
-          <div>Không có GPU để hiển thị.</div>
+          <div>Không có CPU để hiển thị.</div>
         )}
       </Box>
     </div>

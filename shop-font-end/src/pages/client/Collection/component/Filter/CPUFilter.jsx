@@ -17,7 +17,7 @@ const theme = createTheme({
   },
 });
 /* eslint-disable react/prop-types */
-const CPUFilter = ({ Gpunames, selectedGpu, setSelectedGpu }) => {
+const CPUFilter = ({ Cpunames, selectedCpu, setSelectedCpu }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -37,9 +37,9 @@ const CPUFilter = ({ Gpunames, selectedGpu, setSelectedGpu }) => {
         variant="outlined"
         onClick={handleClick}
         sx={{
-          borderColor: selectedGpu.length > 0 ? "#007bff" : "grey.500",
-          color: selectedGpu.length > 0 ? "#007bff" : "black",
-          fontWeight: selectedGpu.length > 0 ? 450 : 400,
+          borderColor: selectedCpu.length > 0 ? "#007bff" : "grey.500",
+          color: selectedCpu.length > 0 ? "#007bff" : "black",
+          fontWeight: selectedCpu.length > 0 ? 450 : 400,
         }}
       >
         CPU
@@ -65,9 +65,9 @@ const CPUFilter = ({ Gpunames, selectedGpu, setSelectedGpu }) => {
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
           <CPUcon
-            Gpunames={Gpunames}
-            selectedGpu={selectedGpu}
-            setSelectedGpu={setSelectedGpu}
+            Cpunames={Cpunames}
+            selectedCpu={selectedCpu}
+            setSelectedCpu={setSelectedCpu}
           />
 
           <Box
@@ -79,7 +79,7 @@ const CPUFilter = ({ Gpunames, selectedGpu, setSelectedGpu }) => {
             <Button
               variant="outlined"
               color="error"
-              onClick={() => setSelectedGpu([])}
+              onClick={() => setSelectedCpu([])}
             >
               Bỏ chọn
             </Button>

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 const usePriceFilter = (products, priceRange) => {
   const [priceNames, setPriceNames] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState(products);
-  const [noProductsMessage, setNoProductsMessage] = useState(""); // Thêm state cho thông báo
 
   useEffect(() => {
     if (products) {
@@ -20,30 +19,26 @@ const usePriceFilter = (products, priceRange) => {
   }, [products]);
 
   useEffect(() => {
-    if (priceRange) {
-      const newFilteredProducts = products.filter((product) =>
-        product.variants.some(
-          (variant) =>
-            variant.price >= priceRange[0] && variant.price <= priceRange[1]
-        )
-      );
+    if (priceRange && products) {
+      const newFilteredProducts = products.filter(
+        (product) =>
+          product.variants &&
+          product.variants.some((variant) => {
+            const variantPrice = Number(variant.price);
 
-      if (newFilteredProducts.length === 0) {
-        setNoProductsMessage(
-          "Không có sản phẩm nào phù hợp với khoảng giá đã chọn."
-        );
-      } else {
-        setNoProductsMessage("");
-      }
+            return (
+              variantPrice >= priceRange[0] && variantPrice <= priceRange[1]
+            );
+          })
+      );
 
       setFilteredProducts(newFilteredProducts);
     } else {
-      setFilteredProducts(products);
-      setNoProductsMessage("");
+      setFilteredProducts(products || []);
     }
   }, [priceRange, products]);
 
-  return { priceNames, filteredProducts, noProductsMessage };
+  return { priceNames, filteredProducts };
 };
 
 export default usePriceFilter;

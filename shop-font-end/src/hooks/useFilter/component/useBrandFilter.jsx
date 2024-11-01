@@ -1,3 +1,4 @@
+// hooks/useBrandFilter.js
 import { useEffect, useState } from "react";
 
 const useBrandFilter = (products, selectedBrand) => {
@@ -23,8 +24,12 @@ const useBrandFilter = (products, selectedBrand) => {
       const selectedBrandTitles = selectedBrand
         .map((index) => Brand[index])
         .filter(Boolean);
-      const newFilteredProducts = products.filter((product) =>
-        selectedBrandTitles.includes(product.brand.title)
+
+      const newFilteredProducts = products.filter(
+        (product) =>
+          product.brand &&
+          product.brand.title &&
+          selectedBrandTitles.includes(product.brand.title)
       );
       setFilteredProducts(newFilteredProducts);
     }

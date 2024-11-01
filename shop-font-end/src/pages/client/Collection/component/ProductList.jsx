@@ -1,5 +1,3 @@
-// components/ProductList/ProductList.js
-
 import { useState } from "react";
 import Product from "../../../../components/Product";
 import { Box } from "@mui/material";
@@ -15,22 +13,23 @@ import StatusFilter from "./Filter/StatusFilter";
 import PriceFilter from "./Filter/PriceFilter";
 import ArrangeFilter from "./Filter/ArrangeFilter";
 import useProductFilters from "../../../../hooks/useFilter/useProductFilters";
-
 /* eslint-disable react/prop-types */
 const ProductList = ({ products }) => {
   const [selectedIndices, setSelectedIndices] = useState([]);
-  const [selectedGpu, setSelectedGpu] = useState([]);
+  const [selectedCpu, setSelectedCpu] = useState([]);
+  const [selectedVga, setSelectedVga] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState([]);
   const [selectedLcd, setSelectedLcd] = useState([]);
+  const [selectedSSD, setSelectedSSD] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000000000]);
 
   const {
-    ProductsMessage,
-    noProductsMessage,
     ramSizes,
-    Gpunames,
+    Cpunames,
     Brand,
     LCD,
+    SSDnames,
+    Vganames,
     priceNames,
     sortedProducts,
     sortProducts,
@@ -38,9 +37,11 @@ const ProductList = ({ products }) => {
     products,
     priceRange,
     selectedIndices,
-    selectedGpu,
+    selectedCpu,
+    selectedVga,
     selectedBrand,
-    selectedLcd
+    selectedLcd,
+    selectedSSD
   );
 
   const filters = [
@@ -62,9 +63,9 @@ const ProductList = ({ products }) => {
     ),
     (props) => (
       <CPUFilter
-        Gpunames={Gpunames}
-        selectedGpu={selectedGpu}
-        setSelectedGpu={setSelectedGpu}
+        Cpunames={Cpunames}
+        selectedCpu={selectedCpu}
+        setSelectedCpu={setSelectedCpu}
       />
     ),
     (props) => (
@@ -74,7 +75,13 @@ const ProductList = ({ products }) => {
         setSelectedIndices={setSelectedIndices}
       />
     ),
-    SSDFilter,
+    (props) => (
+      <SSDFilter
+        SSDnames={SSDnames}
+        selectedSSD={selectedSSD}
+        setSelectedSSD={setSelectedSSD}
+      />
+    ),
     (props) => (
       <SizeFilter
         LCD={LCD}
@@ -83,7 +90,13 @@ const ProductList = ({ products }) => {
       />
     ),
     NeedFilter,
-    VGAFilter,
+    (props) => (
+      <VGAFilter
+        Vganames={Vganames}
+        selectedVga={selectedVga}
+        setSelectedVga={setSelectedVga}
+      />
+    ),
   ];
 
   return (
@@ -110,10 +123,13 @@ const ProductList = ({ products }) => {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-5">
-        {noProductsMessage && <div>{noProductsMessage}</div>}
-        {sortedProducts.map((product, index) => (
-          <Product key={product.id || index} {...product} />
-        ))}
+        {sortedProducts.length > 0 ? (
+          sortedProducts.map((product, index) => (
+            <Product key={product.id || index} {...product} />
+          ))
+        ) : (
+          <div>Không có sản phẩm nào trong tầm giá này.</div>
+        )}
       </div>
     </div>
   );

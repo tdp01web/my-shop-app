@@ -3,6 +3,10 @@ import { TextField, Slider } from "@mui/material";
 
 /* eslint-disable react/prop-types */
 const Price = ({ priceRange = [0, 60000000], onPriceChange }) => {
+  const handleSliderChange = (event, newValue) => {
+    onPriceChange(newValue); // Cập nhật giá trị giá
+  };
+
   return (
     <Box p={2} width="250px">
       <Box display="flex" justifyContent="space-between" mb={2}>
@@ -27,7 +31,7 @@ const Price = ({ priceRange = [0, 60000000], onPriceChange }) => {
       </Box>
       <Slider
         value={priceRange}
-        onChange={onPriceChange} // Hàm thay đổi giá trị
+        onChange={handleSliderChange}
         min={1000}
         max={60000000}
         valueLabelDisplay="auto"
