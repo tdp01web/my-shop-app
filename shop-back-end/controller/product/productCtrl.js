@@ -10,6 +10,43 @@ const Category = require("../../models/product/prodcategoryModel");
 const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 
+// Tìm kiếm sản phẩm
+const searchProducts = async (req, res) => {
+  const query = req.query.query;
+
+  if (!query || typeof query !== "string") {
+    return res.status(400).json({ message: "Vui lòng nhập từ khóa tìm kiếm." });
+  }
+
+  try {
+    const products = await Product.find({
+      title: { $regex: query, $options: "i" },
+    })
+      .populate({
+        path: "variants",
+        populate: [
+          { path: "color" },
+          { path: "ram" },
+          { path: "storage" },
+          { path: "processor" },
+          { path: "gpu" },
+        ],
+      })
+      .sort({ createdAt: -1 });
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm nào." });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Có lỗi xảy ra trong quá trình tìm kiếm." });
+  }
+};
+
 //! Thêm sản phẩm mới
 const createProduct = asyncHandler(async (req, res) => {
   try {
@@ -344,4 +381,5 @@ module.exports = {
   updateProductVariant,
   deleteProductVariant,
   getRelatedProducts,
+  searchProducts,
 };
