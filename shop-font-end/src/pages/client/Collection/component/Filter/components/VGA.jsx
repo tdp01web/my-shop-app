@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 /* eslint-disable react/prop-types */
-const CPUcon = ({ Vganames = [], selectedVga = [], setSelectedVga }) => {
+const VGAcon = ({ Vganames = [], selectedVga = [], setSelectedVga }) => {
   const handleSelect = (index) => {
     setSelectedVga((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
@@ -42,4 +42,4 @@ const CPUcon = ({ Vganames = [], selectedVga = [], setSelectedVga }) => {
   );
 };
 
-export default CPUcon;
+export default VGAcon;

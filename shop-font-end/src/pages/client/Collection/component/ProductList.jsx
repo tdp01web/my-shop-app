@@ -1,18 +1,11 @@
+// src/components/ProductList/ProductList.js
+import { Box } from "@mui/material";
 import { useState } from "react";
 import Product from "../../../../components/Product";
-import { Box } from "@mui/material";
-import BrandFilter from "./Filter/BrandFilter";
-import CPUFilter from "./Filter/CPUFilter";
-import RAMFilter from "./Filter/RAMFilter";
-import SizeFilter from "./Filter/SizeFilter";
-import NeedFilter from "./Filter/NeedFilter";
-import VGAFilter from "./Filter/VGAFilter";
-import SSDFilter from "./Filter/SSDFilter";
-import TotalFilter from "./Filter/TotalFilter";
-import StatusFilter from "./Filter/StatusFilter";
-import PriceFilter from "./Filter/PriceFilter";
-import ArrangeFilter from "./Filter/ArrangeFilter";
 import useProductFilters from "../../../../hooks/useFilter/useProductFilters";
+import TotalFilter from "./Filter/TotalFilter";
+import ArrangeFilter from "./Filter/ArrangeFilter";
+import Filters from "./Filter/FilterModule/Filters";
 /* eslint-disable react/prop-types */
 const ProductList = ({ products }) => {
   const [selectedIndices, setSelectedIndices] = useState([]);
@@ -44,61 +37,6 @@ const ProductList = ({ products }) => {
     selectedSSD
   );
 
-  const filters = [
-    TotalFilter,
-    StatusFilter,
-    (props) => (
-      <PriceFilter
-        priceNames={priceNames}
-        priceRange={priceRange}
-        setPriceRange={setPriceRange}
-      />
-    ),
-    (props) => (
-      <BrandFilter
-        Brand={Brand}
-        selectedBrand={selectedBrand}
-        setSelectedBrand={setSelectedBrand}
-      />
-    ),
-    (props) => (
-      <CPUFilter
-        Cpunames={Cpunames}
-        selectedCpu={selectedCpu}
-        setSelectedCpu={setSelectedCpu}
-      />
-    ),
-    (props) => (
-      <RAMFilter
-        ramSizes={ramSizes}
-        selectedIndices={selectedIndices}
-        setSelectedIndices={setSelectedIndices}
-      />
-    ),
-    (props) => (
-      <SSDFilter
-        SSDnames={SSDnames}
-        selectedSSD={selectedSSD}
-        setSelectedSSD={setSelectedSSD}
-      />
-    ),
-    (props) => (
-      <SizeFilter
-        LCD={LCD}
-        selectedLcd={selectedLcd}
-        setSelectedLcd={setSelectedLcd}
-      />
-    ),
-    NeedFilter,
-    (props) => (
-      <VGAFilter
-        Vganames={Vganames}
-        selectedVga={selectedVga}
-        setSelectedVga={setSelectedVga}
-      />
-    ),
-  ];
-
   return (
     <div className="w-full bg-cover flex bg-white rounded-sm flex-col bg-center gap-3 h-auto p-4">
       <Box
@@ -113,9 +51,29 @@ const ProductList = ({ products }) => {
           <ArrangeFilter onSortChange={sortProducts} />
         </div>
         <div className="hidden md:flex gap-2 flex-wrap">
-          {filters.map((FilterComponent, index) => (
-            <FilterComponent key={index} />
-          ))}
+          <Filters
+            ramSizes={ramSizes}
+            Cpunames={Cpunames}
+            Brand={Brand}
+            LCD={LCD}
+            SSDnames={SSDnames}
+            Vganames={Vganames}
+            priceNames={priceNames}
+            selectedCpu={selectedCpu}
+            selectedVga={selectedVga}
+            selectedBrand={selectedBrand}
+            priceRange={priceRange}
+            selectedSSD={selectedSSD}
+            selectedIndices={selectedIndices}
+            selectedLcd={selectedLcd}
+            setSelectedIndices={setSelectedIndices}
+            setSelectedLcd={setSelectedLcd}
+            setSelectedCpu={setSelectedCpu}
+            setSelectedVga={setSelectedVga}
+            setSelectedBrand={setSelectedBrand}
+            setPriceRange={setPriceRange}
+            setSelectedSSD={setSelectedSSD}
+          />
         </div>
       </Box>
       <div className="md:flex hidden" style={{ marginLeft: "auto" }}>
