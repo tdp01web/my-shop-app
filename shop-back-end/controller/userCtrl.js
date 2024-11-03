@@ -12,7 +12,7 @@ const Product = require("../models/product/productModel");
 const Cart = require("../models/cartModel");
 const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
-
+const bcrypt = require("bcrypt");
 //! Register
 const createUser = asyncHandler(async (req, res) => {
   const { email, mobile } = req.body;
@@ -59,6 +59,7 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
       firstName: findUser?.firstName,
       lastName: findUser?.lastName,
       mobile: findUser?.mobile,
+      role: findUser?.role,
       email: findUser?.email,
       token: generateToken(findUser?._id),
     });
@@ -208,16 +209,29 @@ const logout = asyncHandler(async (req, res) => {
 
 //! Update password
 const updatePassword = asyncHandler(async (req, res) => {
-  const { _id } = req.user;
-  const { password } = req.body;
+  const { _id } = req.user; // ID người dùng từ xác thực
+  const { currentPassword, newPassword } = req.body; // Mật khẩu hiện tại và mật khẩu mới từ request body
+
   validateMongoDbId(_id);
+
   const user = await User.findById(_id);
-  if (password) {
-    user.password = password;
-    const updatedPassword = await user.save();
-    res.json(updatedPassword);
+  if (!user) {
+    return res.status(404).json({ message: "Không tìm thấy người dùng" });
+  }
+
+  // Kiểm tra mật khẩu hiện tại có khớp với mật khẩu đã mã hóa trong DB
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ message: "Mật khẩu hiện tại không đúng" });
+  }
+
+  // Cập nhật mật khẩu mới nếu kiểm tra hợp lệ
+  if (newPassword) {
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({ message: "Cập nhật mật khẩu thành công" });
   } else {
-    res.json(user);
+    res.status(400).json({ message: "Cần nhập mật khẩu mới" });
   }
 });
 
@@ -231,7 +245,7 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
     await user.save();
     const resetURL = `Hi, Please follow this link to reset your password. 
     This link is valid till 10 minutes from now. 
-    <a href='http://localhost:3000/api/user/reset-password/${token}'>Click here</a>`;
+    <a href='http://localhost:5173/forgot-password/${token}'>Click here</a>`;
     const data = {
       to: email,
       text: "Hey User",

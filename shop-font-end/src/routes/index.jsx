@@ -31,6 +31,11 @@ import AddSSD from "../pages/admin/varriantsProduct/ssd/addSSD";
 import EditSSD from "../pages/admin/varriantsProduct/ssd/editSSD";
 import ProductListSearch from "../layouts/client/components/header/ProductListSearch";
 
+import DetailCart from "../pages/admin/carts/detailCart";
+const ResetPassword = lazy(() =>
+  import("../pages/client/ForgotPassword/component/ResetPassword")
+);
+import PrivateRoute from "./privateRouter";
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
 const LayoutClient = lazy(() => import("../layouts/client"));
@@ -66,6 +71,12 @@ const NotFoundSearch = lazy(() => import("../pages/NotFoundSearch"));
 const PaymentManual = lazy(() => import("../pages/client/PaymentManual"));
 const VoucherPage = lazy(() => import("../pages/client/Voucher/VoucherPage"));
 const ProductDetail = lazy(() => import("../pages/client/ProductDetail"));
+const OrderSuccess = lazy(() =>
+  import("../pages/client/cart/component/OrderSuccess")
+);
+
+const ForgotPassword = lazy(() => import("../pages/client/ForgotPassword"));
+const UpdatePassword = lazy(() => import("../pages/client/UpdatePassword"));
 
 const Router = () => {
   return (
@@ -87,6 +98,10 @@ const Router = () => {
               <Route path="address" element={<AccountAddress />} />
               <Route path="orders-history" element={<OrdersHistory />} />
               <Route path="orders/:id" element={<OrderDetail />} />
+              <Route
+                path="/account/update-password"
+                element={<UpdatePassword />}
+              />
             </Route>
             {/* <Route path="products">
               <Route index element={<ProductPage />} />
@@ -96,6 +111,7 @@ const Router = () => {
             <Route path="contacts" element={<ContactPage />} />
             <Route path="abouts" element={<AboutsPage />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
             <Route path="orders/bill" element={<OrdersPage />} />
             <Route path="signin" element={<SigninPage />} />
             <Route path="signup" element={<SignupPage />} />
@@ -104,11 +120,20 @@ const Router = () => {
             <Route path="blog" element={<BlogPage />} />
             <Route path="collection" element={<Collection />} />
             <Route path="search" element={<ProductListSearch />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="forgot-password/:token" element={<ResetPassword />} />
           </Route>
           {/* Voucher */}
           <Route path="voucher" element={<VoucherPage />} />
           {/* Layout Admin */}
-          <Route path="admin" element={<LayoutAdmin />}>
+          <Route
+            path="admin"
+            element={
+              <PrivateRoute>
+                <LayoutAdmin />
+              </PrivateRoute>
+            }
+          >
             <Route index element={<Dashboard />} />
             {/* Brand */}
             <Route path="brand" element={<ListBrand />} />
@@ -141,6 +166,7 @@ const Router = () => {
             <Route path="users/:id/edit" element={<EditUser />} />
             {/* Cart */}
             <Route path="carts" element={<ListCart />} />
+            <Route path="carts/:id/detail" element={<DetailCart />} />
             {/* Comments */}
             <Route path="comments" element={<ListComment />} />
             {/* Vouchers */}

@@ -8,6 +8,8 @@ import Quantity from "../../../../components/quantity";
 import { instance } from "../../../../configs/instance";
 
 const ProductDetailMain = ({ product }) => {
+  console.log("🚀 ~ ProductDetailMain ~ product:", product);
+
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
   const [count, setCount] = useState(1);
   const [nav1, setNav1] = useState(null);
@@ -16,6 +18,7 @@ const ProductDetailMain = ({ product }) => {
   let sliderRef2 = useRef(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const user = localStorage.getItem("user");
 
   useEffect(() => {
     setNav1(sliderRef1);
@@ -115,30 +118,34 @@ const ProductDetailMain = ({ product }) => {
           <tbody>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">SSD</td>
-              <td className="p-3">{selectedVariant.storage.capacity}</td>
+              <td className="p-3">
+                {selectedVariant.storage?.capacity || "N/A"}
+              </td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">CPU</td>
-              <td className="p-3">{selectedVariant.processor.name}</td>
+              <td className="p-3">
+                {selectedVariant.processor?.name || "N/A"}
+              </td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">VGA</td>
-              <td className="p-3">{selectedVariant.gpu.name}</td>
+              <td className="p-3">{selectedVariant.gpu?.name || "N/A"}</td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">RAM</td>
-              <td className="p-3">{selectedVariant.ram.size}</td>
+              <td className="p-3">{selectedVariant.ram?.size || "N/A"}</td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">LCD</td>
               <td className="p-3">
-                {product.lcd.resolution} | {product.lcd.size}{" "}
+                {product.lcd?.resolution || "N/A"} |{" "}
+                {product.lcd?.size || "N/A"}
               </td>
             </tr>
-
             <tr>
               <td className="p-3 bg-gray-100 font-semibold">Số lượng</td>
-              <td className="p-3">{selectedVariant.quantity}</td>
+              <td className="p-3">{selectedVariant.quantity || "N/A"}</td>
             </tr>
           </tbody>
         </table>
@@ -164,29 +171,42 @@ const ProductDetailMain = ({ product }) => {
               ))}
             </div>
 
-            {selectedVariant.quantity <= 0 ? (
-              <Link to={"/"}>
+            {user ? (
+              <>
+                {selectedVariant.quantity <= 0 ? (
+                  <Link to={"/"}>
+                    <Button
+                      variant="contained"
+                      className="w-[50%] p-4 bg-[#E30019]"
+                    >
+                      Sản phẩm này hiện đang hết hàng
+                    </Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Quantity
+                      maxQuantity={selectedVariant.quantity}
+                      onChange={setCount}
+                    />
+                    <Button
+                      variant="contained"
+                      onClick={handleAddToCart}
+                      className="w-[40%] p-4 bg-[#E30019]"
+                    >
+                      Thêm vào giỏ hàng
+                    </Button>
+                  </>
+                )}
+              </>
+            ) : (
+              <Link to={"/login"}>
                 <Button
                   variant="contained"
                   className="w-[50%] p-4 bg-[#E30019]"
                 >
-                  Sản phẩm này hiện đang hết hàng
+                  Vui lòng đăng nhập để mua hàng
                 </Button>
               </Link>
-            ) : (
-              <>
-                <Quantity
-                  maxQuantity={selectedVariant.quantity}
-                  onChange={setCount}
-                />
-                <Button
-                  variant="contained"
-                  onClick={handleAddToCart}
-                  className="w-[40%] p-4 bg-[#E30019]"
-                >
-                  Thêm vào giỏ hàng
-                </Button>
-              </>
             )}
           </>
         )}

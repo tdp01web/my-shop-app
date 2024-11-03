@@ -17,9 +17,11 @@ import { IoIosEye } from "react-icons/io";
 import { PiNotepadBold } from "react-icons/pi";
 import { HiOutlineLogout } from "react-icons/hi";
 import useGetProfile from "../../../../../hooks/queries/useGetProfile";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
+  console.log("🚀 ~ MainHeader ~ data:", data);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -90,15 +92,18 @@ function MainHeader() {
         </button>
         <SearchProduct />
         {links.map((link, index) => (
-          <div className="md:flex gap-2  items-center hidden " key={index}>
+          <Link
+            to={link.to}
+            className="md:flex gap-2  items-center hidden "
+            key={index}
+          >
             <span className="text-[20px]">{link.icon}</span>
             <span className="2xl:flex hidden flex-col font-500 text-[13px] leading-4">
               <span>{link.label}</span>
-              <Link to={link.to}>
-                <span>{link.sublabel}</span>
-              </Link>
+
+              <span>{link.sublabel}</span>
             </span>
-          </div>
+          </Link>
         ))}
         {data ? (
           <div className="user-container">
@@ -106,15 +111,21 @@ function MainHeader() {
               <div className="icon">
                 <AiOutlineUser />
               </div>
-              <div>
+              <div className="hidden md:block">
                 Xin chào <br /> {data.email.split("@")[0]}
               </div>
             </div>
 
             <div className="user-menu">
               <Link to={"/account"} className="flex items-center gap-2">
-                <MdWavingHand /> Xin chào {data.email.split("@")[0]}
+                <MdWavingHand /> {data.email.split("@")[0]}
               </Link>
+
+              {data.role === "admin" && (
+                <Link to={"/admin"} className="flex items-center gap-2">
+                  <MdOutlineAdminPanelSettings /> Vào trang quản lý
+                </Link>
+              )}
               <hr />
               <Link to={"/account"} className="flex items-center gap-2">
                 <IoIosEye /> đã xem gần đây
@@ -145,9 +156,12 @@ function MainHeader() {
           </Link>
         )}
 
-        <div className="flex bg-[#BE1529] p-2 rounded-lg items-center md:hidden">
+        <Link
+          to="/cart"
+          className="flex bg-[#BE1529] p-2 rounded-lg items-center md:hidden"
+        >
           <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />
-        </div>
+        </Link>
       </div>
       <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
         <Box

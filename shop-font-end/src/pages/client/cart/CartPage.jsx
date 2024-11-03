@@ -23,11 +23,11 @@ const CartPage = () => {
   const [addressData, setAddressData] = useState(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const token = localStorage.getItem("token");
 
   const { data: cartData, refetch } = useQuery({
     queryKey: ["CartPage"],
     queryFn: async () => {
-      const token = localStorage.getItem("token");
       const { data } = await instance.get("/cart/getCart", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -51,25 +51,35 @@ const CartPage = () => {
 
   const createOrderMutation = useMutation({
     mutationFn: async (orderDetails) => {
-      console.log("Order Details:", orderDetails);
-
-      const token = localStorage.getItem("token");
       const { data } = await instance.post("/order", orderDetails, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      await refetch();
       return data;
     },
     onSuccess: (data) => {
-      message.success("Đặt hàng thành công");
-      queryClient.invalidateQueries(["cart"]);
-      setActiveStep(3);
-      setOrderInfo(data.order);
+      if (data.paymentIntent?.partnerCode === "MOMO") {
+        try {
+          window.location.href = data.paymentIntent.payUrl;
+        } catch (error) {
+          console.log("🚀 ~ CartPage ~ error:", error);
+        }
+      } else {
+        console.log(data);
+        message.success("Đặt hàng thành công");
+        queryClient.invalidateQueries(["cart"]);
+        setActiveStep(3);
+        setOrderInfo(data.order);
+      }
     },
     onError: (error) => {
-      message.error("Đặt hàng thất bại, vui lòng thử lại!");
-      navigate("/");
-      console.log(error);
+      if (error.response?.status === 401) {
+        message.error("Phiên làm việc hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      } else {
+        message.error("Yêu cầu thất bại, vui lòng thử lại.");
+      }
+      console.error(error);
     },
   });
 

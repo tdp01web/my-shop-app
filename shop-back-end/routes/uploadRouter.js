@@ -13,8 +13,6 @@ router.delete("/deleteImage/:id", authMiddleware, isAdmin, deleteImage);
 //!
 router.post(
   "/",
-  authMiddleware,
-  isAdmin,
   uploadPhoto.array("images", 10),
   productImgResize,
   uploadImage

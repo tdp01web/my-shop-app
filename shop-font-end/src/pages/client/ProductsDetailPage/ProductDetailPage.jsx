@@ -21,7 +21,6 @@ const ProductDetailPage = () => {
     queryKey: ["PRODUCTS", id],
     queryFn: async () => {
       const { data } = await instance.get(`product/getaProduct/${id}`);
-      console.log(data);
       if (!data) throw new Error("Sản phẩm không tồn tại");
       return data;
     },

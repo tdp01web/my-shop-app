@@ -26,27 +26,29 @@ const SearchProduct = () => {
 
   return (
     <div className="w-[60%] sm:w-[80%] md:w-[50%] 2xl:w-[35%]">
-      <Paper
-        component="form"
-        onSubmit={handleSearch}
-        sx={{
-          p: "2px 4px",
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-          height: 40,
-        }}
-      >
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-          placeholder="Bạn muốn tìm gì"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
-          <SearchIcon />
-        </IconButton>
-      </Paper>
+      <div className=" w-[40%] sm:w-[70%] md:w-[50%] 2xl:w-[35%]">
+        <Paper
+          component="form"
+          onSubmit={handleSearch}
+          sx={{
+            p: "2px 4px",
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            height: 40,
+          }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Bạn muốn tìm gì"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+      </div>
     </div>
   );
 };

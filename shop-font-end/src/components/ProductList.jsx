@@ -13,8 +13,6 @@ const ProductList = ({
   seeAllLink,
   titleSale,
 }) => {
-  console.log("🚀 ~ file: ProductList.jsx:products", products);
-
   const settings = {
     dots: true,
     infinite: true,

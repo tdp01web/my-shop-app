@@ -9,7 +9,7 @@ import Support from "../../components/Support";
 const LayoutClient = () => {
   return (
     <>
-      <Support />
+      {/* <Support /> */}
       <div className="max-w-screen-xl mx-auto flex flex-col md:gap-10 bg-[#ECECEC]">
         <HeaderLayoutClient />
 

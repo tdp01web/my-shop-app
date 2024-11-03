@@ -4,6 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../../../components/Loading";
 
 const OrderConfirmation = ({ order }) => {
+  console.log(
+    "🚀 ~ file: OrderConfirmation.jsx:OrderConfirmation ~ order:",
+    order
+  );
   const { shippingAddress, totalPrice, paymentMethod, _id } = order || {};
   const navigate = useNavigate();
   const handleClick = () => {

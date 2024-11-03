@@ -6,6 +6,9 @@ const {
   updateStatus,
   cancelOrderForAdmin,
   cancelOrderForUser,
+  getAllOrdersForAdmin,
+  handleMomoPayment,
+  callback,
 } = require("../../controller/order/order");
 const {
   authMiddleware,
@@ -15,8 +18,15 @@ const router = express.Router();
 
 router.post("/", authMiddleware, createOrder); // Order sản phẩm
 
+// Thanh toán online
+router.post("/payment", authMiddleware, handleMomoPayment);
+router.post("/callback", callback);
+
 // Lấy tất cả đơn hàng của người dùng
 router.get("/", authMiddleware, getUserOrders);
+
+// Lấy tất cả đơn hàng của tất cả người dùng
+router.get("/my-orders", authMiddleware, isAdmin, getAllOrdersForAdmin);
 
 // Lấy chi tiết một đơn hàng cụ thể
 router.get("/:orderId", authMiddleware, getOrderById);

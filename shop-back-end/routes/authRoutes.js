@@ -53,7 +53,7 @@ router.put("/blockUser/:id", authMiddleware, isAdmin, blockUser);
 //! Mở tài khoản user
 router.put("/unblockUser/:id", authMiddleware, isAdmin, unblockUser);
 //! Đổi mật khẩu
-router.put("/updatePassword", authMiddleware, updatePassword);
+router.put("/updatePassword/:id", authMiddleware, updatePassword);
 //! Xóa user
 router.delete("/deleteUser/:id", deleteUser);
 

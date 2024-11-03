@@ -41,51 +41,48 @@ const Method4 = () => {
       <div className=" mt-[45px] mb-[20px]">
         <h2 className="font-bold  text-[32px] ">C. Hình thức đăng ký</h2>
       </div>
-      <div className="h-[490px]  bg-[#F8F8F8] shadow-md rounded-3xl ">
-        <div className="pt-[40px] flex justify-evenly">
-          <div className="text-[18px]">
+      <div className="h-auto sm:h-[490px] bg-[#F8F8F8] shadow-md rounded-3xl p-6">
+        <div className="pt-4 flex flex-col sm:flex-row justify-evenly items-center space-y-6 sm:space-y-0">
+          <div className="text-[16px] sm:text-[18px] text-center sm:text-left flex flex-col items-center sm:items-start">
             <a href="#">
               <img
                 src="/images/installment/logopayment.png"
                 alt=""
-                className=" w-[240px] h-[230px] ml-[50px]"
+                className="w-[180px] sm:w-[240px] h-auto"
               />
             </a>
-            <br />
-            <span className="font-bold ">
+            <span className="font-bold mt-4">
               Cách 1: Đăng ký tại Showroom GEARVN
             </span>
-            <br />
-            Khách hàng tới Showroom GEARVN để được tư <br />
-            vấn sản phẩm, thực hiện thanh toán trả góp tại <br />
-            <span className="ml-[50px]">Showroom và nhận sản phẩm.</span>
+            <p className="mt-2">
+              Khách hàng tới Showroom GEARVN để được tư <br />
+              vấn sản phẩm, thực hiện thanh toán trả góp tại <br />
+              Showroom và nhận sản phẩm.
+            </p>
           </div>
-          <button className="h-[400px] w-[0.2px] bg-black"></button>
-          <div className="text-[18px]">
+
+          <div className="h-[1px] sm:h-[400px] w-full sm:w-[0.2px] bg-black my-4 sm:my-0 mx-3"></div>
+
+          <div className="text-[16px] sm:text-[18px] text-center sm:text-left flex flex-col items-center sm:items-start">
             <a href="#">
               <img
                 src="/images/installment/salephone.png"
                 alt=""
-                className=" w-[266px] h-[230px] ml-[50px]"
+                className="w-[180px] sm:w-[266px] h-auto"
               />
             </a>
-            <br />
-            <span className="font-bold ml-[40px] mb-[10px]">
+            <span className="font-bold mt-4">
               Cách 2: Đăng ký thông qua Hotline
             </span>
-            <br />
-            Khách hàng liên hệ GEARVN qua Hotline 1800.6975
-            <br />
-            <span className="ml-[20px]">
-              để được tư vấn sản phẩm, đặt hàng, nhận sản
-            </span>
-            <br />
-            <span className="ml-[20px]">
-              phẩm và thực hiện thanh toán trả góp tại nhà.
-            </span>
+            <p className="mt-2">
+              Khách hàng liên hệ GEARVN qua Hotline 1800.6975
+              <br /> để được tư vấn sản phẩm, đặt hàng, nhận sản phẩm <br />
+              và thực hiện thanh toán trả góp tại nhà.
+            </p>
           </div>
         </div>
       </div>
+
       <div className=" my-[15px] ">
         <h2 className="font-bold  text-[32px] ">
           D. Danh sách ngân hàng hỗ trợ trả góp và kỳ hạn trả góp
@@ -131,48 +128,44 @@ const Method4 = () => {
           C. Hình thức đăng ký
         </h2>
       </div>
-      <div className="h-[490px]  bg-[#F8F8F8] shadow-md rounded-3xl ">
-        <div className="pt-[40px] flex justify-evenly">
-          <div className="text-[18px]">
+      <div className="h-auto sm:h-[490px] bg-[#F8F8F8] shadow-md rounded-3xl p-6 mb-6">
+        <div className="pt-4 flex flex-col sm:flex-row justify-evenly items-center space-y-6 sm:space-y-0">
+          <div className="text-[16px] sm:text-[18px] text-center sm:text-left flex flex-col items-center sm:items-start">
             <a href="#">
               <img
                 src="/images/installment/logopayment.png"
                 alt=""
-                className=" w-[240px] h-[230px] ml-[50px]"
+                className="w-[180px] sm:w-[240px] h-auto"
               />
             </a>
-            <br />
-            <span className="font-bold ">
+            <span className="font-bold mt-4">
               Cách 1: Đăng ký tại Showroom GEARVN
             </span>
-            <br />
-            Khách hàng tới Showroom GEARVN để được tư <br />
-            vấn sản phẩm, thực hiện thanh toán trả góp tại <br />
-            <span className="ml-[50px]">Showroom và nhận sản phẩm.</span>
+            <p className="mt-2">
+              Khách hàng tới Showroom GEARVN để được tư <br />
+              vấn sản phẩm, thực hiện thanh toán trả góp tại <br />
+              Showroom và nhận sản phẩm.
+            </p>
           </div>
-          <button className="h-[400px] w-[0.2px] bg-black"></button>
-          <div className="text-[18px]">
+
+          <div className="h-[1px] sm:h-[400px] w-full sm:w-[0.2px] bg-black my-4 sm:my-0 mx-3"></div>
+
+          <div className="text-[16px] sm:text-[18px] text-center sm:text-left flex flex-col items-center sm:items-start">
             <a href="#">
               <img
                 src="/images/installment/salephone.png"
                 alt=""
-                className=" w-[266px] h-[230px] ml-[50px]"
+                className="w-[180px] sm:w-[266px] h-auto"
               />
             </a>
-            <br />
-            <span className="font-bold ml-[40px] mb-[10px]">
+            <span className="font-bold mt-4">
               Cách 2: Đăng ký thông qua Hotline
             </span>
-            <br />
-            Khách hàng liên hệ GEARVN qua Hotline 1800.6975
-            <br />
-            <span className="ml-[20px]">
-              để được tư vấn sản phẩm, đặt hàng, nhận sản
-            </span>
-            <br />
-            <span className="ml-[20px]">
-              phẩm và thực hiện thanh toán trả góp tại nhà.
-            </span>
+            <p className="mt-2">
+              Khách hàng liên hệ GEARVN qua Hotline 1800.6975
+              <br /> để được tư vấn sản phẩm, đặt hàng, nhận sản phẩm <br />
+              và thực hiện thanh toán trả góp tại nhà.
+            </p>
           </div>
         </div>
       </div>
@@ -185,7 +178,7 @@ const Method4 = () => {
         <div className="text-[26px] font-bold">NHÂN VIÊN GEARVN TẠO ĐƠN</div>
         <div className="text-[26px] font-bold">KHÁCH HÀNG THANH TOÁN</div>
       </div>
-      <img src="/images/installment/guide.png" alt="" className='mb-[40px]'/>
+      <img src="/images/installment/guide.png" alt="" className="mb-[40px]" />
     </>
   );
 }

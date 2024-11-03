@@ -7,12 +7,10 @@ import { Link } from "react-router-dom";
 import Quantity from "../components/quantity";
 import { instance } from "../configs/instance";
 import Swal from "sweetalert2";
+
 const ItemProductCard = ({ item }) => {
+  console.log("🚀 ~ ItemProductCard ~ item:", item);
   const queryClient = useQueryClient();
-  console.log(
-    "🚀 ~ file: ItemProductCard.jsx ~ line 9 ~ ItemProductCard ~ item:",
-    item.variant
-  );
 
   const mutationDelete = useMutation({
     mutationFn: async (cartData) => {
@@ -102,26 +100,29 @@ const ItemProductCard = ({ item }) => {
   return (
     <div className="flex gap-5">
       <div className="flex flex-col justify-center w-[25%]">
-        <img src={item.product.images[1].url} alt="" />
+        {/* Use optional chaining to safely access the image */}
+        <img src={item.product.images[0]?.url} alt={item.product.title} />
         <Button
           onClick={handleDelete}
-          className="flex text-[12px] text-gray-500 hover:text-[#E30019] w-[20%] mx-auto gap-2 items-center"
+          className="flex items-center gap-2 mx-auto w-[20%] text-[12px] text-gray-500 hover:text-[#E30019]"
         >
           Xóa <FaRegTrashCan />
         </Button>
       </div>
-      <div className="md:flex flex-col md:gap-2 justify-center">
+      <div className="md:flex flex-col justify-center md:gap-2">
         <div>
-          <Link to={`/product/${item.id}`} className="w-[50%]">
+          <Link to={`/product/${item.product._id}`} className="w-[50%]">
             <p className="font-semibold text-[14px]">
-              {item.product.title} | {item.variant.color.title} |{" "}
+              {item.product.title}
+              {/* Check if color is available before displaying */}
+              {item.variant.color ? `| ${item.variant.color.title}` : ""} |{" "}
               {item.variant.gpu.name} | {item.variant.ram.size} |{" "}
               {item.variant.storage.capacity}
             </p>
           </Link>
         </div>
-        <div className="w-[25%] md:w-[40%] ">
-          <p className="font-semibold text-[20px] text-[#E30019]">
+        <div className="w-[25%] md:w-[40%]">
+          <p className="font-semibold text-[#E30019] text-[20px]">
             {new Intl.NumberFormat("vi-VN", {
               style: "currency",
               currency: "VND",

@@ -9,20 +9,23 @@ import { instance } from "../../../../configs/instance";
 import Loader from "../../../../components/Loading";
 
 const CartItems = ({ cartItems, handleNext }) => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["Mã Giảm Giá"],
-    queryFn: async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const { data } = await instance.get("/coupon/getallCoupons", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        return data;
-      } catch (error) {
-        console.log("🚀 ~ queryFn: ~ error:", error);
-      }
-    },
-  });
+  console.log("🚀 ~ CartItems ~ cartItems:", cartItems);
+
+  // const { data, isLoading, isError } = useQuery({
+  //   queryKey: ["Mã Giảm Giá"],
+  //   queryFn: async () => {
+  //     const token = localStorage.getItem("token");
+  //     console.log("🚀 ~ queryFn: ~ token:", token);
+  //     try {
+  //       const { data } = await instance.get("/coupon/getallCoupons", {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       });
+  //       return data;
+  //     } catch (error) {
+  //       // console.log("🚀 ~ queryFn: ~ error:", error);
+  //     }
+  //   },
+  // });
 
   return cartItems ? (
     cartItems.products.length === 0 ? (
@@ -45,7 +48,7 @@ const CartItems = ({ cartItems, handleNext }) => {
             <ItemProductCard key={item._id} item={item} />
           ))}
           <hr className="border border-gray-300" />
-          <CouponDropdown data={data} />
+          {/* <CouponDropdown data={data} /> */}
           <hr className="border border-gray-300" />
           <div className="flex justify-between items-center">
             <p className="text-[#535353] text-[20px] font-medium">

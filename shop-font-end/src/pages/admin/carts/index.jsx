@@ -1,15 +1,53 @@
 import React, { useRef, useState } from "react";
-import { PlusCircleFilled, SearchOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusCircleFilled, QuestionCircleOutlined, SearchOutlined, UpOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Input, message, Popconfirm, Space, Table } from "antd";
+import { Button, Input, message, Popconfirm, Select, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { instance } from "../../../configs/instance";
+import { useGetAllOrders } from "../../../hooks/queries/useGetAllOrder";
+import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
 
-const ListCart = () => {
+const DetailCart = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+  const navigate = useNavigate()
+  const [messageApi, contextHolder] = message.useMessage();
+  const { id } = useParams();
+  const queryClient = useQueryClient();
+  const [selectedStatus, setSelectedStatus] = useState("");
+
+  const options = [
+    { value: "Đang Xử Lý", label: "Đang Xử Lý" },
+    { value: "Đã Xác Nhận", label: "Đã Xác Nhận" },
+    { value: "Đang Đóng Gói", label: "Đang Đóng Gói" },
+    { value: "Đang Giao Hàng", label: "Đang Giao Hàng" },
+    { value: "Đã Giao Hàng", label: "Đã Giao Hàng" },
+    { value: "Đã Hủy", label: "Đã Hủy" },
+  ];
+  const { data: carts, isLoading, isError } = useGetAllOrders(
+    {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        console.log(error);
+      }
+    })
+  const { mutate, isPending, isError: isErrorPut } = usePutOrder(
+    id,
+    {
+      onSuccess: () => {
+        messageApi.success("Cập nhật trạng thái thành công");
+        queryClient.invalidateQueries({
+          queryKey: ["get-all-orders"],
+        })
+      },
+      onError: () => {
+        messageApi.error("Cập nhật trạng thái thất bại");
+      },
+    })
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -71,46 +109,27 @@ const ListCart = () => {
       ),
   });
 
-  const dataSource = [
-    {
-      key: '1',
-      title: 'Đơn hàng A',
-      count: 3,
-      totalPrice: 150000,
-      users: 'Mike',
-      comple: 'Đang xử lý',
-    },
-    {
-      key: '2',
-      title: 'Đơn hàng B',
-      count: 5,
-      totalPrice: 250000,
-      users: 'John',
-      comple: 'Hoàn thành',
-    },
-    {
-      key: '3',
-      title: 'Đơn hàng C',
-      count: 2,
-      totalPrice: 100000,
-      users: 'Anna',
-      comple: 'Đã hủy',
-    },
-    {
-      key: '4',
-      title: 'Đơn hàng D',
-      count: 1,
-      totalPrice: 50000,
-      users: 'Tom',
-      comple: 'Đang giao',
-    },
-  ];
+  const handleStatusUpdate = (orderId, status) => {
+    mutate({ id: orderId, status });
+    setSelectedStatus(""); // Reset the selected status after mutation
+  };
+  const dataSource = carts?.data.map((item, index) => {
+    return {
+      id: item._id,
+      key: item._id,
+      title: item._id,
+      count: item?.products.length,
+      totalPrice: item?.totalPrice,
+      users: item?.shippingAddress.name,
+      comple: item?.orderStatus
+    }
+  })
+
   const columns = [
     {
-      title: "Tên đơn hàng",
+      title: "Mã đơn hàng",
       dataIndex: "title",
       key: "title",
-      width: '30%',
       ...getColumnSearchProps('title'),
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
@@ -138,19 +157,17 @@ const ListCart = () => {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, cart) => (
+      render: (_, carts) => (
         <div className="flex space-x-3">
           <Button>
-            <Link to={`/admin/carts/${cart._id}/detail`}>Chi tiết đơn hàng</Link>
-          </Button>
-          <Button>
-            <Link to={`/admin/carts/${cart._id}/update`}>Cập nhật đơn hàng</Link>
+            <Link to={`/admin/carts/${carts.id}/detail`}>Chi tiết đơn hàng</Link>
           </Button>
         </div>
       ),
     },
   ];
-
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error loading data.</p>
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
@@ -165,5 +182,4 @@ const ListCart = () => {
     </div>
   );
 };
-
-export default ListCart;
+export default DetailCart;

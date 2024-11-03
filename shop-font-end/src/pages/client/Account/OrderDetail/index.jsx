@@ -105,7 +105,7 @@ const OrderDetail = () => {
             <div className="flex items-center mb-3 gap-x-3">
               <p className="w-1/3">Người nhận:</p>
               <p className="flex-1">
-                Bùi Xuân Đạt - {data.shippingAddress.phone}
+                {data.shippingAddress.name} - {data.shippingAddress.phone}
               </p>
             </div>
 
@@ -145,16 +145,13 @@ const OrderDetail = () => {
             <div key={it._id} className="p-2 flex gap-x-4">
               <div className="w-3/4 flex gap-x-3 items-center">
                 <img
-                  src="https://picsum.photos/200/200"
+                  src={it?.images?.[0]?.url}
                   alt="Product image"
                   className="w-[60px] h-[60px] object-cover"
                 />
 
                 <div>
-                  <p className="text-[#111]">
-                    PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
-                    4090)
-                  </p>
+                  <p className="text-[#111]">{it?.title}</p>
 
                   {/* <p className="text-[14px] text-[#535353] mt-1">
                     PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
