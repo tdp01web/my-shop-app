@@ -1,5 +1,5 @@
-import { FaUser, FaSignOutAlt, FaEye } from "react-icons/fa";
-import { FaCartShopping, FaLocationDot } from "react-icons/fa6";
+import { FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaCartShopping } from "react-icons/fa6";
 
 import { NavLink } from "react-router-dom";
 import { getFullName } from "../../pages/client/Account/AccountInformation";
@@ -50,11 +50,10 @@ const Sidebar = () => {
           end
         >
           <GoPasskeyFill />
-
           <p>Thay đổi mật khẩu</p>
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to="/account/address"
           className="flex items-center py-3 px-5 gap-x-3 text-[#111] hover:text-[#e30019] transition-all [&.active]:text-[#e30019]"
           end
@@ -62,7 +61,7 @@ const Sidebar = () => {
           <FaLocationDot />
 
           <p>Sổ địa chỉ</p>
-        </NavLink>
+        </NavLink> */}
 
         <NavLink
           to="/account/orders-history"
@@ -73,14 +72,14 @@ const Sidebar = () => {
           <p>Quản lý đơn hàng</p>
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to="/account/viewed"
           className="flex items-center py-3 px-5 gap-x-3 text-[#111] hover:text-[#e30019] transition-all [&.active]:text-[#e30019]"
         >
           <FaEye />
 
           <p>Sản phẩm đã xem</p>
-        </NavLink>
+        </NavLink> */}
 
         <div
           onClick={handleLogOut}
