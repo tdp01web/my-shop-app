@@ -1,4 +1,3 @@
-// hooks/useFilter/useArrangeFilter.js
 import { useEffect, useState } from "react";
 
 const useArrangeFilter = (filteredProducts) => {
@@ -25,7 +24,6 @@ const useArrangeFilter = (filteredProducts) => {
     setSortedProducts(sorted);
   };
 
-  // Update sorted products whenever the filtered products change
   useEffect(() => {
     setSortedProducts(filteredProducts);
   }, [filteredProducts]);

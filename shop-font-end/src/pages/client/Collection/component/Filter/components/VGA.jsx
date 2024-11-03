@@ -1,43 +1,45 @@
-import { useState } from 'react';
-import { Button,  Box } from '@mui/material';
-const VGAcon = () => {
-    const [selectedIndices, setSelectedIndices] = useState([]); 
-  
+import { Box, Button } from "@mui/material";
+/* eslint-disable react/prop-types */
+const VGAcon = ({ Vganames = [], selectedVga = [], setSelectedVga }) => {
+  const handleSelect = (index) => {
+    setSelectedVga((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
+  };
 
-    const handleSelect = (index) => {
-      setSelectedIndices((prev) =>
-        prev.includes(index)
-          ? prev.filter((i) => i !== index) 
-          : [...prev, index] 
-      );
-    };
-  
-  
-  
   return (
     <div>
-       <Box display="flex" flexDirection="row" flexWrap="wrap" justifyContent="space-between" width="100%">
-            {['RTX 2050', 'RTX 3050', 'RTX 3060', 'RTX 4060', 'RTX 4050'].map((label, index) => (
-              <Button
-                key={index}
-                variant="outlined"
-                onClick={() => handleSelect(index)} 
-                color="primary"
-                sx={{
-                  color: selectedIndices.includes(index) ? '#007bff' : 'black', 
-                  fontWeight: selectedIndices.includes(index) ? 700 : 400,
-                  flex: '1 1 auto', 
-                  margin: '5px', 
-                  flexBasis: '30%', 
-                   width:'50px'
-                }}
-              >
-                {label}
-              </Button>
-            ))}
-          </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        flexWrap="wrap"
+        justifyContent="flex-start"
+        width="100%"
+      >
+        {Vganames.length > 0 ? (
+          Vganames.map((label, index) => (
+            <Button
+              key={index}
+              variant="outlined"
+              onClick={() => handleSelect(index)}
+              color="primary"
+              sx={{
+                color: selectedVga.includes(index) ? "#007bff" : "black",
+                fontWeight: selectedVga.includes(index) ? 700 : 400,
+                flexBasis: "40%",
+                margin: "5px",
+                width: "5px",
+              }}
+            >
+              {label}
+            </Button>
+          ))
+        ) : (
+          <div>Không có VGA để hiển thị.</div>
+        )}
+      </Box>
     </div>
-  )
-}
+  );
+};
 
-export default VGAcon
+export default VGAcon;

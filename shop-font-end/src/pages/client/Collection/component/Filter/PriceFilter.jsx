@@ -1,7 +1,7 @@
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Box, Button, Popover } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Price from "./components/Price";
 
 const theme = createTheme({
@@ -16,6 +16,7 @@ const theme = createTheme({
     },
   },
 });
+
 /* eslint-disable react/prop-types */
 const PriceFilter = ({ priceRange, setPriceRange }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -29,7 +30,7 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
     setAnchorEl(null);
   };
 
-  const handlePriceChange = (event, newValue) => {
+  const handlePriceChange = (newValue) => {
     setPriceRange(newValue);
   };
 
@@ -39,6 +40,22 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
 
   const open = Boolean(anchorEl);
   const id = open ? "price-popover" : undefined;
+
+  const popoverRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -57,7 +74,7 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
         id={id}
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose}
+        onClose={handleClose} 
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left",
@@ -66,7 +83,10 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
           vertical: "top",
           horizontal: "left",
         }}
-        sx={{ marginTop: "10px", width: "900px" }}
+        sx={{ marginTop: "10px", width: "400px" }} 
+        disableRestoreFocus
+        disableEnforceFocus
+        ref={popoverRef} 
       >
         <Box p={2} display="flex" flexDirection="column" alignItems="center">
           <Price

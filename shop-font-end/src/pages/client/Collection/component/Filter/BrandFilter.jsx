@@ -16,6 +16,7 @@ const theme = createTheme({
     },
   },
 });
+
 /* eslint-disable react/prop-types */
 const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -53,36 +54,13 @@ const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
           vertical: "bottom",
           horizontal: "left",
         }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        sx={{ marginTop: "10px", width: "900px" }}
       >
-        <Box p={2} display="flex" flexDirection="column" alignItems="center">
+        <Box p={2}>
           <Brandcon
             Brand={Brand}
             selectedBrand={selectedBrand}
             setSelectedBrand={setSelectedBrand}
           />
-          <Box
-            mt={2}
-            display="flex"
-            justifyContent="space-between"
-            width="100%"
-          >
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => setSelectedBrand(false)}
-            >
-              Bỏ chọn
-            </Button>
-            <Box ml={1} />
-            <Button variant="contained" sx={{ backgroundColor: "#007bff" }}>
-              Xem kết quả
-            </Button>
-          </Box>
         </Box>
       </Popover>
     </ThemeProvider>

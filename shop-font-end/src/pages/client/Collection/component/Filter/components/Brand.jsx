@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 const Brandcon = ({
   Brand = [],
   selectedBrand = [],
-  setSelectedBrand, // Bỏ phần gán giá trị mặc định
+  setSelectedBrand,
 }) => {
   const handleSelect = (index) => {
     setSelectedBrand((prev) => {

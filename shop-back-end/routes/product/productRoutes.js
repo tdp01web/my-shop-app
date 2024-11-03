@@ -12,6 +12,7 @@ const {
   updateProductVariant,
   deleteProductVariant,
   getRelatedProducts,
+  searchProducts,
 } = require("../../controller/product/productCtrl");
 const router = express.Router();
 const {
@@ -29,6 +30,9 @@ router.post("/create", createProduct);
 router.get("/getaProduct/:id", getaProduct);
 //! Get all products
 router.get("/getAllProduct", getAllProducts);
+
+//tim kiem san pham
+router.get("/search", searchProducts);
 
 //! Lấy sản phẩm cùng loại
 router.get("/getRelatedProducts/:categoryId/:excludeId", getRelatedProducts);

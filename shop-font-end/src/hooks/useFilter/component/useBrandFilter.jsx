@@ -18,13 +18,17 @@ const useBrandFilter = (products, selectedBrand) => {
 
   useEffect(() => {
     if (selectedBrand.length === 0) {
-      setFilteredProducts(products); // Không chọn thương hiệu thì hiển thị tất cả
+      setFilteredProducts(products); 
     } else {
       const selectedBrandTitles = selectedBrand
         .map((index) => Brand[index])
         .filter(Boolean);
-      const newFilteredProducts = products.filter((product) =>
-        selectedBrandTitles.includes(product.brand.title)
+
+      const newFilteredProducts = products.filter(
+        (product) =>
+          product.brand &&
+          product.brand.title &&
+          selectedBrandTitles.includes(product.brand.title)
       );
       setFilteredProducts(newFilteredProducts);
     }

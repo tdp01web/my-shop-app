@@ -18,7 +18,7 @@ const useLcdFilter = (products, selectedLcd) => {
 
   useEffect(() => {
     if (selectedLcd.length === 0) {
-      setFilteredProducts(products); // Không chọn màn hình thì hiển thị tất cả
+      setFilteredProducts(products); 
     } else {
       const selectedLcdTitles = selectedLcd
         .map((index) => LCD[index])

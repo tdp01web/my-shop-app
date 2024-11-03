@@ -29,6 +29,8 @@ import EditRAM from "../pages/admin/varriantsProduct/ram/editRAM";
 import ListSSD from "../pages/admin/varriantsProduct/ssd";
 import AddSSD from "../pages/admin/varriantsProduct/ssd/addSSD";
 import EditSSD from "../pages/admin/varriantsProduct/ssd/editSSD";
+import ProductListSearch from "../layouts/client/components/header/ProductListSearch";
+
 import DetailCart from "../pages/admin/carts/detailCart";
 const ResetPassword = lazy(() =>
   import("../pages/client/ForgotPassword/component/ResetPassword")
@@ -117,12 +119,12 @@ const Router = () => {
             <Route path="installment" element={<Installment />} />
             <Route path="blog" element={<BlogPage />} />
             <Route path="collection" element={<Collection />} />
+            <Route path="search" element={<ProductListSearch />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="forgot-password/:token" element={<ResetPassword />} />
           </Route>
           {/* Voucher */}
           <Route path="voucher" element={<VoucherPage />} />
-          // #region Router admin
           {/* Layout Admin */}
           <Route
             path="admin"
