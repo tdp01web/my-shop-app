@@ -74,6 +74,7 @@ const ProductDetail = lazy(() => import("../pages/client/ProductDetail"));
 const OrderSuccess = lazy(() =>
   import("../pages/client/cart/component/OrderSuccess")
 );
+const FavoritesList = lazy(() => import("../pages/client/FavoritesList"));
 
 const ForgotPassword = lazy(() => import("../pages/client/ForgotPassword"));
 const UpdatePassword = lazy(() => import("../pages/client/UpdatePassword"));
@@ -122,6 +123,7 @@ const Router = () => {
             <Route path="search" element={<ProductListSearch />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="forgot-password/:token" element={<ResetPassword />} />
+            <Route path="favorites-list" element={<FavoritesList />} />
           </Route>
           {/* Voucher */}
           <Route path="voucher" element={<VoucherPage />} />

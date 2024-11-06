@@ -1,26 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsDeviceSsd } from "react-icons/bs";
-import { FaHdd, FaMemory } from "react-icons/fa";
+import { FaMemory, FaStar, FaMicrochip } from "react-icons/fa6";
 import { PiCircuitryLight } from "react-icons/pi";
-import { FaStar } from "react-icons/fa6";
-import { FaMicrochip } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-
+import { useMutation } from "@tanstack/react-query";
+import { AiFillHeart } from "react-icons/ai";
+import { message } from "antd";
+import { instance } from "../configs/instance";
 const Product = ({
   _id,
   title,
   price,
-  priceOld,
   images,
   variants,
   totalrating = 0,
   ratings,
-  description,
 }) => {
+  const [isInWishlist, setIsInWishlist] = useState(false); // Trạng thái để xác định màu sắc trái tim
   const productImage = images[0]?.url || "NaN";
-
   const firstVariant = variants[0];
-  const variantImage = firstVariant?.images[0]?.url || "NaN";
 
   const specs = [
     { icon: <FaMicrochip />, text: firstVariant?.processor?.name || "NaN" },
@@ -29,29 +27,58 @@ const Product = ({
     { icon: <FaMemory />, text: firstVariant?.storage?.capacity || "NaN" },
   ];
 
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const token = localStorage.getItem("token");
+      const { data } = await instance.put(
+        "/product/wishlist",
+        { prodId: _id },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return data;
+    },
+    onSuccess: (response) => {
+      setIsInWishlist(
+        response.message === "Thêm vào danh  sách yêu thích thành công"
+      );
+      message.success(response.message);
+    },
+    onError: (error) => {
+      console.log("🚀 ~ error:", error);
+      message.error("Đã có lỗi xảy ra");
+    },
+  });
+
+  const handleAddToWishlist = (e) => {
+    e.preventDefault();
+    mutation.mutate();
+  };
+
   return (
     <Link
       to={`/products/${_id}`}
-      className="bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm"
+      className="relative bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm group"
     >
+      {/* Biểu tượng trái tim cho wishlist */}
+      <div
+        className={`absolute top-2 left-2 ${
+          isInWishlist ? "text-red-500" : "text-gray-400"
+        } opacity-0 group-hover:opacity-100 cursor-pointer`}
+        onClick={handleAddToWishlist}
+      >
+        <AiFillHeart size={24} />
+      </div>
+
       <div>
         <img src={productImage} alt={title} className="w-full h-auto" />
       </div>
       <p className="line-clamp-2 font-600 text-[14px]">{title}</p>
-      {/* <del className=" text-[12px] text-[#6D6E72] md:text-[14px] font-600 leading-none">
-        {priceOld ? `$${priceOld.toLocaleString()}` : "NaN"}
-      </del> */}
       <div className="leading-none text-gray-500 flex items-center gap-2">
         <p className="text-red-500 font-600 text-[14px] md:text-[18px]">
           {firstVariant?.price.toLocaleString()}đ
         </p>
-        {/* <div className="border border-solid border-red-500 rounded-sm px-2">
-          <p className="text-red-500  text-[14px] md:text-[18px]">
-            {priceOld
-              ? Math.round(((priceOld - price) / priceOld) * 100) + "%"
-              : "NaN"}
-          </p>
-        </div> */}
       </div>
       <div className="flex flex-wrap gap-3 bg-[#ECECEC] p-2 rounded-md">
         {specs.map((spec, index) => (
