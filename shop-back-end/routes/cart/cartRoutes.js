@@ -6,6 +6,7 @@ const {
   applyCoupon,
   addToCart,
   updateCart,
+  cancelCoupon,
 } = require("../../controller/cart/cartCtrl");
 const {
   authMiddleware,
@@ -24,6 +25,7 @@ router.delete(
 );
 
 router.put("/applyCoupon", authMiddleware, applyCoupon); // Áp dụng mã giảm giá
+router.put("/cancelCoupon", authMiddleware, cancelCoupon); //Hủy áp dụng mã giảm giá
 router.put(
   "/updateProductInCart/:productId/:variantId",
   authMiddleware,

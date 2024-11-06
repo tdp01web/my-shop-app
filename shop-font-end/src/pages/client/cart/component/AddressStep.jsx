@@ -5,6 +5,7 @@ import axios from "axios";
 const { Option } = Select;
 
 const AddressStep = ({ handleNext, cartTotal }) => {
+  console.log("🚀 ~ AddressStep ~ cartTotal:", cartTotal);
   const [tinhList, setTinhList] = useState([]);
   const [quanList, setQuanList] = useState([]);
   const [phuongList, setPhuongList] = useState([]);
