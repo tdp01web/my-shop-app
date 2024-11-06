@@ -10,7 +10,8 @@ const axios = require("axios");
 const crypto = require("crypto");
 
 const createOrder = asyncHandler(async (req, res) => {
-  const { paymentMethod, couponApplied, shippingAddress } = req.body;
+  const { paymentMethod, couponApplied, shippingAddress, couponDetails } =
+    req.body;
   const { _id } = req.user;
 
   validateMongoDbId(_id);
@@ -70,6 +71,7 @@ const createOrder = asyncHandler(async (req, res) => {
       orderedBy: user._id,
       totalProductPrice: finalAmount,
       discountApplied: couponApplied ? userCart.cartTotal - finalAmount : 0,
+      couponDiscountDetails: couponDetails,
       shippingFee: shippingFee,
       totalPrice: totalPrice,
       shippingAddress: shippingAddress,

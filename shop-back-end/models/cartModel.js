@@ -40,6 +40,11 @@ const cartSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    appliedCoupon: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Coupon",
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -121,6 +126,26 @@ cartSchema.statics.findCartAndUpdatePrices = async function (cartId) {
   await cart.updatePrices();
 
   return cart;
+};
+
+cartSchema.methods.applyCoupon = async function (coupon) {
+  const discountAmount = Math.min(
+    (this.cartTotal * coupon.discount) / 100,
+    coupon.maxDiscountAmount
+  );
+
+  this.totalAfterDiscount = this.cartTotal - discountAmount; // Trừ trực tiếp vào giỏ hàng
+  this.appliedCoupon = coupon._id; // Lưu mã giảm giá đã áp dụng
+
+  await this.save(); // Lưu lại giỏ hàng sau khi áp dụng giảm giá
+};
+
+// Hủy mã giảm giá
+cartSchema.methods.cancelCoupon = async function () {
+  this.appliedCoupon = null; // Xóa mã giảm giá
+  this.totalAfterDiscount = this.cartTotal; // Đặt lại tổng tiền sau giảm giá
+
+  await this.save();
 };
 
 module.exports = mongoose.model("Cart", cartSchema);

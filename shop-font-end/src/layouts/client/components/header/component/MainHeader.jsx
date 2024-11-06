@@ -21,7 +21,6 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
-  console.log("🚀 ~ MainHeader ~ data:", data);
 
   const handleLogout = () => {
     localStorage.removeItem("user");

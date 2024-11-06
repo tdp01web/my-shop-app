@@ -9,7 +9,6 @@ import { instance } from "../configs/instance";
 import Swal from "sweetalert2";
 
 const ItemProductCard = ({ item }) => {
-  console.log("🚀 ~ ItemProductCard ~ item:", item);
   const queryClient = useQueryClient();
 
   const mutationDelete = useMutation({
