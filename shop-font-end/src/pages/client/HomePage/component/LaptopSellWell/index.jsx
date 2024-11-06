@@ -40,7 +40,7 @@ const LaptopSellWell = ({ products }) => {
         categories={categories}
         titleSale="Miễn Phí giao hàng"
         products={productList}
-        seeAllLink="/xem-tat-ca"
+        seeAllLink="/collection"
       />
     </div>
   );

@@ -9,6 +9,7 @@ const Processor = require("../../models/product/processorModel");
 const Category = require("../../models/product/prodcategoryModel");
 const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
+const User = require("../../models/userModel");
 
 // Tìm kiếm sản phẩm
 const searchProducts = async (req, res) => {
@@ -281,26 +282,29 @@ const getAllProducts = asyncHandler(async (req, res) => {
 //! Thêm vào danh sách yêu thích
 const addToWishlist = asyncHandler(async (req, res) => {
   const { prodId } = req.body;
-  const { _id } = req.user; // Lấy thông tin người dùng đã đăng nhập
+  const { _id } = req.user;
 
   try {
     const user = await User.findById(_id);
 
-    const alreadyAdded = user.wishlist.includes(prodId);
+    const alreadyAdded = user.wishlist.includes(prodId.toString());
     if (alreadyAdded) {
-      // Nếu đã có trong wishlist, xóa sản phẩm khỏi danh sách yêu thích
-      user.wishlist = user.wishlist.filter((id) => id.toString() !== prodId);
+      user.wishlist = user.wishlist.filter(
+        (id) => id.toString() !== prodId.toString()
+      );
       await user.save();
-      res
-        .status(200)
-        .json({ message: "Removed from wishlist", wishlist: user.wishlist });
+      res.status(200).json({
+        message: "Xóa khỏi danh sách yêu thích thành công",
+        wishlist: user.wishlist,
+      });
     } else {
       // Nếu chưa có, thêm vào wishlist
       user.wishlist.push(prodId);
       await user.save();
-      res
-        .status(200)
-        .json({ message: "Added to wishlist", wishlist: user.wishlist });
+      res.status(200).json({
+        message: "Thêm vào danh  sách yêu thích thành công",
+        wishlist: user.wishlist,
+      });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -20,7 +20,7 @@ const Endow = () => {
           <LottieAnimation />
           <AnimatedText
             el="h1"
-            text={["MIỄN PHÍ NÂNG CẤP 32GB RAM"]}
+            text={["TOP 5 SẢN PHẨM BÁN CHẠY "]}
             className="md:text-xl sm:text-sm text-[16px] font-bold text-[#FDD835] "
             // repeatDelay={1000}
             // once
