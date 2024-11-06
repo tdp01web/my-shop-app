@@ -25,7 +25,9 @@ const FavoritesList = () => {
   return (
     <div className="w-[80%] mx-auto ">
       {wishlist.length === 0 ? (
-        <div className="text-center">Không có sản phẩm yêu thích</div>
+        <div className="text-center">
+          Không có sản phẩm yêu thích trong dữ liệu
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {wishlist.map((product) => (
