@@ -9,6 +9,8 @@ const productVariantModel = require("../../models/product/productVariantModel");
 const axios = require("axios");
 const crypto = require("crypto");
 
+const nodemailer = require("nodemailer");
+
 const createOrder = asyncHandler(async (req, res) => {
   const { paymentMethod, couponApplied, shippingAddress, couponDetails } =
     req.body;
@@ -44,7 +46,6 @@ const createOrder = asyncHandler(async (req, res) => {
       couponApplied && userCart.totalAfterDiscount
         ? userCart.totalAfterDiscount
         : userCart.cartTotal;
-
     const shippingFee = req.body.deliveryFee;
     const totalPrice = finalAmount + shippingFee;
 
@@ -57,13 +58,11 @@ const createOrder = asyncHandler(async (req, res) => {
         brand: item.product.brand?.title || null,
         lcd: item.product.lcd?.size || null,
         images: item.product.images,
-        // Attributes from variant
         color: item.variant?.color?.title || null,
         ram: item.variant?.ram?.size || null,
         storage: item.variant?.storage?.capacity || null,
         processor: item.variant?.processor?.name || null,
         gpu: item.variant?.gpu?.name || null,
-
         price: item.variant ? item.variant.price : item.product.price,
         quantity: item.variant ? item.variant.quantity : item.product.quantity,
         count: item.count,
@@ -87,9 +86,36 @@ const createOrder = asyncHandler(async (req, res) => {
       try {
         const orderId = savedOrder._id.toString();
         paymentIntent = await handleMomoPayment(totalPrice, orderId);
-
         savedOrder.paymentIntent = paymentIntent;
         await savedOrder.save();
+
+        // Gửi email xác nhận khi thanh toán MOMO thành công
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 587,
+          secure: false,
+          auth: {
+            user: process.env.EMAIL_ID,
+            pass: process.env.MP,
+          },
+        });
+
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: user.email,
+          subject: "Cảm ơn bạn đã đặt hàng!",
+          text: `Xin chào \n\nCảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi.\nMã đơn hàng của bạn là: ${savedOrder._id}\nTổng số tiền: ${totalPrice}.\n\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng,\nCửa hàng của bạn`,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log("Lỗi gửi email:", error);
+          } else {
+            console.log("Email gửi thành công:", info.response);
+          }
+        });
+
+        return res.json({ message: "Redirecting to MoMo", paymentIntent });
       } catch (error) {
         return res
           .status(500)
@@ -120,8 +146,32 @@ const createOrder = asyncHandler(async (req, res) => {
 
     await Cart.findOneAndDelete({ orderedBy: user._id });
 
-    if (paymentMethod === "MOMO") {
-      return res.json({ message: "Redirecting to MoMo", paymentIntent });
+    if (paymentMethod !== "MOMO") {
+      // Gửi email cho các phương thức thanh toán khác (không qua MOMO)
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_ID,
+          pass: process.env.MP,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "Cảm ơn bạn đã đặt hàng!",
+        text: `Xin chào \n\nCảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi.\nMã đơn hàng của bạn là: ${savedOrder._id}\nTổng số tiền: ${totalPrice}.\n\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng,\nCửa hàng của bạn`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("Lỗi gửi email:", error);
+        } else {
+          console.log("Email gửi thành công:", info.response);
+        }
+      });
     }
 
     res.json({ message: "Đơn hàng đã được đặt thành công", order: savedOrder });
@@ -129,6 +179,59 @@ const createOrder = asyncHandler(async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Hàm cập nhật số lượng sản phẩm
+async function updateStockAfterOrder(userCart) {
+  let updateProducts = userCart.products.map((item) => ({
+    updateOne: {
+      filter: { _id: item.product },
+      update: { $inc: { quantity: -item.count, sold: +item.count } },
+    },
+  }));
+
+  await Product.bulkWrite(updateProducts, {});
+
+  if (userCart.products.some((item) => item.variant)) {
+    let updateVariants = userCart.products
+      .filter((item) => item.variant)
+      .map((item) => ({
+        updateOne: {
+          filter: { _id: item.variant },
+          update: { $inc: { quantity: -item.count } },
+        },
+      }));
+    await productVariantModel.bulkWrite(updateVariants, {});
+  }
+
+  await Cart.findOneAndDelete({ orderedBy: user._id });
+}
+
+// Hàm gửi email cảm ơn
+async function sendThankYouEmail(user, orderId, totalPrice) {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_ID,
+      pass: process.env.MP,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: user.email,
+    subject: "Cảm ơn bạn đã đặt hàng!",
+    text: `Xin chào \n\nCảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi.\nMã đơn hàng của bạn là: ${orderId}\nTổng số tiền: ${totalPrice}.\n\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Email gửi thành công");
+  } catch (error) {
+    console.log("Lỗi gửi email:", error);
+  }
+}
 
 // Hàm xử lý thanh toán MOMO
 const handleMomoPayment = async (amount, orderId) => {
