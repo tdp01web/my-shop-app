@@ -180,59 +180,6 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 });
 
-// Hàm cập nhật số lượng sản phẩm
-async function updateStockAfterOrder(userCart) {
-  let updateProducts = userCart.products.map((item) => ({
-    updateOne: {
-      filter: { _id: item.product },
-      update: { $inc: { quantity: -item.count, sold: +item.count } },
-    },
-  }));
-
-  await Product.bulkWrite(updateProducts, {});
-
-  if (userCart.products.some((item) => item.variant)) {
-    let updateVariants = userCart.products
-      .filter((item) => item.variant)
-      .map((item) => ({
-        updateOne: {
-          filter: { _id: item.variant },
-          update: { $inc: { quantity: -item.count } },
-        },
-      }));
-    await productVariantModel.bulkWrite(updateVariants, {});
-  }
-
-  await Cart.findOneAndDelete({ orderedBy: user._id });
-}
-
-// Hàm gửi email cảm ơn
-async function sendThankYouEmail(user, orderId, totalPrice) {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_ID,
-      pass: process.env.MP,
-    },
-  });
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: user.email,
-    subject: "Cảm ơn bạn đã đặt hàng!",
-    text: `Xin chào \n\nCảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi.\nMã đơn hàng của bạn là: ${orderId}\nTổng số tiền: ${totalPrice}.\n\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng`,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("Email gửi thành công");
-  } catch (error) {
-    console.log("Lỗi gửi email:", error);
-  }
-}
-
 // Hàm xử lý thanh toán MOMO
 const handleMomoPayment = async (amount, orderId) => {
   var accessKey = "F8BBA842ECF85";
@@ -547,9 +494,19 @@ const cancelOrderForAdmin = asyncHandler(async (req, res) => {
 });
 
 // Cập nhật trạng thái đơn hàng (chỉ dành cho admin)
+const statusOrderFlow = [
+  "Đang Xử Lý",
+  "Đã Xác Nhận",
+  "Đang Đóng Gói",
+  "Đang Giao Hàng",
+  "Đã Giao Hàng",
+  "Hoàn Thành",
+  "Đã Hủy",
+];
+
 const updateStatus = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
-  const { orderStatus } = req.body;
+  const { orderStatus, cancellationReason } = req.body;
 
   const order = await Order.findById(orderId);
 
@@ -557,16 +514,42 @@ const updateStatus = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
   }
 
-  // Cập nhật trạng thái đơn hàng nếu được cung cấp, nếu không giữ nguyên trạng thái hiện tại
-  if (orderStatus) {
-    order.orderStatus = orderStatus;
-    await order.save();
-    return res
-      .status(200)
-      .json({ message: "Trạng thái đơn hàng đã được cập nhật.", order });
+  const currentStatusIndex = statusOrderFlow.indexOf(order.orderStatus);
+  const newStatusIndex = statusOrderFlow.indexOf(orderStatus);
+
+  // Không cho phép quay lại trạng thái trước đó
+  if (newStatusIndex <= currentStatusIndex && orderStatus !== "Đã Hủy") {
+    return res.status(400).json({
+      message: "Không thể quay lại trạng thái trước đó.",
+    });
   }
 
-  res.status(400).json({ message: "Cần cung cấp trạng thái đơn hàng." });
+  // Không cho phép hủy nếu đơn đã xác nhận
+  if (order.orderStatus === "Đã Xác Nhận" && orderStatus === "Đã Hủy") {
+    return res.status(400).json({
+      message: "Không thể hủy đơn hàng đã được xác nhận.",
+    });
+  }
+
+  // Yêu cầu lý do khi hủy đơn
+  if (orderStatus === "Đã Hủy" && !cancellationReason) {
+    return res.status(400).json({
+      message: "Cần cung cấp lý do hủy đơn hàng.",
+    });
+  }
+
+  // Cập nhật trạng thái và lý do hủy (nếu có)
+  order.orderStatus = orderStatus;
+  if (orderStatus === "Đã Hủy") {
+    order.cancellationReason = cancellationReason;
+  }
+
+  await order.save();
+
+  return res.status(200).json({
+    message: "Trạng thái đơn hàng đã được cập nhật.",
+    order,
+  });
 });
 
 //Thanh toán online
