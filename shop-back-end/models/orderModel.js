@@ -127,6 +127,12 @@ var orderSchema = new mongoose.Schema(
     },
     cancellationReason: {
       type: String,
+      required: function () {
+        return this.orderStatus === "Đã Hủy";
+      }, // yêu cầu lý do khi hủy đơn
+    },
+    cancellationReason: {
+      type: String,
     }, // Lý do hủy đơn hàng
 
     // Thông tin thêm
