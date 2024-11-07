@@ -57,13 +57,29 @@ const CartPage = () => {
       return data;
     },
     onSuccess: (data) => {
-      message.success("Đặt hàng thành công");
-      queryClient.invalidateQueries(["CartPage"]);
-      setActiveStep(3);
-      setOrderInfo(data.order);
+      if (data.paymentIntent?.partnerCode === "MOMO") {
+        try {
+          window.location.href = data.paymentIntent.payUrl;
+        } catch (error) {
+          console.log("🚀 ~ CartPage ~ error:", error);
+        }
+      } else {
+        console.log(data);
+        message.success("Đặt hàng thành công");
+        queryClient.invalidateQueries(["CartPage"]);
+        setActiveStep(3);
+        setOrderInfo(data.order);
+      }
     },
     onError: (error) => {
-      message.error("Yêu cầu thất bại, vui lòng thử lại.");
+      if (error.response?.status === 401) {
+        message.error("Phiên làm việc hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      } else {
+        message.error("Yêu cầu thất bại, vui lòng thử lại.");
+      }
+      console.error(error);
     },
   });
 
