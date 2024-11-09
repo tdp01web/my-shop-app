@@ -103,9 +103,7 @@ const PriceFilter = ({ priceRange, setPriceRange }) => {
             <Button variant="outlined" color="error" onClick={handleReset}>
               Bỏ chọn
             </Button>
-            <Button variant="contained" sx={{ backgroundColor: "#007bff" }}>
-              Xem kết quả
-            </Button>
+            
           </Box>
         </Box>
       </Popover>
