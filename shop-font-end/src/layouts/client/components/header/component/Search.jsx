@@ -68,9 +68,12 @@ const SearchProduct = () => {
           <SearchIcon />
         </IconButton>
       </Paper>
+<<<<<<< HEAD
       {errorMessage && (
         <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>
       )}
+=======
+>>>>>>> origin
     </div>
   );
 };

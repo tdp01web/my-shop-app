@@ -49,6 +49,11 @@ var orderSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     }, // Số tiền giảm giá (nếu có mã giảm giá được áp dụng)
+    couponDiscountDetails: {
+      discount: { type: Number, default: 0 }, // Phần trăm giảm giá
+      maxDiscountAmount: { type: Number, default: 0 }, // Số tiền giảm tối đa
+      discountAmount: { type: Number, default: 0 }, // Số tiền được giảm
+    },
     shippingFee: {
       type: Number,
       required: true,
@@ -116,8 +121,15 @@ var orderSchema = new mongoose.Schema(
         "Đang Đóng Gói",
         "Đang Giao Hàng",
         "Đã Giao Hàng",
+        "Hoàn Thành",
         "Đã Hủy",
       ],
+    },
+    cancellationReason: {
+      type: String,
+      required: function () {
+        return this.orderStatus === "Đã Hủy";
+      }, // yêu cầu lý do khi hủy đơn
     },
     cancellationReason: {
       type: String,

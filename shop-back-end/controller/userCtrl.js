@@ -37,31 +37,43 @@ const createUser = asyncHandler(async (req, res) => {
 //! Login
 const loginUserCtrl = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  //check user có tồn tại hay không
+
+  // Check if the user exists
   const findUser = await User.findOne({ email });
-  if (findUser && (await findUser.isPasswordMatched(password))) {
-    const refreshToken = await generateRefreshToken(findUser?._id);
+
+  if (!findUser) {
+    throw new Error("Tài khoản không tồn tại");
+  }
+
+  // Check if the user is blocked
+  if (findUser.isBlocked) {
+    throw new Error(
+      "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên."
+    );
+  }
+
+  // Check if the password matches
+  if (await findUser.isPasswordMatched(password)) {
+    const refreshToken = await generateRefreshToken(findUser._id);
     const updateUser = await User.findByIdAndUpdate(
       findUser.id,
-      {
-        refreshToken: refreshToken,
-      },
-      {
-        new: true,
-      }
+      { refreshToken },
+      { new: true }
     );
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      maxAge: 72 * 60 * 60 * 1000,
+      maxAge: 72 * 60 * 60 * 1000, // 3 days
     });
+
     res.json({
-      _id: findUser?._id,
-      firstName: findUser?.firstName,
-      lastName: findUser?.lastName,
-      mobile: findUser?.mobile,
-      role: findUser?.role,
-      email: findUser?.email,
-      token: generateToken(findUser?._id),
+      _id: findUser._id,
+      firstName: findUser.firstName,
+      lastName: findUser.lastName,
+      mobile: findUser.mobile,
+      role: findUser.role,
+      email: findUser.email,
+      token: generateToken(findUser._id),
     });
   } else {
     throw new Error("Tài khoản mật khẩu không chính xác");
@@ -82,6 +94,41 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
     const accessToken = generateToken(user?._id);
     res.json({ accessToken });
   });
+});
+
+const toggleUserRole = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(id);
+
+    if (!user) {
+      throw new Error("Người dùng không tồn tại");
+    }
+
+    // If the current role is "admin" and we want to switch to "user", ensure there's at least one other admin
+    if (user.role === "admin") {
+      const adminCount = await User.countDocuments({ role: "admin" });
+
+      if (adminCount <= 1) {
+        throw new Error("Phải có ít nhất một tài khoản admin.");
+      }
+    }
+
+    // Toggle role
+    const newRole = user.role === "admin" ? "user" : "admin";
+    user.role = newRole;
+    await user.save();
+
+    res.json({
+      message: `Vai trò người dùng đã được thay đổi thành ${newRole}`,
+      role: newRole,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
 });
 
 //! Get all users
@@ -315,10 +362,30 @@ const loginAdmin = asyncHandler(async (req, res) => {
 const getWishlist = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   try {
-    const findUser = await User.findById(_id).populate("wishlist");
-    res.json(findUser);
+    const user = await User.findById(_id).populate({
+      path: "wishlist",
+      populate: [
+        {
+          path: "variants",
+          populate: [
+            { path: "processor" },
+            { path: "gpu" },
+            { path: "ram" },
+            { path: "storage" },
+          ],
+        },
+      ],
+    });
+
+    // Kiểm tra nếu wishlist trống
+    if (!user || !user.wishlist || user.wishlist.length === 0) {
+      return res.status(404).json({ message: "Wishlist is empty" });
+    }
+
+    // Trả về wishlist đã được populate
+    res.status(200).json({ wishlist: user.wishlist });
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -482,4 +549,5 @@ module.exports = {
   getOrder,
   updateOrderStatus,
   getAllOrders,
+  toggleUserRole,
 };

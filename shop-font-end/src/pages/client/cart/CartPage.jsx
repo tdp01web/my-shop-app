@@ -1,19 +1,13 @@
 import React, { useState } from "react";
 import { Stepper, Step, StepLabel } from "@mui/material";
-import {
-  FaShoppingCart,
-  FaClipboardList,
-  FaCreditCard,
-  FaCheckCircle,
-} from "react-icons/fa";
-import CartItems from "./component/CartItems";
-import AddressStep from "./component/AddressStep";
-import Pay from "./component/Pay";
-import OrderConfirmation from "./component/OrderConfirmation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { instance } from "../../../configs/instance";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
+import CartItems from "./component/CartItems";
+import AddressStep from "./component/AddressStep";
+import Pay from "./component/Pay";
+import OrderConfirmation from "./component/OrderConfirmation";
 
 const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán", "Hoàn tất"];
 
@@ -21,6 +15,7 @@ const CartPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [orderInfo, setOrderInfo] = useState(null);
   const [addressData, setAddressData] = useState(null);
+  const [totalAfterDiscount, setTotalAfterDiscount] = useState(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
@@ -49,6 +44,11 @@ const CartPage = () => {
     if (activeStep > 0) setActiveStep((prevStep) => prevStep - 1);
   };
 
+  const handleApplyCouponSuccess = (discountedTotal) => {
+    setTotalAfterDiscount(discountedTotal);
+    refetch(); // Refetch lại dữ liệu giỏ hàng để đảm bảo tất cả cập nhật
+  };
+
   const createOrderMutation = useMutation({
     mutationFn: async (orderDetails) => {
       const { data } = await instance.post("/order", orderDetails, {
@@ -66,7 +66,7 @@ const CartPage = () => {
       } else {
         console.log(data);
         message.success("Đặt hàng thành công");
-        queryClient.invalidateQueries(["cart"]);
+        queryClient.invalidateQueries(["CartPage"]);
         setActiveStep(3);
         setOrderInfo(data.order);
       }
@@ -116,16 +116,24 @@ const CartPage = () => {
       </Stepper>
 
       {activeStep === 0 && cartData && (
-        <CartItems cartItems={cartData} handleNext={handleNext} />
+        <CartItems
+          cartItems={cartData}
+          totalAfterDiscount={totalAfterDiscount ?? cartData.totalAfterDiscount}
+          handleNext={handleNext}
+          onApplyCouponSuccess={handleApplyCouponSuccess}
+        />
       )}
       {activeStep === 1 && (
-        <AddressStep cartTotal={cartData.cartTotal} handleNext={handleNext} />
+        <AddressStep
+          cartTotal={totalAfterDiscount ?? cartData.totalAfterDiscount}
+          handleNext={handleNext}
+        />
       )}
       {activeStep === 2 && (
         <Pay
           addressData={addressData}
           handleNext={handleNext}
-          cartTotal={cartData.cartTotal}
+          cartTotal={totalAfterDiscount ?? cartData.totalAfterDiscount}
         />
       )}
       {activeStep === 3 && <OrderConfirmation order={orderInfo} />}

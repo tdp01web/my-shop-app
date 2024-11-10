@@ -18,10 +18,10 @@ import { PiNotepadBold } from "react-icons/pi";
 import { HiOutlineLogout } from "react-icons/hi";
 import useGetProfile from "../../../../../hooks/queries/useGetProfile";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { CiHeart } from "react-icons/ci";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
-  console.log("🚀 ~ MainHeader ~ data:", data);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -127,8 +127,8 @@ function MainHeader() {
                 </Link>
               )}
               <hr />
-              <Link to={"/account"} className="flex items-center gap-2">
-                <IoIosEye /> đã xem gần đây
+              <Link to={"/favorites-list"} className="flex items-center gap-2">
+                <CiHeart /> sản phẩm yêu thích
               </Link>
               <Link
                 to={"account/orders-history"}

@@ -1,62 +1,77 @@
 import React, { useState } from "react";
 import {
   ExpandMore as ExpandMoreIcon,
-  LocalOffer as LocalOfferIcon,
   Cancel as CancelIcon,
 } from "@mui/icons-material";
 import { CiDiscount1 } from "react-icons/ci";
 import { instance } from "../../../../configs/instance";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { message } from "antd";
 
-export default function CouponDropdown({ data }) {
+export default function CouponDropdown({ data, onApplyCouponSuccess }) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedCoupon, setSelectedCoupon] = useState(null); // Thay đổi sang null
-  const [manualCode, setManualCode] = useState("");
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
+
+  // Mutation để hủy mã giảm giá
+  const cancelMutation = useMutation({
+    mutationFn: async () => {
+      const token = localStorage.getItem("token");
+      const { data } = await instance.put(
+        "/cart/cancelCoupon",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return data;
+    },
+    onSuccess: (data) => {
+      setSelectedCoupon(null);
+      onApplyCouponSuccess(data.totalAfterDiscount);
+      message.success("Mã giảm giá đã được hủy.");
+    },
+    onError: (error) => {
+      message.error("Hủy mã giảm giá thất bại.");
+      console.log("🚀 ~ cancelMutation error:", error);
+    },
+  });
 
   const handleCouponApply = (coupon) => {
     setSelectedCoupon(coupon);
-    alert(`Đã áp dụng mã giảm giá "${coupon.name}"`);
+    message.success(`Đã áp dụng mã giảm giá "${coupon.name}"`);
   };
 
   const handleCouponCancel = () => {
-    setSelectedCoupon(null);
-    alert(`Mã giảm giá đã được hủy bỏ!`);
+    cancelMutation.mutate();
   };
 
   const formatDate = (dateString) => {
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    };
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleString("vi-VN", options);
   };
 
-  const mutation = useMutation({
+  const applyMutation = useMutation({
     mutationFn: async (couponId) => {
       const token = localStorage.getItem("token");
-      try {
-        const { data } = await instance.put(
-          "/cart/applyCoupon",
-          {
-            couponId: couponId,
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        return data;
-      } catch (error) {
-        console.log("🚀 ~ mutationFn: ~ error:", error);
-      }
+      const { data } = await instance.put(
+        "/cart/applyCoupon",
+        { couponId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return data;
+    },
+    onSuccess: (data) => {
+      onApplyCouponSuccess(data.totalAfterDiscount);
+    },
+    onError: (error) => {
+      message.error("Áp dụng mã giảm giá thất bại.");
+      console.log("🚀 ~ applyMutation error:", error);
     },
   });
 
   const handleApplyCoupon = (couponId) => {
-    mutation.mutate(couponId);
+    applyMutation.mutate(couponId);
+    handleCouponApply(data.find((coupon) => coupon._id === couponId));
   };
 
   return (
@@ -83,11 +98,11 @@ export default function CouponDropdown({ data }) {
                 className="flex items-center justify-between border border-gray-500 p-2 rounded-md"
               >
                 <div className="flex items-center">
-                  <div className=" text-white w-[15%]">
+                  <div className="text-white w-[15%]">
                     <img
                       src="/images/danhmucsp/ma-giam-gia.webp"
                       alt=""
-                      className=" object-cover"
+                      className="object-cover"
                     />
                   </div>
                   <div className="ml-4">
@@ -103,8 +118,11 @@ export default function CouponDropdown({ data }) {
                   </div>
                 </div>
                 <button
-                  className="bg-blue-500 w-[20%] md:w-[15%] text-white px-4 py-1 rounded-md"
+                  className={`bg-blue-500 w-[20%] md:w-[15%] text-white px-4 py-1 rounded-md ${
+                    selectedCoupon ? "hidden" : ""
+                  }`}
                   onClick={() => handleApplyCoupon(coupon._id)}
+                  disabled={selectedCoupon} // Disable nút áp dụng khi đã có mã giảm giá
                 >
                   Áp dụng
                 </button>
@@ -117,7 +135,7 @@ export default function CouponDropdown({ data }) {
       {selectedCoupon && (
         <div className="mt-4 p-4 bg-green-100 border border-green-400 rounded-md flex justify-between items-center">
           <p>
-            Mã giảm giá đã áp dụng: <strong>{selectedCoupon.code}</strong>{" "}
+            Mã giảm giá đã áp dụng: <strong>{selectedCoupon.name}</strong>
           </p>
           <button
             className="bg-red-500 text-white px-4 py-1 rounded-md flex items-center"
