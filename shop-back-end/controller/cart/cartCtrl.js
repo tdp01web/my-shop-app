@@ -44,24 +44,25 @@ const addToCart = asyncHandler(async (req, res) => {
           p.product.toString() === product && p.variant.toString() === variant
       );
 
-      // Nếu sản phẩm đã có, cập nhật số lượng và giá
+      // Nếu sản phẩm đã có, trả về thông báo và dừng thêm vào giỏ hàng
       if (existingProduct) {
-        existingProduct.count += count;
-        existingProduct.price = variantData.price;
-      } else {
-        // Nếu sản phẩm chưa có, thêm sản phẩm vào giỏ hàng
-        cart.products.push({
-          product,
-          variant,
-          count,
-          price: variantData.price,
-        });
+        return res
+          .status(400)
+          .json({ message: "Sản phẩm này đã có trong giỏ hàng." });
       }
+
+      // Nếu sản phẩm chưa có, thêm sản phẩm vào giỏ hàng
+      cart.products.push({
+        product,
+        variant,
+        count,
+        price: variantData.price,
+      });
     }
 
     // ** Tính lại tổng tiền của tất cả các sản phẩm trong giỏ hàng **
     cart.cartTotal = cart.products.reduce((total, item) => {
-      return total + item.count * item.price; // Tổng dựa trên số lượng và giá của tất cả các sản phẩm
+      return total + item.count * item.price;
     }, 0);
 
     await cart.save(); // Lưu giỏ hàng sau khi cập nhật
