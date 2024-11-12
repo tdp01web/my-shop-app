@@ -1,7 +1,6 @@
 const Product = require("../../models/product/productModel");
 const ProductVariant = require("../../models/product/productVariantModel");
 const Brand = require("../../models/product/brandModel");
-const Color = require("../../models/product/colorModel");
 const RAM = require("../../models/product/ramModel");
 const Storage = require("../../models/product/storageModel");
 const GPU = require("../../models/product/gpuModel");
@@ -26,7 +25,6 @@ const searchProducts = async (req, res) => {
       .populate({
         path: "variants",
         populate: [
-          { path: "color" },
           { path: "ram" },
           { path: "storage" },
           { path: "processor" },
@@ -77,12 +75,11 @@ const createProduct = asyncHandler(async (req, res) => {
     // Thêm các biến thể cho sản phẩm
     if (variants && variants.length > 0) {
       for (const variant of variants) {
-        const { color, ram, storage, processor, gpu, quantity, price, images } =
+        const { ram, storage, processor, gpu, quantity, price, images } =
           variant;
 
         const productVariant = await ProductVariant.create({
           product: product._id,
-          color,
           ram,
           storage,
           processor,
@@ -138,7 +135,6 @@ const updateProduct = asyncHandler(async (req, res) => {
       for (const variant of variants) {
         const {
           _id,
-          color,
           ram,
           storage,
           processor,
@@ -152,7 +148,6 @@ const updateProduct = asyncHandler(async (req, res) => {
           // Nếu biến thể đã tồn tại, tiến hành cập nhật
           const existingVariant = await ProductVariant.findById(_id);
           if (existingVariant) {
-            existingVariant.color = color || existingVariant.color;
             existingVariant.ram = ram || existingVariant.ram;
             existingVariant.storage = storage || existingVariant.storage;
             existingVariant.processor = processor || existingVariant.processor;
@@ -167,7 +162,6 @@ const updateProduct = asyncHandler(async (req, res) => {
           // Nếu biến thể chưa tồn tại, tạo mới
           const newVariant = await ProductVariant.create({
             product: product._id,
-            color,
             ram,
             storage,
             processor,
@@ -222,7 +216,7 @@ const getaProduct = asyncHandler(async (req, res) => {
       .populate("lcd")
       .populate({
         path: "variants",
-        populate: ["color", "ram", "storage", "processor", "gpu"],
+        populate: [ "ram", "storage", "processor", "gpu"],
       });
 
     if (!product) {
@@ -251,7 +245,7 @@ const getRelatedProducts = asyncHandler(async (req, res) => {
       .populate("lcd")
       .populate({
         path: "variants",
-        populate: ["color", "ram", "storage", "processor", "gpu"],
+        populate: ["ram", "storage", "processor", "gpu"],
       });
 
     res.status(200).json(relatedProducts);
@@ -270,7 +264,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
       .populate("lcd")
       .populate({
         path: "variants",
-        populate: ["color", "ram", "storage", "processor", "gpu"],
+        populate: ["ram", "storage", "processor", "gpu"],
       });
 
     res.status(200).json(products);
@@ -349,7 +343,7 @@ const rateProduct = asyncHandler(async (req, res) => {
 const updateProductVariant = asyncHandler(async (req, res) => {
   try {
     const { variantId } = req.params;
-    const { color, ram, storage, processor, gpu, quantity, price, images } =
+    const { ram, storage, processor, gpu, quantity, price, images } =
       req.body;
 
     const variant = await ProductVariant.findById(variantId);
@@ -357,7 +351,6 @@ const updateProductVariant = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Không tìm thấy biến thể" });
     }
 
-    variant.color = color || variant.color;
     variant.ram = ram || variant.ram;
     variant.storage = storage || variant.storage;
     variant.processor = processor || variant.processor;
@@ -398,7 +391,6 @@ const deleteProductVariant = asyncHandler(async (req, res) => {
 const getAllVariants = asyncHandler(async (req, res) => {
   try {
     const variants = await ProductVariant.find()
-      .populate("color")
       .populate("ram")
       .populate("storage")
       .populate("processor")
@@ -415,7 +407,6 @@ const getVariant = asyncHandler(async (req, res) => {
   try {
     const { variantId } = req.params;
     const variant = await ProductVariant.findById(variantId)
-      .populate("color")
       .populate("ram")
       .populate("storage")
       .populate("processor")
