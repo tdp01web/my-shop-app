@@ -27,7 +27,6 @@ var orderSchema = new mongoose.Schema(
             ref: "ProductVariant",
           },
         ],
-        color: String,
         ram: String,
         storage: String,
         processor: String,

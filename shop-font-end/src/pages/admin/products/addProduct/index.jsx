@@ -293,24 +293,7 @@ const AddProduct = () => {
                       {...restField}
                       name={[name]}
                       fieldKey={[fieldKey]}
-                      // rules={[{ required: true, whitespace: true, message: "Vui lòng nhập tên biến thể hoặc xóa trường này." }]}
                     >
-                      <Form.Item
-                        {...restField}
-                        label={"Màu"}
-                        name={[name, "color"]}
-                        fieldKey={[fieldKey, "color"]}
-                        rules={[
-                          { required: true, message: "Màu bắt buộc phải điền" },
-                        ]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder="Chọn Màu"
-                          optionFilterProp="label"
-                          options={optionCPU}
-                        />
-                      </Form.Item>
                       <Form.Item
                         {...restField}
                         label={"CPU"}

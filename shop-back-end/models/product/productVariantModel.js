@@ -7,11 +7,6 @@ var productVariantSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     }, // Liên kết tới sản phẩm chính
-    color: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Color",
-      required: true,
-    },
     ram: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "RAM",

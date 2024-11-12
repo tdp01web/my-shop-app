@@ -21,12 +21,29 @@ const EditProduct = () => {
   const [optionGPU, setOptionGPU] = useState([]);
   const [optionRAM, setOptionRAM] = useState([]);
   const [optionSSD, setOptionSSD] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState([]);
   const navigate = useNavigate();
   const { form } = useForm();
   const { id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
 
+  const handleUploadChange = ({ fileList }) => {
+    console.log("🚀 ~ handleUploadChange ~ fileList:", fileList);
+
+    const structuredData = fileList
+      .flatMap(
+        (file) =>
+          file.response?.map((res) => ({
+            url: res?.url,
+            asset_id: res?.asset_id,
+            public_id: res?.public_id,
+          })) || []
+      )
+      .filter((file) => file.url);
+
+    setUploadedImages(structuredData);
+  };
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -119,12 +136,15 @@ const EditProduct = () => {
     {
       onSuccess: () => {
         messageApi.success("Cập nhật sản phẩm thành công");
-        navigate('/admin/products')
+        setTimeout(() => {
+          navigate('/admin/products')
+        }, 1000);
         queryClient.invalidateQueries({
           queryKey: ["get-all-products"],
         })
       },
       onError: () => {
+        console.log(isErrorPutProduct)
         messageApi.error("Cập nhật sản phẩm thất bại");
       },
     })
@@ -159,7 +179,16 @@ const EditProduct = () => {
             description: product?.data?.description,
             category: product?.data?.category?._id,
             brand: product?.data?.brand?._id,
-            variants: product?.data?.variants || [{ cpu: '', gpu: '', ram: '', storage: '', price: null, quantity: null }],
+            variants: product?.data?.variants.map((item) => (
+              {
+                processor: item.processor._id,
+                gpu: item.gpu._id,
+                ram: item.ram._id,
+                storage: item.storage._id,
+                price: item.price,
+                quantity: item.quantity,
+                key: item._id
+              }))
           }}
           autoComplete="off"
           disabled={isPending}
@@ -173,8 +202,13 @@ const EditProduct = () => {
             <Input />
           </Form.Item>
           <Form.Item label="Images" name="images" valuePropName="fileList" getValueFromEvent={normFile}>
-            <Upload action="/upload.do" listType="picture-card">
-              <button style={{ border: 0, background: 'none' }} type="button">
+            <Upload
+              action="http://localhost:3000/api/upload"
+              name="images"
+              listType="picture-card"
+              onChange={handleUploadChange}
+            >
+              <button style={{ border: 0, background: "none" }} type="button">
                 <PlusOutlined />
                 <div style={{ marginTop: 8 }}>Upload</div>
               </button>
@@ -207,31 +241,24 @@ const EditProduct = () => {
               options={optionBrand}
             />
           </Form.Item>
-          <Form.List name="variants" initialValue={product?.data?.variants || [{ cpu: '', gpu: '', ram: '', storage: '', price: null, quantity: null }]}>
+          <Form.List
+            name="variants"
+            initialValue={product?.data?.variants.map((item) => (
+              {
+                processor: item.processor._id,
+                gpu: item.gpu._id,
+                ram: item.ram._id,
+                storage: item.storage._id,
+                price: item.price,
+                quantity: item.quantity,
+                key: item._id
+              }))}
+          >
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, fieldKey, ...restField }) => (
-                  <Form.Item key={key} required={false} label="Biến thể"  >
-                    <Form.Item
-                      {...restField}
-                      name={[name]}
-                      fieldKey={[fieldKey]}
-                    // rules={[{ required: true, whitespace: true, message: "Vui lòng nhập tên biến thể hoặc xóa trường này." }]}
-                    >
-                      <Form.Item
-                        {...restField}
-                        label={"Màu"}
-                        name={[name, 'color']}
-                        fieldKey={[fieldKey, 'color']}
-                        rules={[{ required: true, message: "Màu bắt buộc phải điền" }]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder="Chọn Màu"
-                          optionFilterProp="label"
-                          options={optionCPU}
-                        />
-                      </Form.Item>
+                  <Form.Item key={key} required={false} label="Biến thể">
+                    <Form.Item {...restField} name={[name]} fieldKey={[fieldKey]}>
                       <Form.Item
                         {...restField}
                         label={"CPU"}
@@ -290,7 +317,7 @@ const EditProduct = () => {
                       </Form.Item>
                       <Form.Item
                         {...restField}
-                        label={"Gía"}
+                        label={"Giá"}
                         name={[name, 'price']}
                         fieldKey={[fieldKey, 'price']}
                         rules={[
@@ -302,7 +329,7 @@ const EditProduct = () => {
                       </Form.Item>
                       <Form.Item
                         {...restField}
-                        label={"Số lượng "}
+                        label={"Số lượng"}
                         name={[name, 'quantity']}
                         fieldKey={[fieldKey, 'quantity']}
                         rules={[

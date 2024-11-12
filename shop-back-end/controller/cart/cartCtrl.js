@@ -89,7 +89,6 @@ const getCart = asyncHandler(async (req, res) => {
       .populate({
         path: "products.variant",
         populate: [
-          { path: "color", select: "title" },
           { path: "ram", select: "size" },
           { path: "storage", select: "capacity" },
           { path: "processor", select: "name" },
