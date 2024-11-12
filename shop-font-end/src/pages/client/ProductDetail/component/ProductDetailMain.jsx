@@ -49,6 +49,7 @@ const ProductDetailMain = ({ product }) => {
         message.error("Vui lòng đăng nhập để thêm vào giỏ hàng");
         return;
       }
+
       try {
         const { data } = await instance.post(
           "/cart",
@@ -67,7 +68,14 @@ const ProductDetailMain = ({ product }) => {
         );
         return data;
       } catch (error) {
-        console.error("🚀 ~ Error in Mutation:", error);
+        // Kiểm tra nếu có phản hồi từ server
+        if (error.response && error.response.data) {
+          // Ném lỗi với thông báo từ server
+          throw new Error(error.response.data.message);
+        } else {
+          // Ném lỗi chung nếu không có phản hồi cụ thể
+          throw new Error("Đã xảy ra lỗi khi thêm vào giỏ hàng");
+        }
       }
     },
     onSuccess: (data) => {
@@ -75,8 +83,8 @@ const ProductDetailMain = ({ product }) => {
       message.success("Thêm vào giỏ hàng thành công");
     },
     onError: (error) => {
-      message.error("Đã có lỗi xảy ra");
-      console.log(error);
+      message.error(error.message);
+      console.error("🚀 ~ onError:", error.message);
     },
   });
 
