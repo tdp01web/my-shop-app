@@ -44,24 +44,25 @@ const addToCart = asyncHandler(async (req, res) => {
           p.product.toString() === product && p.variant.toString() === variant
       );
 
-      // Nếu sản phẩm đã có, cập nhật số lượng và giá
+      // Nếu sản phẩm đã có, trả về thông báo và dừng thêm vào giỏ hàng
       if (existingProduct) {
-        existingProduct.count += count;
-        existingProduct.price = variantData.price;
-      } else {
-        // Nếu sản phẩm chưa có, thêm sản phẩm vào giỏ hàng
-        cart.products.push({
-          product,
-          variant,
-          count,
-          price: variantData.price,
-        });
+        return res
+          .status(400)
+          .json({ message: "Sản phẩm này đã có trong giỏ hàng." });
       }
+
+      // Nếu sản phẩm chưa có, thêm sản phẩm vào giỏ hàng
+      cart.products.push({
+        product,
+        variant,
+        count,
+        price: variantData.price,
+      });
     }
 
     // ** Tính lại tổng tiền của tất cả các sản phẩm trong giỏ hàng **
     cart.cartTotal = cart.products.reduce((total, item) => {
-      return total + item.count * item.price; // Tổng dựa trên số lượng và giá của tất cả các sản phẩm
+      return total + item.count * item.price;
     }, 0);
 
     await cart.save(); // Lưu giỏ hàng sau khi cập nhật
@@ -80,8 +81,8 @@ const addToCart = asyncHandler(async (req, res) => {
 
 // Lấy giỏ hàng của người dùng
 const getCart = asyncHandler(async (req, res) => {
-  const userId = req.user._id; // Lấy ID người dùng từ token
-  validateMongoDbId(userId); // Kiểm tra ID hợp lệ
+  const userId = req.user._id;
+  validateMongoDbId(userId);
 
   try {
     let cart = await Cart.findOne({ orderedBy: userId })
@@ -89,7 +90,6 @@ const getCart = asyncHandler(async (req, res) => {
       .populate({
         path: "products.variant",
         populate: [
-          { path: "color", select: "title" },
           { path: "ram", select: "size" },
           { path: "storage", select: "capacity" },
           { path: "processor", select: "name" },
@@ -101,10 +101,17 @@ const getCart = asyncHandler(async (req, res) => {
       return res.status(200).json({ message: "Giỏ hàng trống.", products: [] });
     }
 
-    // Cập nhật giá sản phẩm nếu có thay đổi
+    // Cập nhật giá sản phẩm và kiểm tra trạng thái
     await cart.updatePrices();
 
-    res.status(200).json(cart);
+    res.status(200).json({
+      products: cart.products.map((item) => ({
+        ...item._doc,
+        unavailable: item.unavailable, // Trả về trạng thái khả dụng của sản phẩm
+      })),
+      cartTotal: cart.cartTotal,
+      totalAfterDiscount: cart.totalAfterDiscount,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

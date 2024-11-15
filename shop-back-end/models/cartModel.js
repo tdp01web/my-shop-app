@@ -53,9 +53,23 @@ const cartSchema = new mongoose.Schema(
 
 // Tính tổng giỏ hàng
 cartSchema.methods.calculateCartTotal = async function () {
-  const cartTotal = this.products.reduce((total, item) => {
-    return total + item.count * item.price; // Sử dụng giá của biến thể hiện tại
-  }, 0);
+  const Product = mongoose.model("Product");
+  let cartTotal = 0;
+
+  for (let item of this.products) {
+    const product = await Product.findById(item.product);
+    const variant = await mongoose
+      .model("ProductVariant")
+      .findById(item.variant);
+
+    // Kiểm tra nếu sản phẩm bị ẩn (status = 1) hoặc hết hàng (quantity = 0)
+    if (product.status === 1 || !variant || variant.quantity === 0) {
+      item.unavailable = true; // Đánh dấu là không khả dụng
+    } else {
+      item.unavailable = false; // Sản phẩm khả dụng
+      cartTotal += item.count * item.price; // Tính tổng giá nếu khả dụng
+    }
+  }
 
   this.cartTotal = cartTotal;
   this.totalAfterDiscount = cartTotal; // Cập nhật giá sau giảm giá
@@ -65,15 +79,28 @@ cartSchema.methods.calculateCartTotal = async function () {
 // Cập nhật giá của sản phẩm dựa trên biến thể hiện tại
 cartSchema.methods.updatePrices = async function () {
   const ProductVariant = mongoose.model("ProductVariant");
+  const Product = mongoose.model("Product");
 
   for (let item of this.products) {
+    const product = await Product.findById(item.product);
     const variant = await ProductVariant.findById(item.variant);
-    if (variant) {
+
+    // Nếu sản phẩm hoặc biến thể không tồn tại, hoặc không khả dụng
+    if (
+      !product ||
+      product.status === 1 ||
+      !variant ||
+      variant.quantity === 0
+    ) {
+      item.unavailable = true;
+      item.price = 0; // Đặt giá = 0 nếu sản phẩm không khả dụng
+    } else {
+      item.unavailable = false;
       item.price = variant.price; // Cập nhật giá từ biến thể hiện tại
     }
   }
 
-  await this.calculateCartTotal(); // Cập nhật tổng tiền giỏ hàng sau khi thay đổi giá
+  await this.calculateCartTotal();
 };
 
 // Thêm sản phẩm vào giỏ hàng

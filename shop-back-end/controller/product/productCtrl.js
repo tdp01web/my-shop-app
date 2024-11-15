@@ -1,7 +1,6 @@
 const Product = require("../../models/product/productModel");
 const ProductVariant = require("../../models/product/productVariantModel");
 const Brand = require("../../models/product/brandModel");
-const Color = require("../../models/product/colorModel");
 const RAM = require("../../models/product/ramModel");
 const Storage = require("../../models/product/storageModel");
 const GPU = require("../../models/product/gpuModel");
@@ -26,7 +25,6 @@ const searchProducts = async (req, res) => {
       .populate({
         path: "variants",
         populate: [
-          { path: "color" },
           { path: "ram" },
           { path: "storage" },
           { path: "processor" },
@@ -77,12 +75,11 @@ const createProduct = asyncHandler(async (req, res) => {
     // Thêm các biến thể cho sản phẩm
     if (variants && variants.length > 0) {
       for (const variant of variants) {
-        const { color, ram, storage, processor, gpu, quantity, price, images } =
+        const { ram, storage, processor, gpu, quantity, price, images } =
           variant;
 
         const productVariant = await ProductVariant.create({
           product: product._id,
-          color,
           ram,
           storage,
           processor,
@@ -115,15 +112,16 @@ const updateProduct = asyncHandler(async (req, res) => {
       brand,
       lcd,
       images,
-      variants, // Danh sách biến thể mới hoặc cần cập nhật
+      variants,
     } = req.body;
 
-    const product = await Product.findById(id).populate("variants"); // Tải các biến thể hiện có
+    // Tìm sản phẩm theo `id`
+    const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Cập nhật các thông tin cơ bản của sản phẩm
+    // Cập nhật các thông tin sản phẩm
     product.title = title || product.title;
     product.slug = slugify(title) || product.slug;
     product.description = description || product.description;
@@ -131,61 +129,68 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.category = category || product.category;
     product.brand = brand || product.brand;
     product.lcd = lcd || product.lcd;
-    product.images = images || product.images;
 
-    // Cập nhật hoặc thêm mới các biến thể
-    if (variants && variants.length > 0) {
+    if (Array.isArray(images) && images.length > 0) {
+      const newImagesMap = new Map(images.map((img) => [img.public_id, img]));
+
+      // Xóa ảnh cũ không có trong danh sách ảnh mới
+      product.images = product.images.filter((oldImage) =>
+        newImagesMap.has(oldImage.public_id)
+      );
+
+      // Thêm các ảnh mới vào danh sách ảnh của sản phẩm
+      images.forEach((newImage) => {
+        if (
+          !product.images.some((img) => img.public_id === newImage.public_id)
+        ) {
+          product.images.push({
+            public_id: newImage.public_id,
+            url: newImage.url,
+          });
+        }
+      });
+    }
+
+    const newVariantIds = [];
+
+    if (Array.isArray(variants) && variants.length > 0) {
       for (const variant of variants) {
-        const {
-          _id,
-          color,
-          ram,
-          storage,
-          processor,
-          gpu,
-          quantity,
-          price,
-          images,
-        } = variant;
+        const { _id, ram, storage, processor, gpu, quantity, price } = variant;
 
-        if (_id) {
-          // Nếu biến thể đã tồn tại, tiến hành cập nhật
+        if (_id && mongoose.Types.ObjectId.isValid(_id)) {
           const existingVariant = await ProductVariant.findById(_id);
           if (existingVariant) {
-            existingVariant.color = color || existingVariant.color;
             existingVariant.ram = ram || existingVariant.ram;
             existingVariant.storage = storage || existingVariant.storage;
             existingVariant.processor = processor || existingVariant.processor;
             existingVariant.gpu = gpu || existingVariant.gpu;
             existingVariant.quantity = quantity || existingVariant.quantity;
             existingVariant.price = price || existingVariant.price;
-            existingVariant.images = images || existingVariant.images;
 
             await existingVariant.save();
+            newVariantIds.push(existingVariant._id);
           }
         } else {
-          // Nếu biến thể chưa tồn tại, tạo mới
           const newVariant = await ProductVariant.create({
             product: product._id,
-            color,
             ram,
             storage,
             processor,
             gpu,
             quantity,
             price,
-            images,
           });
 
-          product.variants.push(newVariant._id); // Thêm biến thể mới vào sản phẩm
+          newVariantIds.push(newVariant._id);
         }
       }
     }
 
-    // Lưu sản phẩm với các biến thể đã cập nhật hoặc thêm mới
+    // Cập nhật mảng `variants` của sản phẩm
+    product.variants = newVariantIds;
     await product.save();
 
-    res.status(200).json(product);
+    res.status(200).json({ message: "Product updated successfully", product });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -222,7 +227,7 @@ const getaProduct = asyncHandler(async (req, res) => {
       .populate("lcd")
       .populate({
         path: "variants",
-        populate: ["color", "ram", "storage", "processor", "gpu"],
+        populate: ["ram", "storage", "processor", "gpu"],
       });
 
     if (!product) {
@@ -251,7 +256,7 @@ const getRelatedProducts = asyncHandler(async (req, res) => {
       .populate("lcd")
       .populate({
         path: "variants",
-        populate: ["color", "ram", "storage", "processor", "gpu"],
+        populate: ["ram", "storage", "processor", "gpu"],
       });
 
     res.status(200).json(relatedProducts);
@@ -270,7 +275,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
       .populate("lcd")
       .populate({
         path: "variants",
-        populate: ["color", "ram", "storage", "processor", "gpu"],
+        populate: ["ram", "storage", "processor", "gpu"],
       });
 
     res.status(200).json(products);
@@ -349,15 +354,13 @@ const rateProduct = asyncHandler(async (req, res) => {
 const updateProductVariant = asyncHandler(async (req, res) => {
   try {
     const { variantId } = req.params;
-    const { color, ram, storage, processor, gpu, quantity, price, images } =
-      req.body;
+    const { ram, storage, processor, gpu, quantity, price, images } = req.body;
 
     const variant = await ProductVariant.findById(variantId);
     if (!variant) {
       return res.status(404).json({ message: "Không tìm thấy biến thể" });
     }
 
-    variant.color = color || variant.color;
     variant.ram = ram || variant.ram;
     variant.storage = storage || variant.storage;
     variant.processor = processor || variant.processor;
@@ -398,7 +401,6 @@ const deleteProductVariant = asyncHandler(async (req, res) => {
 const getAllVariants = asyncHandler(async (req, res) => {
   try {
     const variants = await ProductVariant.find()
-      .populate("color")
       .populate("ram")
       .populate("storage")
       .populate("processor")
@@ -415,7 +417,6 @@ const getVariant = asyncHandler(async (req, res) => {
   try {
     const { variantId } = req.params;
     const variant = await ProductVariant.findById(variantId)
-      .populate("color")
       .populate("ram")
       .populate("storage")
       .populate("processor")
@@ -426,6 +427,24 @@ const getVariant = asyncHandler(async (req, res) => {
     }
 
     res.status(200).json(variant);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+const getAllProductsForUsers = asyncHandler(async (req, res) => {
+  try {
+    // Lọc chỉ các sản phẩm có status = 0
+    const products = await Product.find({ status: 0 })
+      .populate("category")
+      .populate("brand")
+      .populate("lcd")
+      .populate({
+        path: "variants",
+        populate: ["ram", "storage", "processor", "gpu"],
+      });
+
+    res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -445,4 +464,5 @@ module.exports = {
   deleteProductVariant,
   getRelatedProducts,
   searchProducts,
+  getAllProductsForUsers,
 };

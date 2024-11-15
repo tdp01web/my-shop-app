@@ -28,6 +28,7 @@ const CartItems = ({
       }
     },
   });
+  console.log(cartItems.products.some((item) => item.unavailable));
 
   return cartItems ? (
     cartItems.products.length === 0 ? (
@@ -66,15 +67,26 @@ const CartItems = ({
               }).format(totalAfterDiscount)}
             </p>
           </div>
-
-          <Button
-            type="primary"
-            size="large"
-            className="mt-4 bg-red-600"
-            onClick={handleNext}
-          >
-            ĐẶT HÀNG NGAY
-          </Button>
+          {cartItems.products.some((item) => item.unavailable) ? (
+            <Button
+              type="primary"
+              size="large"
+              className="mt-4 bg-red-600"
+              onClick={handleNext}
+            >
+              Vui lòng xóa những sản phẩm không khả dụng để đặt hàng
+            </Button>
+          ) : (
+            <Button
+              type="primary"
+              size="large"
+              className="mt-4 bg-red-600"
+              onClick={handleNext}
+              disabled={cartItems.products.some((item) => item.unavailable)}
+            >
+              ĐẶT HÀNG NGAY
+            </Button>
+          )}
         </div>
       </React.Fragment>
     )

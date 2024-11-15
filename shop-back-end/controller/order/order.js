@@ -29,7 +29,6 @@ const createOrder = asyncHandler(async (req, res) => {
       .populate({
         path: "products.variant",
         populate: [
-          { path: "color" },
           { path: "ram" },
           { path: "storage" },
           { path: "processor" },
@@ -58,7 +57,6 @@ const createOrder = asyncHandler(async (req, res) => {
         brand: item.product.brand?.title || null,
         lcd: item.product.lcd?.size || null,
         images: item.product.images,
-        color: item.variant?.color?.title || null,
         ram: item.variant?.ram?.size || null,
         storage: item.variant?.storage?.capacity || null,
         processor: item.variant?.processor?.name || null,
@@ -497,7 +495,6 @@ const cancelOrderForAdmin = asyncHandler(async (req, res) => {
 const statusOrderFlow = [
   "Đang Xử Lý",
   "Đã Xác Nhận",
-  "Đang Đóng Gói",
   "Đang Giao Hàng",
   "Đã Giao Hàng",
   "Hoàn Thành",
