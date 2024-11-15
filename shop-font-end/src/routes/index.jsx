@@ -49,10 +49,7 @@ const Installment = lazy(() => import("../pages/client/Installment"));
 const ContactPage = lazy(() => import("../pages/client/ContactPage"));
 const HomePage = lazy(() => import("../pages/client/HomePage"));
 const OrdersPage = lazy(() => import("../pages/client/OrdersPage"));
-const ProductDetailPage = lazy(() =>
-  import("../pages/client/ProductsDetailPage/ProductDetailPage")
-);
-const ProductPage = lazy(() => import("../pages/client/ProductsPage"));
+
 const CartPage = lazy(() => import("../pages/client/cart/CartPage"));
 const Login = lazy(() => import("../pages/client/login/Login"));
 const Register = lazy(() => import("../pages/client/register"));
