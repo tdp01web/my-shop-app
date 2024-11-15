@@ -104,10 +104,6 @@ const Router = () => {
                 element={<UpdatePassword />}
               />
             </Route>
-            {/* <Route path="products">
-              <Route index element={<ProductPage />} />
-              <Route path=":id" element={<ProductDetail />} />
-            </Route> */}
             <Route path="products/:id" element={<ProductDetail />} />
             <Route path="contacts" element={<ContactPage />} />
             <Route path="abouts" element={<AboutsPage />} />
