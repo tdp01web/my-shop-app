@@ -13,7 +13,7 @@ const HomePage = () => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["Data_HomePage"],
     queryFn: async () => {
-      const { data } = await instance.get("/product/getAllProduct");
+      const { data } = await instance.get("/product/get-all-product-user");
       return data;
     },
     staleTime: 4 * 60 * 1000, // Dữ liệu sẽ được coi là mới trong 4 phút

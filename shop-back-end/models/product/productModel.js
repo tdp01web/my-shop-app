@@ -31,6 +31,11 @@ var productSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "LCD",
     },
+    status: {
+      type: Number,
+      enum: [0, 1],
+      default: 0,
+    },
     images: [
       {
         public_id: String,
