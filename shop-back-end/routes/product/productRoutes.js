@@ -13,6 +13,7 @@ const {
   deleteProductVariant,
   getRelatedProducts,
   searchProducts,
+  getAllProductsForUsers,
 } = require("../../controller/product/productCtrl");
 const router = express.Router();
 const {
@@ -30,6 +31,7 @@ router.post("/create", createProduct);
 router.get("/getaProduct/:id", getaProduct);
 //! Get all products
 router.get("/getAllProduct", getAllProducts);
+router.get("/get-all-product-user", getAllProductsForUsers);
 
 //tim kiem san pham
 router.get("/search", searchProducts);

@@ -95,7 +95,6 @@ const ItemProductCard = ({ item }) => {
       variantId: item.variant._id,
     });
   };
-
   return (
     <div className="flex gap-5">
       <div className="flex flex-col justify-center w-[25%]">
@@ -110,29 +109,32 @@ const ItemProductCard = ({ item }) => {
       </div>
       <div className="md:flex flex-col justify-center md:gap-2">
         <div>
-          <Link to={`/product/${item.product._id}`} className="w-[50%]">
+          <Link to={`/products/${item.product._id}`} className="w-[50%]">
             <p className="font-semibold text-[14px]">
               {item.product.title}
-              {/* Check if color is available before displaying */}
               {item.variant.color ? `| ${item.variant.color.title}` : ""} |{" "}
               {item.variant.gpu.name} | {item.variant.ram.size} |{" "}
               {item.variant.storage.capacity}
             </p>
           </Link>
         </div>
-        <div className="w-[25%] md:w-[40%]">
-          <p className="font-semibold text-[#E30019] text-[20px]">
-            {new Intl.NumberFormat("vi-VN", {
-              style: "currency",
-              currency: "VND",
-            }).format(item.price)}
-          </p>
-          <Quantity
-            maxQuantity={item.variant.quantity}
-            initialQuantity={item.count}
-            onChange={handleQuantityChange}
-          />
-        </div>
+        {item.unavailable ? (
+          <span style={{ color: "red" }}>Sản phẩm này hiện không khả dụng</span>
+        ) : (
+          <div className="w-[25%] md:w-[40%]">
+            <p className="font-semibold text-[#E30019] text-[20px]">
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(item.price)}
+            </p>
+            <Quantity
+              maxQuantity={item.variant.quantity}
+              initialQuantity={item.count}
+              onChange={handleQuantityChange}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
