@@ -36,6 +36,7 @@ const ResetPassword = lazy(() =>
   import("../pages/client/ForgotPassword/component/ResetPassword")
 );
 import PrivateRoute from "./privateRouter";
+import NotSearch from "../pages/NotSearch";
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
 const LayoutClient = lazy(() => import("../layouts/client"));
@@ -166,6 +167,7 @@ const Router = () => {
             <Route path="comments" element={<ListComment />} />
             {/* Vouchers */}
             <Route path="vouchers" element={<ListVouchers />} />
+            <Route path="NotSearch" element={<NotSearch />} />
           </Route>
           {/* Authentication */}
           <Route path="login" element={<Login />} />

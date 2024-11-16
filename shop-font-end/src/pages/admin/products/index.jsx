@@ -1,65 +1,79 @@
-import React, { useRef, useState } from "react";
-import { DownOutlined, PlusCircleFilled, SearchOutlined } from "@ant-design/icons";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  DownOutlined,
+  PlusCircleFilled,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Dropdown, Input, message, Popconfirm, Space, Table } from "antd";
+import {
+  Button,
+  Dropdown,
+  Input,
+  message,
+  Popconfirm,
+  Space,
+  Table,
+} from "antd";
 import Highlighter from "react-highlight-words";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { instance } from "../../../configs/instance";
 import { useGetAllProducts } from "../../../hooks/queries/useGetAllProduct";
 import { useDeleteProduct } from "../../../hooks/mutations/useDeleteProduct";
 import { useDeleteVarriantsProuduct } from "../../../hooks/mutations/useDeleteVarriantProduct";
 
 const ListProduct = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
+  const location = useLocation();
+  const [filteredData, setFilteredData] = useState(null);
 
-  const { mutate: deleteProduct } = useDeleteProduct(
-    {
-      onSuccess: () => {
-        messageApi.open({
-          type: "success",
-          content: "Xoá sản phẩm thành công",
-        });
-        queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
-      },
-      onError(error) {
-        messageApi.open({
-          type: "error",
-          content: error.message,
-        });
-      },
+  useEffect(() => {
+    if (location.state && location.state.results) {
+      setFilteredData(location.state.results);
     }
-  )
-  const { mutate: deleteVrProduct } = useDeleteVarriantsProuduct(
-    {
-      onSuccess: () => {
-        messageApi.open({
-          type: "success",
-          content: "Xoá biến thể thành công",
-        });
-        queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
-      },
-      onError(error) {
-        messageApi.open({
-          type: "error",
-          content: error.message,
-        });
-      },
-    }
-  )
-  const { data: product } = useGetAllProducts(
-    {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      onError: (error) => {
-        console.log(error);
-      }
-    }
-  )
+  }, [location.state]);
+
+  const { mutate: deleteProduct } = useDeleteProduct({
+    onSuccess: () => {
+      messageApi.open({
+        type: "success",
+        content: "Xoá sản phẩm thành công",
+      });
+      queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
+    },
+    onError(error) {
+      messageApi.open({
+        type: "error",
+        content: error.message,
+      });
+    },
+  });
+  const { mutate: deleteVrProduct } = useDeleteVarriantsProuduct({
+    onSuccess: () => {
+      messageApi.open({
+        type: "success",
+        content: "Xoá biến thể thành công",
+      });
+      queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
+    },
+    onError(error) {
+      messageApi.open({
+        type: "error",
+        content: error.message,
+      });
+    },
+  });
+  const { data: product } = useGetAllProducts({
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -69,19 +83,26 @@ const ListProduct = () => {
 
   const handleReset = (clearFilters) => {
     clearFilters();
-    setSearchText('');
+    setSearchText("");
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ marginBottom: 8, display: 'block' }}
+          style={{ marginBottom: 8, display: "block" }}
         />
         <Space>
           <Button
@@ -92,17 +113,20 @@ const ListProduct = () => {
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small">
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+          >
             Reset
           </Button>
         </Space>
       </div>
     ),
     filterIcon: (filtered) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes((value).toLowerCase()),
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -111,49 +135,62 @@ const ListProduct = () => {
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString() : ""}
         />
       ) : (
         text
       ),
   });
 
-  const dataSource = product?.data.map((item, index) => {
-    return {
-      id: item._id,
-      key: item._id,
-      title: item.title,
-      image: item?.images,
-      description: item.description,
-      brand: item?.brand?.title,
-      category: item?.category?.name,
-      price: item.title,
-      variants: item?.variants || [],
-    };
-  });
+  const dataSource = filteredData
+    ? filteredData.map((item, index) => ({
+        id: item._id,
+        key: item._id,
+        title: item.title,
+        image: item.images,
+        description: item.description,
+        brand: item.brand?.title,
+        category: item.category?.name,
+        price: item.price,
+        variants: item.variants || [],
+      }))
+    : product?.data.map((item, index) => ({
+        id: item._id,
+        key: item._id,
+        title: item.title,
+        image: item.images,
+        description: item.description,
+        brand: item.brand?.title,
+        category: item.category?.name,
+        price: item.price,
+        variants: item.variants || [],
+      }));
   const columns = [
     {
       title: "Tên sản phẩm",
       dataIndex: "title",
       key: "title",
-      width: '15%',
-      ...getColumnSearchProps('title'),
+      width: "15%",
+      ...getColumnSearchProps("title"),
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
-      render: (images) => (
+      render: (images) =>
         images && images.length > 0 ? (
-          <img src={images[0].url} alt="product" style={{ width: 100, height: 100, borderRadius: 5 }} />
+          <img
+            src={images[0].url}
+            alt="product"
+            style={{ width: 100, height: 100, borderRadius: 5 }}
+          />
         ) : (
-          'Không có ảnh'
-        )
-      ),
+          "Không có ảnh"
+        ),
     },
     {
       title: "Giá sản phẩm",
@@ -201,12 +238,12 @@ const ListProduct = () => {
   ];
 
   const expandColumns = [
-    { title: 'CPU', dataIndex: 'cpu', key: 'cpu' },
-    { title: 'GPU', dataIndex: 'gpu', key: 'gpu' },
-    { title: 'RAM', dataIndex: 'ram', key: 'ram' },
-    { title: 'SSD', dataIndex: 'ssd', key: 'ssd' },
-    { title: 'Giá', dataIndex: 'price', key: 'price' },
-    { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
+    { title: "CPU", dataIndex: "cpu", key: "cpu" },
+    { title: "GPU", dataIndex: "gpu", key: "gpu" },
+    { title: "RAM", dataIndex: "ram", key: "ram" },
+    { title: "SSD", dataIndex: "ssd", key: "ssd" },
+    { title: "Giá", dataIndex: "price", key: "price" },
+    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     {
       title: "Hành động",
       dataIndex: "action",
@@ -241,7 +278,13 @@ const ListProduct = () => {
       price: variant.price,
     }));
 
-    return <Table columns={expandColumns} dataSource={variantsData} pagination={false} />;
+    return (
+      <Table
+        columns={expandColumns}
+        dataSource={variantsData}
+        pagination={false}
+      />
+    );
   };
   return (
     <div>
