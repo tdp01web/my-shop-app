@@ -9,6 +9,7 @@ const {
   getAllOrdersForAdmin,
   handleMomoPayment,
   callback,
+  cancelMyOrder,
 } = require("../../controller/order/order");
 const {
   authMiddleware,
@@ -35,6 +36,9 @@ router.get("/:orderId", authMiddleware, getOrderById);
 
 // Cập nhật trạng thái đơn hàng (chỉ dành cho admin)
 router.put("/update-status/:orderId", authMiddleware, isAdmin, updateStatus);
+
+// người dùng huỷ đơn của mình
+router.put('/my-orders/cancel/:orderId', authMiddleware, cancelMyOrder)
 
 // hủy đơn hàng cho admin
 router.put(

@@ -549,6 +549,47 @@ const updateStatus = asyncHandler(async (req, res) => {
   });
 });
 
+// user huỷ đơn hàng của chính mình
+const cancelMyOrder = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { orderId } = req.params;
+  const { cancelReason } = req.body;
+
+  const order = await Order.findOne({
+    _id: orderId,
+    orderedBy: _id
+  })
+
+  if (!order) {
+    return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+  }
+
+  // Không cho phép hủy nếu đơn đã xác nhận
+  if (order.orderStatus === "Đã Xác Nhận") {
+    return res.status(400).json({
+      message: "Không thể hủy đơn hàng đã được xác nhận.",
+    });
+  }
+
+  // Yêu cầu lý do khi hủy đơn
+  if (!cancelReason) {
+    return res.status(400).json({
+      message: "Cần cung cấp lý do hủy đơn hàng.",
+    });
+  }
+
+  // Cập nhật trạng thái và lý do hủy
+  order.orderStatus = 'Đã Hủy';
+  order.cancellationReason = cancelReason;
+
+  await order.save();
+
+  return res.status(200).json({
+    message: "Huỷ đơn hàng thành công",
+    order,
+  });
+});
+
 //Thanh toán online
 
 module.exports = {
@@ -562,4 +603,5 @@ module.exports = {
   handleMomoPayment,
   callback,
   transactionStatus,
+  cancelMyOrder
 };
