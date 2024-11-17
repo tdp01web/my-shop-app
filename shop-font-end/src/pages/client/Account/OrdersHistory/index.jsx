@@ -58,6 +58,20 @@ const OrdersHistory = () => {
     return orders?.filter((it) => it.orderStatus === activeTab);
   }, [activeTab, orders]);
 
+  const renderOrderCount = (status) => {
+    let count = 0;
+    if (status === TABS[0].label) {
+      count = orders?.length;
+    } else {
+      const data = orders?.filter((x) => x.orderStatus === status);
+      count = data?.length;
+    }
+
+    if (count > 0) {
+      return `(${count})`;
+    }
+  };
+
   return (
     <>
       <h2 className="text-[24px] font-semibold px-6 py-4 text-[#333] leading-tight">
@@ -76,12 +90,10 @@ const OrdersHistory = () => {
           >
             <span>{it.label}</span>
 
-            {activeTab === it.label && (
-              <span className="text-[#ff3c53]">
-                {" "}
-                {selectedOrders?.length > 0 && `(${selectedOrders.length})`}
-              </span>
-            )}
+            <span className="text-[#ff3c53]">
+              {" "}
+              {renderOrderCount(it.label)}
+            </span>
           </p>
         ))}
       </div>
