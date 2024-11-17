@@ -9,47 +9,13 @@ import { useGetAllProducts } from "../../../hooks/queries/useGetAllProduct";
 import { useDeleteProduct } from "../../../hooks/mutations/useDeleteProduct";
 import { useDeleteVarriantsProuduct } from "../../../hooks/mutations/useDeleteVarriantProduct";
 
-const ListProduct = () => {
+const ListProductStaff = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
 
-  const { mutate: deleteProduct } = useDeleteProduct(
-    {
-      onSuccess: () => {
-        messageApi.open({
-          type: "success",
-          content: "Xoá sản phẩm thành công",
-        });
-        queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
-      },
-      onError(error) {
-        messageApi.open({
-          type: "error",
-          content: error.message,
-        });
-      },
-    }
-  )
-  const { mutate: deleteVrProduct } = useDeleteVarriantsProuduct(
-    {
-      onSuccess: () => {
-        messageApi.open({
-          type: "success",
-          content: "Xoá biến thể thành công",
-        });
-        queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
-      },
-      onError(error) {
-        messageApi.open({
-          type: "error",
-          content: error.message,
-        });
-      },
-    }
-  )
   const { data: product } = useGetAllProducts(
     {
       onSuccess: (data) => {
@@ -176,7 +142,7 @@ const ListProduct = () => {
       dataIndex: "description",
       key: "description",
       render: (text) => (
-        <Popover content={text} title="Mô tả đầy đủ" trigger="hover" overlayStyle={{ maxWidth: 900 , overflow:'auto' }}>
+        <Popover content={text} title="Mô tả đầy đủ" trigger="hover" overlayStyle={{ maxWidth: 900, overflow: 'auto' }}>
           <span>
             {text.length > 50 ? `${text.substring(0, 50)}...` : text}
           </span>
@@ -199,18 +165,8 @@ const ListProduct = () => {
       width: 250,
       render: (_, product) => (
         <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa sản phẩm"
-            onConfirm={() => deleteProduct(product.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
-            </Button>
-          </Popconfirm>
           <Button>
-            <Link to={`/admin/products/${product.id}/edit`}>Cập nhật</Link>
+            <Link to={`/admin/products/${product.id}/edit`}>Chi tiết sản phẩm</Link>
           </Button>
         </div>
       ),
@@ -230,18 +186,9 @@ const ListProduct = () => {
       width: 250,
       render: (_, record) => (
         <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa biến thể"
-            onConfirm={() => {
-              deleteVrProduct(record.id);
-            }}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
-            </Button>
-          </Popconfirm>
+          <Button type="primary" danger>
+            Thêm vào đơn hàng
+          </Button>
         </div>
       ),
     },
@@ -264,10 +211,10 @@ const ListProduct = () => {
     <div>
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Quản lý sản phẩm</h1>
+        <h1 className="font-semibold text-2xl">Danh sách sản phẩm</h1>
         <Button type="primary">
           <Link to="/admin/products/add">
-            <PlusCircleFilled /> Thêm sản phẩm
+            <PlusCircleFilled /> Tạo đơn hàng
           </Link>
         </Button>
       </div>
@@ -282,4 +229,4 @@ const ListProduct = () => {
   );
 };
 
-export default ListProduct;
+export default ListProductStaff;

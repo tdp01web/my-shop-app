@@ -6,7 +6,7 @@ import { useGetOrderByID } from "../../../hooks/queries/useGetOrderByID";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
 import { useEffect, useState } from "react";
 
-const DetailCart = () => {
+const DetailCartShipper = () => {
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -185,4 +185,4 @@ const DetailCart = () => {
   );
 };
 
-export default DetailCart;
+export default DetailCartShipper;

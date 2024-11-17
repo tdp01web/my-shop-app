@@ -3,11 +3,17 @@ import { PlusCircleFilled, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, message, Popconfirm, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
+import { useGetAllVouchers } from "../../../hooks/queries/useGetAllVouchers";
+import { useDeleteVouchers } from "../../../hooks/mutations/useDeleteVouchers";
+import { useQueryClient } from "@tanstack/react-query";
+import moment from "moment/moment";
 
 export const ListVouchers = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+  const [messageApi, contextHolder] = message.useMessage();
+  const queryClient = useQueryClient();
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -68,39 +74,50 @@ export const ListVouchers = () => {
         text
       ),
   });
+  const { data: vouchers, isLoading, isError } = useGetAllVouchers({
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
 
-  const dataSource = [
-    {
-      key: '1',
-      title: 'Voucher Giảm Giá 10%',
-      discounts: 10, // Kiểu số
-      date: '2024-12-31', // Ngày hết hạn
+  const { mutate } = useDeleteVouchers({
+    onSuccess: () => {
+      messageApi.open({
+        type: "success",
+        content: "Xoá vouchers thành công",
+      });
+      queryClient.invalidateQueries({ queryKey: ["get-all-vouchers"] });
     },
-    {
-      key: '2',
-      title: 'Voucher Giảm Giá 20%',
-      discounts: 20, // Kiểu số
-      date: '2024-11-30',
+    onError(error) {
+      messageApi.open({
+        type: "error",
+        content: error.message,
+      });
     },
-    {
-      key: '3',
-      title: 'Voucher Giảm Giá 15%',
-      discounts: 15, // Kiểu số
-      date: '2024-10-15',
-    },
-    {
-      key: '4',
-      title: 'Voucher Giảm Giá 5%',
-      discounts: 5, // Kiểu số
-      date: '2025-01-01',
-    },
-  ];
+  })
+  const dataSource = vouchers?.data?.map((voucher) => ({
+    key: voucher._id,
+    id: voucher._id,
+    title: voucher.name,
+    discounts: voucher.discount,
+    date: moment(voucher.startDate).format("YYYY-MM-DD"),
+    endDate: moment(voucher.expiry).format("YYYY-MM-DD"),
+  }))
   const columns = [
+    {
+      title: "Mã vouchers",
+      dataIndex: "id",
+      key: "id",
+      ...getColumnSearchProps('id'),
+      sorter: (a, b) => a.id.localeCompare(b.id),
+    },
     {
       title: "Tên vouchers",
       dataIndex: "title",
       key: "title",
-      width: '30%',
       ...getColumnSearchProps('title'),
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
@@ -111,34 +128,49 @@ export const ListVouchers = () => {
       sorter: (a, b) => a.discounts - b.discounts,
     },
     {
-      title: "Ngày hết hạn",
+      title: "Ngày bắt đầu",
       dataIndex: "date",
       key: "date",
+      sorter: (a, b) => a.date - b.date,
+    },
+    {
+      title: "Ngày hết hạn",
+      dataIndex: "endDate",
+      key: "endDate",
       sorter: (a, b) => a.date - b.date,
     },
     {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, cart) => (
+      render: (_, voucher) => (
         <div className="flex space-x-3">
+          <Popconfirm
+            title="Xóa hãng"
+            onConfirm={() => mutate(voucher.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>
+              Xóa
+            </Button>
+          </Popconfirm>
           <Button>
-            <Link to={`/admin/`}>Xóa </Link>
-          </Button>
-          <Button>
-            <Link to={`/admin/`}>Cập nhật</Link>
+            <Link to={`/admin/vouchers/${voucher.id}/edit`}>Cập nhật</Link>
           </Button>
         </div>
       ),
     },
   ];
-
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error loading data.</p>
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
+        {contextHolder}
         <h1 className="font-semibold text-2xl">Quản lý Vouchers</h1>
         <Button type="primary">
-          <Link to="/admin/vouchers">
+          <Link to="/admin/vouchers/add">
             <PlusCircleFilled /> Thêm mới vouchers
           </Link>
         </Button>

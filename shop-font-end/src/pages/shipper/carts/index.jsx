@@ -8,7 +8,7 @@ import { instance } from "../../../configs/instance";
 import { useGetAllOrders } from "../../../hooks/queries/useGetAllOrder";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
 
-const DetailCart = () => {
+const ListCartShipper = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -18,14 +18,6 @@ const DetailCart = () => {
   const queryClient = useQueryClient();
   const [selectedStatus, setSelectedStatus] = useState("");
 
-  const options = [
-    { value: "Đang Xử Lý", label: "Đang Xử Lý" },
-    { value: "Đã Xác Nhận", label: "Đã Xác Nhận" },
-    { value: "Đang Đóng Gói", label: "Đang Đóng Gói" },
-    { value: "Đang Giao Hàng", label: "Đang Giao Hàng" },
-    { value: "Đã Giao Hàng", label: "Đã Giao Hàng" },
-    { value: "Đã Hủy", label: "Đã Hủy" },
-  ];
   const { data: carts, isLoading, isError } = useGetAllOrders(
     {
       onSuccess: (data) => {
@@ -158,6 +150,9 @@ const DetailCart = () => {
           <Button>
             <Link to={`/admin/carts/${carts.id}/detail`}>Chi tiết đơn hàng</Link>
           </Button>
+          <Button>
+            <Link to={`/admin/carts/${carts.id}/detail`}>Nhận đơn hàng</Link>
+          </Button>
         </div>
       ),
     },
@@ -178,4 +173,4 @@ const DetailCart = () => {
     </div>
   );
 };
-export default DetailCart;
+export default ListCartShipper;
