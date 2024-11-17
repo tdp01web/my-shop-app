@@ -109,10 +109,6 @@ const DetailCart = () => {
       ),
   });
 
-  const handleStatusUpdate = (orderId, status) => {
-    mutate({ id: orderId, status });
-    setSelectedStatus(""); // Reset the selected status after mutation
-  };
   const dataSource = carts?.data.map((item, index) => {
     return {
       id: item._id,

@@ -1,16 +1,18 @@
 import { message } from "antd";
 import { Navigate } from "react-router-dom";
 
-
-const PrivateRoute = ({ children }) => {
-
+const PrivateRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
-  const isAuthenticated = token && user?.role === "admin";
-  if (!isAuthenticated) {
-    message.error("Bạn cần dùng quyền admin để truy cập");
+  const isAuthenticated = token && user;
+
+  const hasAccess = isAuthenticated && (user.role === "admin" || allowedRoles.includes(user.role));
+
+  if (!hasAccess) {
+    message.error("Bạn không có quyền để truy cập");
   }
-  return isAuthenticated ? children : <Navigate to="/login" />;
+
+  return hasAccess ? children : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;

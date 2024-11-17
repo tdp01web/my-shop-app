@@ -25,7 +25,7 @@ const LayoutAdmin = () => {
         <SidebarLayoutAdmin />
         <MainLayoutAdmin />
       </Layout>
-      <Footer className='font-bold text-[17px] text-center'>MANAGE SNEAKER-CUTI</Footer>
+      <Footer className='font-bold text-[24px] text-center text-red-500'>Gaming Gear</Footer>
     </Layout>
   );
 };

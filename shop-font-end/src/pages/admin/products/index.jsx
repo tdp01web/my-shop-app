@@ -1,25 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  DownOutlined,
-  PlusCircleFilled,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { PlusCircleFilled, SearchOutlined } from "@ant-design/icons";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
-  Dropdown,
   Input,
   message,
   Popconfirm,
+  Popover,
   Space,
   Table,
 } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { Link, useLocation } from "react-router-dom";
-import { instance } from "../../../configs/instance";
-import { useGetAllProducts } from "../../../hooks/queries/useGetAllProduct";
 import { useDeleteProduct } from "../../../hooks/mutations/useDeleteProduct";
 import { useDeleteVarriantsProuduct } from "../../../hooks/mutations/useDeleteVarriantProduct";
+import { useGetAllProducts } from "../../../hooks/queries/useGetAllProduct";
 
 const ListProduct = () => {
   const [searchText, setSearchText] = useState("");
@@ -168,7 +163,16 @@ const ListProduct = () => {
         price: item.price,
         variants: item.variants || [],
       }));
+
   const columns = [
+    {
+      title: "Mã sản phẩm",
+      dataIndex: "id",
+      key: "id",
+      width: "15%",
+      ...getColumnSearchProps("id"),
+      sorter: (a, b) => a.id.localeCompare(b.id),
+    },
     {
       title: "Tên sản phẩm",
       dataIndex: "title",
@@ -202,6 +206,16 @@ const ListProduct = () => {
       title: "Mô tả",
       dataIndex: "description",
       key: "description",
+      render: (text) => (
+        <Popover
+          content={text}
+          title="Mô tả đầy đủ"
+          trigger="hover"
+          overlayStyle={{ maxWidth: 900, overflow: "auto" }}
+        >
+          <span>{text.length > 50 ? `${text.substring(0, 50)}...` : text}</span>
+        </Popover>
+      ),
     },
     {
       title: "Danh mục",
