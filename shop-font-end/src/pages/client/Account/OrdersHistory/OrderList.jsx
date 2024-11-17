@@ -1,4 +1,5 @@
 import { Button } from "antd";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -46,7 +47,8 @@ const OrderCard = ({ data }) => {
                   to={`/products/${data._id}`}
                   className="text-[#111] font-semibold"
                 >
-                  {product?.title}
+                  {product?.title} | {product?.gpu} | {product?.ram} |{" "}
+                  {product?.storage}
                 </Link>
               </div>
             </div>
@@ -66,20 +68,24 @@ const OrderCard = ({ data }) => {
         </Button>
       )}
 
-      <div className="text-right">
-        <p>
-          <span>Tổng tiền: </span>
-          <span className="text-[#e30019] font-semibold">
-            {data.totalPrice.toLocaleString()}đ
-          </span>
-        </p>
+      <div className="flex items-center justify-between">
+        <p>Đặt lúc: {dayjs(data.createdAt).format("HH:mm DD.MM.YYYY")}</p>
 
-        <Link
-          to={`/account/orders/${data._id}`}
-          className="border border-[#1982f9] rounded px-3 h-9 text-[14px] text-[#1982f9] inline-flex items-center mt-2"
-        >
-          Xem chi tiết
-        </Link>
+        <div className="text-right">
+          <p>
+            <span>Tổng tiền: </span>
+            <span className="text-[#e30019] font-semibold">
+              {data.totalPrice.toLocaleString()}đ
+            </span>
+          </p>
+
+          <Link
+            to={`/account/orders/${data._id}`}
+            className="border border-[#1982f9] rounded px-3 h-9 text-[14px] text-[#1982f9] inline-flex items-center mt-2"
+          >
+            Xem chi tiết
+          </Link>
+        </div>
       </div>
     </div>
   );
