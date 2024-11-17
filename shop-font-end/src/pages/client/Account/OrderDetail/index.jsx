@@ -1,4 +1,4 @@
-import { Steps } from "antd";
+import { Button, Steps } from "antd";
 import OrderStep1Icon from "../../../../components/JSXIcon/OrderStep1Icon";
 import OrderStep2Icon from "../../../../components/JSXIcon/OrderStep2Icon";
 import OrderStep3Icon from "../../../../components/JSXIcon/OrderStep3Icon";
@@ -11,6 +11,8 @@ import styles from "./index.module.css";
 import { Link, useParams } from "react-router-dom";
 import { instance } from "../../../../configs/instance";
 import dayjs from "dayjs";
+import CancelOrderModal from "./component/CancelOrderModal";
+import { useState } from "react";
 
 const ORDER_ICONS = [
   OrderStep1Icon,
@@ -37,7 +39,12 @@ const customDot = (dot, { status, index }) => {
 const OrderDetail = () => {
   const { id } = useParams();
 
-  const { data, isFetching } = useQuery({
+  const [openModal, setOpenModal] = useState(false);
+
+  const onOpenModal = () => setOpenModal(true);
+  const onCloseModal = () => setOpenModal(false);
+
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ["ORDER_DETAIL", id],
     queryFn: async () => {
       const r = await instance.get(`/order/${id}`);
@@ -47,19 +54,30 @@ const OrderDetail = () => {
     enabled: !!id,
   });
 
-  if (isFetching) return;
+  if (isFetching && !data) return;
 
   return (
     <>
       <div className="px-6 py-4 flex items-center justify-between gap-x-2">
         <p className="text-[24px] font-semibold text-[#333]">
-          <span>Chi tiết đơn hàng #{data._id} - </span>
-          <span className="text-[#FF7A00]">{data.orderStatus}</span>
+          <span>Chi tiết đơn hàng #{data._id}</span>
         </p>
 
         <p className="text-[#111]">
           Đặt lúc: {dayjs(data.createdAt).format("HH:mm DD.MM.YYYY")}
         </p>
+      </div>
+
+      <div className="px-6 flex justify-between items-center mb-2">
+        <p className="text-[24px] font-semibold text-[#FF7A00]">
+          {data.orderStatus}
+        </p>
+
+        {data.orderStatus === "Đang Xử Lý" && (
+          <Button danger type="primary" onClick={onOpenModal}>
+            Huỷ ĐH
+          </Button>
+        )}
       </div>
 
       <div className="px-6 py-4">
@@ -117,10 +135,17 @@ const OrderDetail = () => {
               </p>
             </div>
 
-            <div className="flex items-center mb-3 gap-x-3">
-              <p className="w-1/3">Thời gian nhận hàng:</p>
-              <p className="flex-1"></p>
-            </div>
+            {data.orderStatus !== "Đã Hủy" ? (
+              <div className="flex items-center mb-3 gap-x-3">
+                <p className="w-1/3">Thời gian nhận hàng:</p>
+                <p className="flex-1"></p>
+              </div>
+            ) : (
+              <div className="flex items-center mb-3 gap-x-3">
+                <p className="w-1/3">Lý do huỷ:</p>
+                <p className="flex-1">{data?.cancellationReason}</p>
+              </div>
+            )}
           </div>
 
           <div className="col-span-12 md:col-span-4 pt-3 px-4 pb-4 border border-[#CFCFCF] rounded">
@@ -220,6 +245,13 @@ const OrderDetail = () => {
           </Link>
         </div>
       </div>
+
+      <CancelOrderModal
+        open={openModal}
+        onClose={onCloseModal}
+        orderId={id}
+        refetch={refetch}
+      />
     </>
   );
 };
