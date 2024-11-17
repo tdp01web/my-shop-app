@@ -9,6 +9,7 @@ var orderSchema = new mongoose.Schema(
     },
     products: [
       {
+        prodId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" }, // Thêm ID sản phẩm
         title: String,
         slug: String,
         description: String,
@@ -31,7 +32,6 @@ var orderSchema = new mongoose.Schema(
         storage: String,
         processor: String,
         gpu: String,
-
         price: Number,
         quantity: Number,
         count: {
@@ -47,59 +47,29 @@ var orderSchema = new mongoose.Schema(
     discountApplied: {
       type: Number,
       default: 0,
-    }, // Số tiền giảm giá (nếu có mã giảm giá được áp dụng)
-    couponDiscountDetails: {
-      discount: { type: Number, default: 0 }, // Phần trăm giảm giá
-      maxDiscountAmount: { type: Number, default: 0 }, // Số tiền giảm tối đa
-      discountAmount: { type: Number, default: 0 }, // Số tiền được giảm
     },
     shippingFee: {
       type: Number,
       required: true,
-    }, // Phí vận chuyển
+    },
     totalPrice: {
       type: Number,
       required: true,
-    }, // Tổng số tiền phải thanh toán (bao gồm vận chuyển và giảm giá)
-
-    // Thông tin giao hàng
-    shippingAddress: {
-      name: {
-        type: String,
-        required: true,
-      }, // Tên người nhận hàng
-      phone: {
-        type: String,
-        required: true,
-      }, // Số điện thoại người nhận hàng
-      addressLine1: {
-        type: String,
-        required: true,
-      }, // Địa chỉ giao hàng (đường/phố)
-      city: {
-        type: String,
-        required: true,
-      }, // Tỉnh/thành phố
-      district: {
-        type: String,
-        required: true,
-      }, // Quận/huyện
-      ward: {
-        type: String,
-        required: true,
-      }, // Phường/xã
-      postalCode: {
-        type: String,
-        required: false,
-      }, // Mã bưu điện (nếu có)
     },
-
-    // Trạng thái thanh toán và đơn hàng
+    shippingAddress: {
+      name: { type: String, required: true },
+      phone: { type: String, required: true },
+      addressLine1: { type: String, required: true },
+      city: { type: String, required: true },
+      district: { type: String, required: true },
+      ward: { type: String, required: true },
+      postalCode: { type: String, required: false },
+    },
     paymentMethod: {
       type: String,
       enum: ["Thanh Toán Khi Nhận Hàng", "MOMO"],
       required: true,
-    }, // Phương thức thanh toán
+    },
     paymentStatus: {
       type: String,
       enum: [
@@ -110,7 +80,7 @@ var orderSchema = new mongoose.Schema(
         "Hoàn Tiền",
       ],
       default: "Chưa Thanh Toán",
-    }, // Trạng thái thanh toán của đơn hàng
+    },
     orderStatus: {
       type: String,
       default: "Đang Xử Lý",
@@ -128,17 +98,11 @@ var orderSchema = new mongoose.Schema(
       type: String,
       required: function () {
         return this.orderStatus === "Đã Hủy";
-      }, // yêu cầu lý do khi hủy đơn
+      },
     },
-    cancellationReason: {
-      type: String,
-    }, // Lý do hủy đơn hàng
-
-    // Thông tin thêm
-    paymentIntent: {}, // Tùy chọn: Dùng để lưu thông tin thanh toán (nếu dùng Stripe hoặc các cổng thanh toán khác)
   },
   {
-    timestamps: true, // Tự động thêm thời gian tạo và cập nhật
+    timestamps: true,
   }
 );
 

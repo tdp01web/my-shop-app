@@ -6,6 +6,7 @@ import ProductDetailMain from "./component/ProductDetailMain";
 import Loader from "../../../components/Loading";
 import SimilarProducts from "./component/SimilarProducts";
 import ProductDescription from "./component/ProductDescription";
+import ProductComments from "./component/ProductComments";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -69,6 +70,7 @@ const ProductDetail = () => {
           <SimilarProducts dataProductCategory={relatedProductsData} />
         )}
       </div>
+      <ProductComments data={data} />
     </div>
   );
 };
