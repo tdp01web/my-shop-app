@@ -6,6 +6,7 @@ const Storage = require("../../models/product/storageModel");
 const GPU = require("../../models/product/gpuModel");
 const Processor = require("../../models/product/processorModel");
 const Category = require("../../models/product/prodcategoryModel");
+const Order = require("../../models/orderModel");
 const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 const User = require("../../models/userModel");
@@ -316,36 +317,76 @@ const addToWishlist = asyncHandler(async (req, res) => {
   }
 });
 
-//! Đánh giá cho sản phẩm
+//! Đánh giá cho sản phẩm
 const rateProduct = asyncHandler(async (req, res) => {
-  const { star, prodId, comment } = req.body;
-  const { _id } = req.user; // Lấy thông tin người dùng đã đăng nhập
+  const { prodId, star, comment } = req.body;
+  const { _id } = req.user;
 
   try {
+    // Kiểm tra sản phẩm có tồn tại không
     const product = await Product.findById(prodId);
+    if (!product) {
+      return res.status(404).json({ message: "Sản phẩm không tồn tại!" });
+    }
 
-    // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
+    // Kiểm tra xem người dùng đã mua sản phẩm chưa
+    const orderExists = await Order.findOne({
+      orderedBy: _id,
+      "products.prodId": prodId,
+      orderStatus: "Hoàn Thành",
+    });
+
+    if (!orderExists) {
+      return res
+        .status(403)
+        .json({ message: "Bạn chỉ có thể đánh giá sản phẩm đã mua." });
+    }
+
+    // Tìm xem người dùng đã đánh giá trước đó chưa
     const existingRating = product.ratings.find(
       (rating) => rating.postedby.toString() === _id.toString()
     );
 
     if (existingRating) {
-      // Nếu đã đánh giá, cập nhật lại đánh giá
+      // Nếu đã đánh giá trước đó, cập nhật lại
       existingRating.star = star;
       existingRating.comment = comment;
     } else {
-      // Nếu chưa đánh giá, thêm đánh giá mới
+      // Nếu chưa đánh giá, thêm mới
       product.ratings.push({ star, comment, postedby: _id });
     }
 
-    // Tính tổng số sao đánh giá và cập nhật tổng rating
-    const totalRating = product.ratings.length;
-    const sumRating = product.ratings.reduce((acc, curr) => acc + curr.star, 0);
-    product.totalrating = sumRating / totalRating;
+    // Tính tổng số sao trung bình
+    const totalStars = product.ratings.reduce(
+      (acc, rating) => acc + rating.star,
+      0
+    );
+    product.totalrating = (totalStars / product.ratings.length).toFixed(1);
 
     await product.save();
-    res.status(200).json(product);
+    res.status(200).json({ message: "Đánh giá thành công!", product });
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+const getProductComments = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findById(id).populate({
+      path: "ratings.postedby", //
+      select: "firstName lastName email",
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Sản phẩm không tồn tại!" });
+    }
+
+    // Trả về danh sách ratings đã populate
+    res.status(200).json({ ratings: product.ratings });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -465,4 +506,5 @@ module.exports = {
   getRelatedProducts,
   searchProducts,
   getAllProductsForUsers,
+  getProductComments,
 };

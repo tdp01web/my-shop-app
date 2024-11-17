@@ -1,13 +1,25 @@
-import { BackwardFilled, Loading3QuartersOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  BackwardFilled,
+  Loading3QuartersOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Input, InputNumber, message, Select, Upload } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Select,
+  Upload,
+} from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetOrderByID } from "../../../hooks/queries/useGetOrderByID";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
 import { useEffect, useState } from "react";
 
 const DetailCart = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const { id } = useParams();
@@ -20,39 +32,41 @@ const DetailCart = () => {
     { value: "Đang Đóng Gói", label: "Đang Đóng Gói" },
     { value: "Đang Giao Hàng", label: "Đang Giao Hàng" },
     { value: "Đã Giao Hàng", label: "Đã Giao Hàng" },
+    { value: "Hoàn Thành", label: "Hoàn Thành" },
     { value: "Đã Hủy", label: "Đã Hủy" },
   ];
-  const { data, isLoading, isError } = useGetOrderByID(
-    id,
-    {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      onError: (error) => {
-        console.log(error);
-      }
-    })
-  const { mutate, isPending, isError: isErrorPut, error } = usePutOrder(
-    id,
-    {
-      onSuccess: () => {
-        messageApi.success("Cập nhật trạng thái thành công");
-        queryClient.invalidateQueries({
-          queryKey: ["get-all-orders"],
-        })
-        setTimeout(() => {
-          navigate('/admin/carts')
-        }, 500)
-      },
-      onError: (error) => {
-        const errorMessage = error.response?.data?.message || "Đã xảy ra lỗi!";
-        messageApi.error(errorMessage);
-      },
-    })
+  const { data, isLoading, isError } = useGetOrderByID(id, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const {
+    mutate,
+    isPending,
+    isError: isErrorPut,
+    error,
+  } = usePutOrder(id, {
+    onSuccess: () => {
+      messageApi.success("Cập nhật trạng thái thành công");
+      queryClient.invalidateQueries({
+        queryKey: ["get-all-orders"],
+      });
+      setTimeout(() => {
+        navigate("/admin/carts");
+      }, 500);
+    },
+    onError: (error) => {
+      const errorMessage = error.response?.data?.message || "Đã xảy ra lỗi!";
+      messageApi.error(errorMessage);
+    },
+  });
   const onFinish = (values) => {
     mutate({
       orderStatus: values.orderStatus,
-      cancellationReason: values.cancellationReason
+      cancellationReason: values.cancellationReason,
     });
   };
   const handleValuesChange = (changedValues) => {
@@ -61,15 +75,15 @@ const DetailCart = () => {
     } else {
       setCancellationReason("");
     }
-  }
+  };
 
   useEffect(() => {
     if (data?.data.orderStatus) {
       setCancellationReason("Đã Hủy");
     }
-  }, [data?.data.orderStatus])
-  if (isLoading) return <p>Loading...</p>
-  if (isError) return <p>Error loading data.</p>
+  }, [data?.data.orderStatus]);
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading data.</p>;
   return (
     <div className="">
       {contextHolder}
@@ -98,56 +112,32 @@ const DetailCart = () => {
             paymentMethod: data?.data.paymentMethod,
             paymentStatus: data?.data.paymentStatus,
             orderStatus: data?.data.orderStatus,
-            cancellationReason: data?.data.cancellationReason
+            cancellationReason: data?.data.cancellationReason,
           }}
           autoComplete="off"
         >
-          <Form.Item
-            label="Mã đơn hàng"
-            name="_id"
-          >
+          <Form.Item label="Mã đơn hàng" name="_id">
             <Input className="border-none disabled:cursor-not-allowed pointer-events-none" />
           </Form.Item>
-          <Form.Item
-            label="Sản phẩm"
-            name="products"
-          >
+          <Form.Item label="Sản phẩm" name="products">
             <Input className="border-none disabled:cursor-not-allowed pointer-events-none" />
           </Form.Item>
-          <Form.Item
-            label="Giá sản phẩm"
-            name="totalProductPrice"
-          >
+          <Form.Item label="Giá sản phẩm" name="totalProductPrice">
             <Input className="border-none disabled:cursor-not-allowed pointer-events-none" />
           </Form.Item>
-          <Form.Item
-            label="Giá ship"
-            name="shippingFee"
-          >
+          <Form.Item label="Giá ship" name="shippingFee">
             <Input className="border-none disabled:cursor-not-allowed pointer-events-none" />
           </Form.Item>
-          <Form.Item
-            label="Tổng giá trị đơn hàng"
-            name="totalPrice"
-          >
+          <Form.Item label="Tổng giá trị đơn hàng" name="totalPrice">
             <Input className="border-none disabled:cursor-not-allowed pointer-events-none" />
           </Form.Item>
-          <Form.Item
-            label="Phương thức thanh toán"
-            name="paymentMethod"
-          >
+          <Form.Item label="Phương thức thanh toán" name="paymentMethod">
             <Input className="border-none disabled:cursor-not-allowed pointer-events-none" />
           </Form.Item>
-          <Form.Item
-            label="Tình trạng thanh toán"
-            name="paymentStatus"
-          >
+          <Form.Item label="Tình trạng thanh toán" name="paymentStatus">
             <Input className="border-none disabled:cursor-not-allowed pointer-events-none" />
           </Form.Item>
-          <Form.Item
-            label="Trạng thái đơn hàng"
-            name="orderStatus"
-          >
+          <Form.Item label="Trạng thái đơn hàng" name="orderStatus">
             <Select
               showSearch
               placeholder="Trạng thái đơn hàng"
@@ -160,11 +150,11 @@ const DetailCart = () => {
             <Form.Item
               label="Lý do hủy"
               name="cancellationReason"
-              rules={[{ required: true, message: "Lý do hủy bắt buộc phải điền" }]}
+              rules={[
+                { required: true, message: "Lý do hủy bắt buộc phải điền" },
+              ]}
             >
-              <Input
-                placeholder="Nhập lý do hủy"
-              />
+              <Input placeholder="Nhập lý do hủy" />
             </Form.Item>
           ) : null}
           <Form.Item wrapperCol={{ offset: 12, span: 16 }}>

@@ -50,6 +50,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
     let newOrder = new Order({
       products: userCart.products.map((item) => ({
+        prodId: item.product._id,
         title: item.product.title,
         slug: item.product.slug,
         description: item.product.description,
@@ -557,8 +558,8 @@ const cancelMyOrder = asyncHandler(async (req, res) => {
 
   const order = await Order.findOne({
     _id: orderId,
-    orderedBy: _id
-  })
+    orderedBy: _id,
+  });
 
   if (!order) {
     return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
@@ -579,7 +580,7 @@ const cancelMyOrder = asyncHandler(async (req, res) => {
   }
 
   // Cập nhật trạng thái và lý do hủy
-  order.orderStatus = 'Đã Hủy';
+  order.orderStatus = "Đã Hủy";
   order.cancellationReason = cancelReason;
 
   await order.save();
@@ -603,5 +604,5 @@ module.exports = {
   handleMomoPayment,
   callback,
   transactionStatus,
-  cancelMyOrder
+  cancelMyOrder,
 };
