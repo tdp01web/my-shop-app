@@ -12,7 +12,8 @@ const SubHeader = ({ vertical }) => {
   const navigate = useNavigate();
 
   const listMenu = [
-    { icon: <MdOutlineDiscount />, title: "Săn Voucher GEARVN" },
+    { icon: <MdOutlineDiscount />, title: "Săn Voucher Gaming Gear",path: "/voucher" },
+
     { icon: <HiOutlineNewspaper />, title: "Tin công nghệ", path: "blog" },
     {
       icon: <SlSocialYoutube />,

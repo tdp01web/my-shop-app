@@ -5,34 +5,47 @@ import { Typography, Input, Button, Card, Layout, Form } from "antd";
 import { Box } from "@mui/material";
 import { FileSearchOutlined } from "@ant-design/icons";
 import Banner from "../layouts/client/components/banner";
+import { useNavigate } from "react-router-dom";
+import { instance } from "../configs/instance";
 
 const { Title, Paragraph } = Typography;
 const { Content } = Layout;
 
 const NotFoundSearch = () => {
-  const [inputValue, setInputValue] = useState("");
+  const [query, setQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [searchResult, setSearchResult] = useState(false);
+  const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-    if (e.target.value) {
-      setErrorMessage("");
-      setSearchResult(false);
-    } else {
-      setErrorMessage("Trường tìm kiếm không được để trống !");
-      setSearchResult(false);
+  const fetchProducts = async (query) => {
+    try {
+      const response = await instance.get(`/product/search?query=${query}`);
+      if (response.data && response.data.length > 0) {
+        return response.data;
+      }
+      return null;
+    } catch (error) {
+      console.error("Lỗi khi tìm kiếm sản phẩm:", error);
+      return null;
     }
   };
 
-  const onFinish = () => {
-    if (!inputValue) {
-      setErrorMessage("Trường tìm kiếm không được để trống !");
+  const handleSearch = async () => {
+    if (!query) {
+      setErrorMessage("Trường tìm kiếm không được để trống!");
       setSearchResult(false);
     } else {
       setErrorMessage("");
-      setSearchResult(true);
-      console.log("Thêm thành công", inputValue);
+      const results = await fetchProducts(query);
+      if (results) {
+        setSearchResult(true);
+        navigate("/search", { state: { query, results } });
+      } else {
+        setSearchResult(false);
+        setErrorMessage(
+          "Rất tiếc, chúng tôi không thể tìm thấy từ khóa của bạn."
+        );
+      }
     }
   };
 
@@ -56,14 +69,15 @@ const NotFoundSearch = () => {
             <Form
               name="basic"
               className="flex flex-col sm:flex-row items-center"
-              onFinish={onFinish}
+              onFinish={handleSearch}
               autoComplete="off"
             >
               <Form.Item className="mb-2 sm:mb-0">
                 <Input
-                  value={inputValue}
-                  onChange={handleInputChange}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                   className="w-full sm:w-[300px] lg:w-[400px] h-[40px] sm:h-[50px] border border-black align-middle"
+                  placeholder="Nhập từ khóa tìm kiếm"
                 />
               </Form.Item>
               <Form.Item className="mb-0">
@@ -84,16 +98,16 @@ const NotFoundSearch = () => {
             </Paragraph>
           )}
 
-          {/* {searchResult && ( */}
-          <>
-            <Paragraph className="line-clamp-2 font-semibold text-[16px] sm:text-[18px] mt-4 sm:mt-6 lg:mt-7">
-              Rất tiếc, chúng tôi không thể tìm thấy từ khóa của bạn.
-            </Paragraph>
-            <Paragraph className="line-clamp-2 font-semibold text-[16px] sm:text-[18px]">
-              Vui lòng kiểm tra chính tả, sử dụng các từ khóa khác và thử lại!
-            </Paragraph>
-          </>
-          {/* )} */}
+          {!searchResult && !errorMessage && (
+            <>
+              <Paragraph className="line-clamp-2 font-semibold text-[16px] sm:text-[18px] mt-4 sm:mt-6 lg:mt-7">
+                Rất tiếc, chúng tôi không thể tìm thấy từ khóa của bạn.
+              </Paragraph>
+              <Paragraph className="line-clamp-2 font-semibold text-[16px] sm:text-[18px]">
+                Vui lòng kiểm tra chính tả, sử dụng các từ khóa khác và thử lại!
+              </Paragraph>
+            </>
+          )}
         </Card>
       </Content>
       <FooterLayoutClient />

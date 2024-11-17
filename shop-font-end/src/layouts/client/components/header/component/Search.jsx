@@ -2,25 +2,46 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { instance } from "./../../../../../configs/instance";
 
 const SearchProduct = () => {
   const [query, setQuery] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setQuery("");
+    }
+  }, [location.pathname]);
 
   const fetchProducts = async (query) => {
-    const response = await instance.get(`/product/search?query=${query}`);
-    return response.data;
+    try {
+      const response = await instance.get(`/product/search?query=${query}`);
+      if (response.data.message === "Không tìm thấy sản phẩm nào.") {
+        return null;
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Lỗi khi tìm kiếm sản phẩm:", error);
+      return null;
+    }
   };
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
     if (query.length > 0) {
       const results = await fetchProducts(query);
-      console.log(results);
-      navigate("/search", { state: { query, results } });
+      if (results) {
+        navigate("/search", { state: { query, results } });
+      } else {
+        setErrorMessage("Không tìm thấy sản phẩm nào.");
+        navigate("/not-found-search", { state: { query } });
+      }
     }
   };
 
@@ -47,6 +68,9 @@ const SearchProduct = () => {
           <SearchIcon />
         </IconButton>
       </Paper>
+      {errorMessage && (
+        <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>
+      )}
     </div>
   );
 };

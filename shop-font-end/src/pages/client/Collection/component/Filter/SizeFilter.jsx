@@ -1,7 +1,7 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useEffect, useState } from "react";
-import { Button, Popover, Box } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Box, Button, Popover } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useState } from "react";
 import Size from "./components/Size";
 
 const theme = createTheme({
@@ -84,9 +84,6 @@ const SizeFilter = ({ LCD, selectedLcd, setSelectedLcd }) => {
               Bỏ chọn
             </Button>
             <Box ml={1} />
-            <Button variant="contained" sx={{ backgroundColor: "#007bff" }}>
-              Xem kết quả
-            </Button>
           </Box>
         </Box>
       </Popover>

@@ -67,9 +67,7 @@ const NeedFilter = () => {
               Bỏ chọn
             </Button>
             <Box ml={1} />
-            <Button variant="contained" sx={{backgroundColor: '#007bff'}}>
-              Xem kết quả
-            </Button>
+            
           </Box>
         </Box>
       </Popover>

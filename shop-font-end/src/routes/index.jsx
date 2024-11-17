@@ -36,6 +36,7 @@ const ResetPassword = lazy(() =>
   import("../pages/client/ForgotPassword/component/ResetPassword")
 );
 import PrivateRoute from "./privateRouter";
+import NotSearch from "../pages/NotSearch";
 import DashboardStaff from "../pages/staff/dashboard";
 import ListProductStaff from "../pages/staff/products";
 import LayoutAdminShipper from "../layouts/shipper";
@@ -136,7 +137,7 @@ const Router = () => {
           <Route
             path="admin"
             element={
-              <PrivateRoute allowedRoles={['admin']}>
+              <PrivateRoute allowedRoles={["admin"]}>
                 <LayoutAdmin />
               </PrivateRoute>
             }
@@ -178,6 +179,7 @@ const Router = () => {
             <Route path="comments" element={<ListComment />} />
             {/* Vouchers */}
             <Route path="vouchers" element={<ListVouchers />} />
+            <Route path="NotSearch" element={<NotSearch />} />
             <Route path="vouchers/add" element={<AddVouchers />} />
             <Route path="vouchers/:id/edit" element={<EditVouchers />} />
           </Route>
@@ -185,7 +187,7 @@ const Router = () => {
           <Route
             path="staff"
             element={
-              <PrivateRoute allowedRoles={['admin', 'staff']}>
+              <PrivateRoute allowedRoles={["admin", "staff"]}>
                 <LayoutAdminStaff />
               </PrivateRoute>
             }
@@ -201,7 +203,7 @@ const Router = () => {
           <Route
             path="shipper"
             element={
-              <PrivateRoute allowedRoles={['admin', 'shipper']}>
+              <PrivateRoute allowedRoles={["admin", "shipper"]}>
                 <LayoutAdminShipper />
               </PrivateRoute>
             }
