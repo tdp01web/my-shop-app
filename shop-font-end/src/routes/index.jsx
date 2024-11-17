@@ -36,6 +36,17 @@ const ResetPassword = lazy(() =>
   import("../pages/client/ForgotPassword/component/ResetPassword")
 );
 import PrivateRoute from "./privateRouter";
+import DashboardStaff from "../pages/staff/dashboard";
+import ListProductStaff from "../pages/staff/products";
+import LayoutAdminShipper from "../layouts/shipper";
+import LayoutAdminStaff from "../layouts/staff";
+import ListCartStaff from "../pages/staff/carts";
+import DetailCartStaff from "../pages/staff/carts/detailCart";
+import DashboardShipper from "../pages/shipper/dashboard";
+import ListCartShipper from "../pages/shipper/carts";
+import DetailCartShipper from "../pages/shipper/carts/detailCart";
+import AddVouchers from "../pages/admin/vouchers/add";
+import EditVouchers from "../pages/admin/vouchers/edit";
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
 const LayoutClient = lazy(() => import("../layouts/client"));
@@ -88,6 +99,7 @@ const Router = () => {
       // }
       >
         <Routes>
+          //#region Client
           {/* Layout Client */}
           <Route path="" element={<LayoutClient />}>
             <Route index element={<HomePage />} />
@@ -120,11 +132,11 @@ const Router = () => {
           </Route>
           {/* Voucher */}
           <Route path="voucher" element={<VoucherPage />} />
-          {/* Layout Admin */}
+          //#region Admin
           <Route
             path="admin"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={['admin']}>
                 <LayoutAdmin />
               </PrivateRoute>
             }
@@ -166,6 +178,38 @@ const Router = () => {
             <Route path="comments" element={<ListComment />} />
             {/* Vouchers */}
             <Route path="vouchers" element={<ListVouchers />} />
+            <Route path="vouchers/add" element={<AddVouchers />} />
+            <Route path="vouchers/:id/edit" element={<EditVouchers />} />
+          </Route>
+          //#region Staff
+          <Route
+            path="staff"
+            element={
+              <PrivateRoute allowedRoles={['admin', 'staff']}>
+                <LayoutAdminStaff />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<DashboardStaff />} />
+            {/* Products */}
+            <Route path="products" element={<ListProductStaff />} />
+            {/* Cart */}
+            <Route path="carts" element={<ListCartStaff />} />
+            <Route path="carts/:id/detail" element={<DetailCartStaff />} />
+          </Route>
+          //#region Shipper
+          <Route
+            path="shipper"
+            element={
+              <PrivateRoute allowedRoles={['admin', 'shipper']}>
+                <LayoutAdminShipper />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<DashboardShipper />} />
+            {/* Cart */}
+            <Route path="carts" element={<ListCartShipper />} />
+            <Route path="carts/:id/detail" element={<DetailCartShipper />} />
           </Route>
           {/* Authentication */}
           <Route path="login" element={<Login />} />

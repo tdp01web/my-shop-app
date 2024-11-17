@@ -5,7 +5,7 @@ import HeaderLayoutAdmin from './components/header';
 import SidebarLayoutAdmin from './components/sidebar/SidebarLayoutAdmin';
 import MainLayoutAdmin from './components/main';
 const { Footer } = Layout;
-const LayoutAdmin = () => {
+const LayoutAdminStaff = () => {
   const navigate = useNavigate()
   // const Logout = () => {
   //   localStorage.clear()
@@ -30,4 +30,4 @@ const LayoutAdmin = () => {
   );
 };
 
-export default LayoutAdmin;
+export default LayoutAdminStaff;

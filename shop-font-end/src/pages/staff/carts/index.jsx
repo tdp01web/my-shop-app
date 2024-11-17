@@ -8,7 +8,7 @@ import { instance } from "../../../configs/instance";
 import { useGetAllOrders } from "../../../hooks/queries/useGetAllOrder";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
 
-const DetailCart = () => {
+const ListCartStaff = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -178,4 +178,4 @@ const DetailCart = () => {
     </div>
   );
 };
-export default DetailCart;
+export default ListCartStaff;
