@@ -9,7 +9,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useBreakpoints } from "../../../../../hooks/useBreakpoints";
 import SubHeader from "./SubHeader";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Menu from "../../../../../pages/client/HomePage/component/HomePageTop/component/Menu";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdWavingHand } from "react-icons/md";
@@ -19,9 +19,31 @@ import { HiOutlineLogout } from "react-icons/hi";
 import useGetProfile from "../../../../../hooks/queries/useGetProfile";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { CiHeart } from "react-icons/ci";
+import axios from "axios";
+import { instance } from "../../../../../configs/instance";
+
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const response = await instance.get("/cart/getCart");
+        const products = response.data.products || [];
+        const totalCount = products.reduce(
+          (total, product) => total + product.count,
+          0
+        );
+        setCartItemCount(totalCount);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
+      }
+    };
+
+    fetchCartData();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -49,7 +71,16 @@ function MainHeader() {
       to: "/account",
     },
     {
-      icon: <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />,
+      icon: (
+        <div className="relative">
+          <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />
+          {cartItemCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-[#ebff50] text-black text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
+              {cartItemCount}
+            </span>
+          )}
+        </div>
+      ),
       label: "Giỏ",
       sublabel: "hàng",
       to: "/cart",
