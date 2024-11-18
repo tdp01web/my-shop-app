@@ -28,8 +28,13 @@ const deleteBrand = asyncHandle(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteBrand = await Brand.findByIdAndDelete(id);
-    res.json(deleteBrand);
+    const brand = await Brand.findById(id);
+    if (!brand) {
+      return res.status(404).json({ message: "Brand not found" });
+    }
+    brand.status = brand.status === 1 ? 0 : 1;
+    const updatedBrand = await brand.save();
+    res.json(updatedBrand);
   } catch (error) {
     throw new Error(error);
   }

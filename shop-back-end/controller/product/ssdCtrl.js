@@ -28,8 +28,13 @@ const deleteSSD = asyncHandle(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteSSD = await SSD.findByIdAndDelete(id);
-    res.json(deleteSSD);
+    const deleteSSD = await SSD.findById(id);
+    if (!deleteSSD) {
+      return res.status(404).json({ message: "SSD not found" });
+    }
+    deleteSSD.status = deleteSSD.status === 1 ? 0 : 1;
+    const updateSSD = await deleteSSD.save();
+    res.json(updateSSD);
   } catch (error) {
     throw new Error(error);
   }

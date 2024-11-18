@@ -35,7 +35,7 @@ const ListProduct = () => {
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Xoá sản phẩm thành công",
+        content: "Thay đổi trạng thái sản phẩm thành công",
       });
       queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
     },
@@ -50,14 +50,18 @@ const ListProduct = () => {
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Xoá biến thể thành công",
+        content: "Thay đổi trạng thái biến thể thành công",
       });
       queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
     },
     onError(error) {
+      const errorMessage =
+        error.response && error.response.status === 400
+          ? "Sản phẩm đình chỉ không thể sử dụng biến thể."
+          : error.message;
       messageApi.open({
         type: "error",
-        content: error.message,
+        content: errorMessage,
       });
     },
   });
@@ -139,30 +143,42 @@ const ListProduct = () => {
         text
       ),
   });
-
-  const dataSource = filteredData
-    ? filteredData.map((item, index) => ({
-        id: item._id,
-        key: item._id,
-        title: item.title,
-        image: item.images,
-        description: item.description,
-        brand: item.brand?.title,
-        category: item.category?.name,
-        price: item.price,
-        variants: item.variants || [],
-      }))
-    : product?.data.map((item, index) => ({
-        id: item._id,
-        key: item._id,
-        title: item.title,
-        image: item.images,
-        description: item.description,
-        brand: item.brand?.title,
-        category: item.category?.name,
-        price: item.price,
-        variants: item.variants || [],
-      }));
+  const dataSource =
+    filteredData
+      ? filteredData.map((item) => {
+        const prices = item?.variants.map(variant => variant.price) || [];
+        const minPrice = prices.length > 0 ? Math.min(...prices) : null;
+        return {
+          id: item._id,
+          key: item._id,
+          title: item.title,
+          image: item.images,
+          description: item.description,
+          brand: item.brand?.title,
+          category: item.category?.name,
+          price: minPrice,
+          variants: item.variants || [],
+          prices: prices,
+          status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+        };
+      })
+      : product?.data.map((item) => {
+        const prices = item?.variants.map(variant => variant.price) || [];
+        const minPrice = prices.length > 0 ? Math.min(...prices) : null;
+        return {
+          id: item._id,
+          key: item._id,
+          title: item.title,
+          image: item.images,
+          description: item.description,
+          brand: item.brand?.title,
+          category: item.category?.name,
+          price: minPrice,
+          variants: item.variants || [],
+          prices: prices,
+          status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+        };
+      });
 
   const columns = [
     {
@@ -202,82 +218,134 @@ const ListProduct = () => {
       key: "price",
       sorter: (a, b) => a.price - b.price,
     },
-    {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
-      render: (text) => (
-        <Popover
-          content={text}
-          title="Mô tả đầy đủ"
-          trigger="hover"
-          overlayStyle={{ maxWidth: 900, overflow: "auto" }}
-        >
-          <span>{text.length > 50 ? `${text.substring(0, 50)}...` : text}</span>
-        </Popover>
-      ),
-    },
+    // {
+    //   title: "Mô tả",
+    //   dataIndex: "description",
+    //   key: "description",
+    //   render: (text) => (
+    //     <Popover
+    //       content={text}
+    //       title="Mô tả đầy đủ"
+    //       trigger="hover"
+    //       overlayStyle={{ maxWidth: 900, overflow: "auto" }}
+    //     >
+    //       <span>{text.length > 50 ? `${text.substring(0, 50)}...` : text}</span>
+    //     </Popover>
+    //   ),
+    // },
     {
       title: "Danh mục",
       dataIndex: "category",
       key: "category",
+      ...getColumnSearchProps("category"),
+      sorter: (a, b) => a.category.localeCompare(b.category),
     },
     {
       title: "Hãng",
       dataIndex: "brand",
       key: "brand",
+      ...getColumnSearchProps("brand"),
+      sorter: (a, b) => a.brand.localeCompare(b.brand),
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      ...getColumnSearchProps('status'),
+      sorter: (a, b) => a.status.localeCompare(b.status),
     },
     {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, product) => (
-        <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa sản phẩm"
-            onConfirm={() => deleteProduct(product.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
+      render: (_, product) => {
+        const isActive = product.status === "Sử dụng";
+        return (
+          <div className="flex space-x-3">
+            <Popconfirm
+              title={isActive ? "Đình chỉ sản phẩm?" : "Kích hoạt sản phẩm?"}
+              onConfirm={() => deleteProduct(product.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
+              </Button>
+            </Popconfirm>
+            <Button>
+              <Link to={`/admin/products/${product.id}/edit`}>Cập nhật</Link>
             </Button>
-          </Popconfirm>
-          <Button>
-            <Link to={`/admin/products/${product.id}/edit`}>Cập nhật</Link>
-          </Button>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
 
   const expandColumns = [
-    { title: "CPU", dataIndex: "cpu", key: "cpu" },
-    { title: "GPU", dataIndex: "gpu", key: "gpu" },
-    { title: "RAM", dataIndex: "ram", key: "ram" },
-    { title: "SSD", dataIndex: "ssd", key: "ssd" },
-    { title: "Giá", dataIndex: "price", key: "price" },
-    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
+    {
+      title: "Mã biến thể", dataIndex: "id", key: "id",
+      ...getColumnSearchProps('id'),
+      sorter: (a, b) => a.id.localeCompare(b.id),
+    },
+    {
+      title: "CPU", dataIndex: "cpu", key: "cpu",
+      ...getColumnSearchProps('cpu'),
+      sorter: (a, b) => a.cpu.localeCompare(b.cpu),
+    },
+    {
+      title: "GPU", dataIndex: "gpu", key: "gpu",
+      ...getColumnSearchProps('gpu'),
+      sorter: (a, b) => a.gpu.localeCompare(b.gpu),
+    },
+    {
+      title: "RAM", dataIndex: "ram", key: "ram",
+      ...getColumnSearchProps('ram'),
+      sorter: (a, b) => a.ram.localeCompare(b.ram),
+    },
+    {
+      title: "SSD", dataIndex: "ssd", key: "ssd",
+      ...getColumnSearchProps('ssd'),
+      sorter: (a, b) => a.ssd.localeCompare(b.ssd),
+    },
+    {
+      title: "Giá", dataIndex: "price", key: "price",
+      sorter: (a, b) => a.price.localeCompare(b.price),
+    },
+    {
+      title: "Số lượng", dataIndex: "quantity", key: "quantity",
+      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+    },
+    {
+      title: "Trạng thái", dataIndex: "statusVr", key: "statusVr",
+      ...getColumnSearchProps('statusVr'),
+      sorter: (a, b) => a.statusVr.localeCompare(b.statusVr),
+    },
     {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, record) => (
-        <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa biến thể"
-            onConfirm={() => {
-              deleteVrProduct(record.id);
-            }}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
+      render: (_, record) => {
+        const isActive = record.statusVr === "Sử dụng";
+        return (
+          <div className="flex space-x-3">
+            <Popconfirm
+              title={isActive ? "Đình chỉ sản phẩm?" : "Kích hoạt sản phẩm?"}
+              onConfirm={() => {
+                deleteVrProduct(record.id);
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
+              </Button>
+            </Popconfirm>
+            <Button>
+              <Link to={`/admin/variants/${record.id}/edit`}>Cập nhật</Link>
             </Button>
-          </Popconfirm>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
   const expandedRowRender = (record) => {
@@ -290,6 +358,7 @@ const ListProduct = () => {
       ssd: variant?.storage?.capacity,
       quantity: variant.quantity,
       price: variant.price,
+      statusVr: variant.status === 1 ? "Sử dụng" : "Đình chỉ",
     }));
 
     return (

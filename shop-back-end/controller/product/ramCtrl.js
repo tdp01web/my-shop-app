@@ -28,8 +28,13 @@ const deleteRAM = asyncHandle(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteRAM = await RAM.findByIdAndDelete(id);
-    res.json(deleteRAM);
+    const deleteRAM = await RAM.findById(id);
+    if (!deleteRAM) {
+      return res.status(404).json({ message: "RAM not found" });
+    }
+    deleteRAM.status = deleteRAM.status === 1 ? 0 : 1;
+    const updateRAM = await deleteRAM.save();
+    res.json(updateRAM);
   } catch (error) {
     throw new Error(error);
   }

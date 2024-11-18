@@ -8,7 +8,7 @@ export const useDeleteBrand = ({ onSuccess, onError }) => {
     mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .delete(`brand/deleteBrand/${id}`, id)
+          .post(`brand/deleteBrand/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

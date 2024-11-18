@@ -8,7 +8,7 @@ export const useDeleteVouchers = ({ onSuccess, onError }) => {
     mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .delete(`coupon/deleteCoupon/${id}`, id)
+          .post(`coupon/deleteCoupon/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

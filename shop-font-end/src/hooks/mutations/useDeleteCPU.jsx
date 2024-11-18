@@ -8,7 +8,7 @@ export const useDeleteCPU = ({ onSuccess, onError }) => {
     mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .delete(`cpu/deleteCPU/${id}`, id)
+          .post(`cpu/deleteCPU/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

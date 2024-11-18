@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/createSSD", authMiddleware, isAdmin, createSSD);
 router.put("/updateSSD/:id", authMiddleware, isAdmin, updateSSD);
-router.delete("/deleteSSD/:id", authMiddleware, isAdmin, deleteSSD);
+router.post("/deleteSSD/:id", authMiddleware, isAdmin, deleteSSD);
 router.get("/getSSD/:id", getSSD);
 router.get("/getAllSSD", getAllSSD);
 

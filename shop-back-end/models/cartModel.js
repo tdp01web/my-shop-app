@@ -62,8 +62,8 @@ cartSchema.methods.calculateCartTotal = async function () {
       .model("ProductVariant")
       .findById(item.variant);
 
-    // Kiểm tra nếu sản phẩm bị ẩn (status = 1) hoặc hết hàng (quantity = 0)
-    if (product.status === 1 || !variant || variant.quantity === 0) {
+    // Kiểm tra nếu sản phẩm bị ẩn (status = 0) hoặc hết hàng (quantity = 0)
+    if (product.status === 0 || !variant || variant.quantity === 0) {
       item.unavailable = true; // Đánh dấu là không khả dụng
     } else {
       item.unavailable = false; // Sản phẩm khả dụng
@@ -88,7 +88,7 @@ cartSchema.methods.updatePrices = async function () {
     // Nếu sản phẩm hoặc biến thể không tồn tại, hoặc không khả dụng
     if (
       !product ||
-      product.status === 1 ||
+      product.status === 0 ||
       !variant ||
       variant.quantity === 0
     ) {

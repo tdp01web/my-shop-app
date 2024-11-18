@@ -7,7 +7,7 @@ export const useGetAllOrders = ({ onSuccess, onError }) => {
 
     queryFn: async () => {
       try {
-        const apiResult = await instance.get("order");
+        const apiResult = await instance.get("order/my-orders");
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

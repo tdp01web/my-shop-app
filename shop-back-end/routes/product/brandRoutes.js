@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/createBrand", authMiddleware, isAdmin, createBrand);
 router.put("/updateBrand/:id", authMiddleware, isAdmin, updateBrand);
-router.delete("/deleteBrand/:id", authMiddleware, isAdmin, deleteBrand);
+router.post("/deleteBrand/:id", authMiddleware, isAdmin, deleteBrand);
 router.get("/getBrand/:id", getBrand);
 router.get("/getAllBrand", getAllBrand);
 

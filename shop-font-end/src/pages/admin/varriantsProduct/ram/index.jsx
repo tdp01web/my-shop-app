@@ -13,7 +13,7 @@ const ListRAM = () => {
   const searchInput = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
-  const { data: brand, isLoading, isError } = useGetAllRAM({
+  const { data: RAM, isLoading, isError } = useGetAllRAM({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -26,7 +26,7 @@ const ListRAM = () => {
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Xoá RAM thành công",
+        content: "Thay đổi trạng thái RAM thành công",
       });
       queryClient.invalidateQueries({ queryKey: ["get-all-ram"] });
     },
@@ -97,13 +97,23 @@ const ListRAM = () => {
       ),
   });
 
-  const dataSource = brand?.data.map((item) => {
+  const dataSource = RAM?.data.map((item) => {
     return {
       key: item.id,
-      ...item,
+      _id: item._id,
+      size: item.size,
+      status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
     };
   });
   const columns = [
+    {
+      title: "Mã RAM",
+      dataIndex: "_id",
+      key: "_id",
+      width: '20%',
+      ...getColumnSearchProps('_id'),
+      sorter: (a, b) => a._id.localeCompare(b._id),
+    },
     {
       title: "Tên RAM",
       dataIndex: "size",
@@ -113,26 +123,39 @@ const ListRAM = () => {
       sorter: (a, b) => a.size.localeCompare(b.size),
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      width: '15%',
+      ...getColumnSearchProps('status'),
+      sorter: (a, b) => a.status.localeCompare(b.status),
+    },
+    {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, ram) => (
-        <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa RAM"
-            onConfirm={() => mutate(ram._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
+      render: (_, RAM) => {
+        const isActive = RAM.status === "Sử dụng";
+        return (
+          <div className="flex space-x-3">
+            <Popconfirm
+              title={isActive ? "Đình chỉ hãng?" : "Kích hoạt hãng?"}
+              onConfirm={() => {
+                mutate(RAM._id);
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
+              </Button>
+            </Popconfirm>
+            <Button>
+              <Link to={`/admin/ram/${RAM._id}/edit`}>Cập nhật</Link>
             </Button>
-          </Popconfirm>
-          <Button>
-            <Link to={`/admin/ram/${ram._id}/edit`}>Cập nhật</Link>
-          </Button>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
   if (isLoading) return <p>Loading...</p>

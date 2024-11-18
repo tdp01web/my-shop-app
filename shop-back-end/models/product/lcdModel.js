@@ -10,6 +10,11 @@ var lcdSchema = new mongoose.Schema(
       type: String, // Độ phân giải (VD: 1920x1080)
       required: true,
     },
+    status: {
+      type: Number,
+      enum: [0, 1],
+      default: 1,
+    },
   },
   {
     timestamps: true,

@@ -8,7 +8,7 @@ export const useDeleteGPU = ({ onSuccess, onError }) => {
     mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .delete(`gpu/deleteGPU/${id}`, id)
+          .post(`gpu/deleteGPU/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

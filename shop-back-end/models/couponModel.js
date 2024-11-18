@@ -24,6 +24,11 @@ const couponSchema = new mongoose.Schema({
     required: true, // Số tiền giảm tối đa
   },
   usedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Danh sách người dùng đã sử dụng mã giảm giá
+  status: {
+    type: Number,
+    enum: [0, 1],
+    default: 1,
+  },
 });
 
 module.exports = mongoose.model("Coupon", couponSchema);

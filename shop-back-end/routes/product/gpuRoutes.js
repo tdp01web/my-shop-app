@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/createGPU", authMiddleware, isAdmin, createGPU);
 router.put("/updateGPU/:id", authMiddleware, isAdmin, updateGPU);
-router.delete("/deleteGPU/:id", authMiddleware, isAdmin, deleteGPU);
+router.post("/deleteGPU/:id", authMiddleware, isAdmin, deleteGPU);
 router.get("/getGPU/:id", getGPU);
 router.get("/getAllGPU", getAllGPU);
 

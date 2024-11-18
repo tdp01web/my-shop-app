@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/createCategory", authMiddleware, isAdmin, createCategory);
 router.put("/updateCategory/:id", authMiddleware, isAdmin, updateCategory);
-router.delete("/deleteCategory/:id", authMiddleware, isAdmin, deleteCategory);
+router.post("/deleteCategory/:id", authMiddleware, isAdmin, deleteCategory);
 router.get("/getCategory/:id", getCategory);
 router.get("/getAllCategory", getAllCategory);
 

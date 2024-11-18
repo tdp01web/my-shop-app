@@ -47,12 +47,12 @@ router.get("/getReviews/:id", getProductComments);
 //! Update product
 router.put("/updateProduct/:id", authMiddleware, isAdmin, updateProduct);
 //! Delete product
-router.delete("/deleteProduct/:id", authMiddleware, isAdmin, deleteProduct);
+router.post("/deleteProduct/:id", authMiddleware, isAdmin, deleteProduct);
 
 // Các route cho biến thể
 router.get("/variants", getAllVariants); // Route lấy tất cả biến thể
 router.get("/variant/:variantId", getVariant); // Route lấy một biến thể cụ thể
 router.put("/variant/:variantId", updateProductVariant);
-router.delete("/variant/:variantId", deleteProductVariant);
+router.post("/variant/:variantId", deleteProductVariant);
 
 module.exports = router;

@@ -28,8 +28,13 @@ const deleteGPU = asyncHandle(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteGPU = await GPU.findByIdAndDelete(id);
-    res.json(deleteGPU);
+    const deleteGPU = await GPU.findById(id);
+    if (!deleteGPU) {
+      return res.status(404).json({ message: "GPU not found" });
+    }
+    deleteGPU.status = deleteGPU.status === 1 ? 0 : 1;
+    const updateGPU = await deleteGPU.save();
+    res.json(updateGPU);
   } catch (error) {
     throw new Error(error);
   }

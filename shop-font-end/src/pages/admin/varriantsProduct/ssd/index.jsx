@@ -13,7 +13,7 @@ const ListSSD = () => {
   const searchInput = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
-  const { data: brand, isLoading, isError } = useGetAllSSD({
+  const { data: SSD, isLoading, isError } = useGetAllSSD({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -26,7 +26,7 @@ const ListSSD = () => {
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Xoá SSD thành công",
+        content: "Thay đổi trạng thái SSD thành công",
       });
       queryClient.invalidateQueries({ queryKey: ["get-all-ssd"] });
     },
@@ -97,13 +97,23 @@ const ListSSD = () => {
       ),
   });
 
-  const dataSource = brand?.data.map((item) => {
+  const dataSource = SSD?.data.map((item) => {
     return {
       key: item.id,
-      ...item,
+      _id: item._id,
+      capacity: item.capacity,
+      status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
     };
   });
   const columns = [
+    {
+      title: "Mã SSD",
+      dataIndex: "_id",
+      key: "_id",
+      width: '20%',
+      ...getColumnSearchProps('_id'),
+      sorter: (a, b) => a._id.localeCompare(b._id),
+    },
     {
       title: "Tên SSD",
       dataIndex: "capacity",
@@ -113,26 +123,39 @@ const ListSSD = () => {
       sorter: (a, b) => a.capacity.localeCompare(b.capacity),
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      width: '15%',
+      ...getColumnSearchProps('status'),
+      sorter: (a, b) => a.status.localeCompare(b.status),
+    },
+    {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, ssd) => (
-        <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa SSD"
-            onConfirm={() => mutate(ssd._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
+      render: (_, SSD) => {
+        const isActive = SSD.status === "Sử dụng";
+        return (
+          <div className="flex space-x-3">
+            <Popconfirm
+              title={isActive ? "Đình chỉ hãng?" : "Kích hoạt hãng?"}
+              onConfirm={() => {
+                mutate(SSD._id);
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
+              </Button>
+            </Popconfirm>
+            <Button>
+              <Link to={`/admin/ssd/${SSD._id}/edit`}>Cập nhật</Link>
             </Button>
-          </Popconfirm>
-          <Button>
-            <Link to={`/admin/ssd/${ssd._id}/edit`}>Cập nhật</Link>
-          </Button>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
   if (isLoading) return <p>Loading...</p>
