@@ -59,7 +59,7 @@ const createProduct = asyncHandler(async (req, res) => {
       lcd,
       images,
       variants,
-      status
+      status,
     } = req.body;
 
     // Tạo product mới
@@ -72,7 +72,7 @@ const createProduct = asyncHandler(async (req, res) => {
       brand,
       lcd, // lcd is now part of the main product schema
       images,
-      status
+      status,
     });
 
     // Thêm các biến thể cho sản phẩm
@@ -90,7 +90,7 @@ const createProduct = asyncHandler(async (req, res) => {
           quantity,
           price,
           images,
-          status
+          status,
         });
 
         product.variants.push(productVariant._id);
@@ -231,10 +231,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
     product.status = product.status === 1 ? 0 : 1;
     const updatedProduct = await product.save();
 
-    await ProductVariant.updateMany(
-      { product: product._id },
-      { status: 0 }
-    );
+    await ProductVariant.updateMany({ product: product._id }, { status: 0 });
     res.json(updatedProduct);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -440,6 +437,52 @@ const updateProductVariant = asyncHandler(async (req, res) => {
   }
 });
 
+const getAllProductComments = asyncHandler(async (req, res) => {
+  try {
+    const products = await Product.find()
+      .select("title ratings") // Chỉ lấy trường cần thiết
+      .populate({
+        path: "ratings.postedby",
+        select: "firstName lastName email", // Lấy thông tin cần thiết từ người dùng
+      })
+      .sort({ "ratings.createdAt": -1 }); // Sắp xếp bình luận mới nhất
+
+    const result = products.map((product) => {
+      const totalStars = product.ratings.reduce(
+        (sum, rating) => sum + (rating.star || 0),
+        0
+      );
+      const averageRating =
+        product.ratings.length > 0
+          ? (totalStars / product.ratings.length).toFixed(1)
+          : 0; // Tính trung bình sao, làm tròn 1 chữ số thập phân
+
+      return {
+        productTitle: product.title,
+        totalComments: product.ratings.length,
+        averageRating: parseFloat(averageRating), // Thay `totalRatings` bằng `averageRating`
+        latestCommentDate: product.ratings.length
+          ? product.ratings[0].createdAt
+          : null,
+        ratings: product.ratings.map((rating) => ({
+          star: rating.star,
+          comment: rating.comment, // Nội dung bình luận
+          user: rating.postedby
+            ? `${rating.postedby.firstName} ${rating.postedby.lastName}`
+            : "Unknown",
+          email: rating.postedby ? rating.postedby.email : "Unknown",
+          date: rating.createdAt,
+        })),
+      };
+    });
+
+    res.status(200).json({ data: result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi khi lấy dữ liệu bình luận!" });
+  }
+});
+
 //!xóa biến thể của sản phẩm
 // const deleteProductVariant = asyncHandler(async (req, res) => {
 //   try {
@@ -472,7 +515,9 @@ const deleteProductVariant = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
     if (product.status === 0) {
-      return res.status(400).json({ message: "Cannot activate variant because the product is suspended." });
+      return res.status(400).json({
+        message: "Cannot activate variant because the product is suspended.",
+      });
     }
 
     productVariant.status = productVariant.status === 1 ? 0 : 1;
@@ -552,4 +597,5 @@ module.exports = {
   searchProducts,
   getAllProductsForUsers,
   getProductComments,
+  getAllProductComments,
 };

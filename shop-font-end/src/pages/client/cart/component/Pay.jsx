@@ -8,7 +8,7 @@ const Pay = ({ addressData, handleNext, cartTotal }) => {
   console.log("🚀 ~ Pay ~ handleNext:", handleNext);
   console.log("🚀 ~ Pay ~ addressData:", addressData);
   const [gender, setGender] = useState(1);
-
+  const totalPrice = Number(addressData.totalPrice);
   return (
     <div className="  rounded-lg p-6 w-full max-w-md flex flex-col gap-4">
       <div className="flex flex-col gap-4">
@@ -77,13 +77,20 @@ const Pay = ({ addressData, handleNext, cartTotal }) => {
               <GiReceiveMoney /> Thanh toán khi nhận hàng
             </p>
           </Radio>
-          <Radio value={2} className="flex items-center gap-1">
-            <p className="flex items-center gap-1 front-bold">
-              <FcMoneyTransfer />
-              Thanh toán chuyển khoản
-            </p>
-          </Radio>
+          {Number(addressData.totalPrice) <= 50000000 && (
+            <Radio value={2} className="flex items-center gap-1">
+              <p className="flex items-center gap-1 front-bold">
+                <FcMoneyTransfer />
+                Thanh toán chuyển khoản
+              </p>
+            </Radio>
+          )}
         </Radio.Group>
+        {totalPrice > 50000000 && (
+          <p className="text-red-500">
+            Không thể thanh toán online với những đơn hàng trên 50.000.000đ
+          </p>
+        )}
         <hr className="border-3 border-solid border-gray-500" />
         <Button
           type="primary"
