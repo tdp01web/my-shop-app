@@ -1,40 +1,14 @@
-import { Button, Steps } from "antd";
-import OrderStep1Icon from "../../../../components/JSXIcon/OrderStep1Icon";
-import OrderStep2Icon from "../../../../components/JSXIcon/OrderStep2Icon";
-import OrderStep3Icon from "../../../../components/JSXIcon/OrderStep3Icon";
-import OrderStep5Icon from "../../../../components/JSXIcon/OrderStep5Icon";
+import { Button } from "antd";
+
 import { FaCheckCircle } from "react-icons/fa";
 
 import { useQuery } from "@tanstack/react-query";
 
-import styles from "./index.module.css";
 import { Link, useParams } from "react-router-dom";
 import { instance } from "../../../../configs/instance";
 import dayjs from "dayjs";
 import CancelOrderModal from "./component/CancelOrderModal";
 import { useState } from "react";
-
-const ORDER_ICONS = [
-  OrderStep1Icon,
-  OrderStep2Icon,
-  OrderStep3Icon,
-  OrderStep3Icon,
-  OrderStep5Icon,
-];
-
-const customDot = (dot, { status, index }) => {
-  const Icon = ORDER_ICONS[index];
-
-  return (
-    <div
-      className={`-translate-y-1/2 -translate-x-10 ${
-        status === "finish" && styles.activeIcon
-      } ${styles.icon}`}
-    >
-      <Icon />
-    </div>
-  );
-};
 
 const OrderDetail = () => {
   const { id } = useParams();
@@ -81,7 +55,7 @@ const OrderDetail = () => {
       </div>
 
       <div className="px-6 py-4">
-        <Steps
+        {/* <Steps
           className="pb-4 overflow-y-visible overflow-x-auto pt-9"
           current={1}
           progressDot={customDot}
@@ -110,7 +84,7 @@ const OrderDetail = () => {
           ]}
           labelPlacement="horizontal"
           responsive={false}
-        />
+        /> */}
 
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12 md:col-span-8 rounded border border-[#CFCFCF] pt-3 px-4 pb-4">
@@ -176,12 +150,9 @@ const OrderDetail = () => {
                 />
 
                 <div>
-                  <p className="text-[#111]">{it?.title}</p>
-
-                  {/* <p className="text-[14px] text-[#535353] mt-1">
-                    PC GVN x ASUS ROG Hyperion White (Intel i9-14900K/ VGA RTX
-                    4090)
-                  </p> */}
+                  <p className="text-[#111]">
+                    {it?.title} | {it?.gpu} | {it?.ram} | {it?.storage}
+                  </p>
 
                   <p className="text-[14px] text-[#535353] mt-1">
                     Số lượng: {it.count}

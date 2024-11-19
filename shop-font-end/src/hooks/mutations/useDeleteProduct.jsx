@@ -8,7 +8,7 @@ export const useDeleteProduct = ({ onSuccess, onError }) => {
     mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .delete(`product/deleteProduct/${id}`, id)
+          .post(`product/deleteProduct/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

@@ -24,12 +24,18 @@ const updateCPU = asyncHandle(async (req, res) => {
   }
 });
 
-const deleteCPU = asyncHandle(async (req, res) => {
+const deleteCPU =
+asyncHandle(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteCPU = await CPU.findByIdAndDelete(id);
-    res.json(deleteCPU);
+    const deleteCPU = await CPU.findById(id);
+    if (!deleteCPU) {
+      return res.status(404).json({ message: "CPU not found" });
+    }
+    deleteCPU.status = deleteCPU.status === 1 ? 0 : 1;
+    const updateCPU = await deleteCPU.save();
+    res.json(updateCPU);
   } catch (error) {
     throw new Error(error);
   }

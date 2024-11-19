@@ -26,7 +26,7 @@ const ListCategory = () => {
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Xoá danh mục thành công",
+        content: "Thay đổi trạng thái danh mục thành công",
       });
       queryClient.invalidateQueries({ queryKey: ["get-all-category"] });
     },
@@ -100,10 +100,20 @@ const ListCategory = () => {
   const dataSource = categories?.data.map((item) => {
     return {
       key: item.id,
-      ...item,
+      _id: item._id,
+      status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+      name: item.name
     };
   });
   const columns = [
+    {
+      title: "Mã danh mục",
+      dataIndex: "_id",
+      key: "_id",
+      width: '20%',
+      ...getColumnSearchProps('_id'),
+      sorter: (a, b) => a._id.localeCompare(b._id),
+    },
     {
       title: "Tên danh mục",
       dataIndex: "name",
@@ -113,26 +123,39 @@ const ListCategory = () => {
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      width: '15%',
+      ...getColumnSearchProps('status'),
+      sorter: (a, b) => a.status.localeCompare(b.status),
+    },
+    {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, categories) => (
-        <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa danh mục"
-            onConfirm={() => mutate(categories._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
+      render: (_, categories) => {
+        const isActive = categories.status === "Sử dụng";
+        return (
+          <div className="flex space-x-3">
+            <Popconfirm
+              title={isActive ? "Đình chỉ danh mục?" : "Kích hoạt danh mục?"}
+              onConfirm={() => {
+                mutate(categories._id);
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
+              </Button>
+            </Popconfirm>
+            <Button>
+              <Link to={`/admin/categories/${categories._id}/edit`}>Cập nhật</Link>
             </Button>
-          </Popconfirm>
-          <Button>
-            <Link to={`/admin/categories/${categories._id}/edit`}>Cập nhật</Link>
-          </Button>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
   if (isLoading) return <p>Loading...</p>

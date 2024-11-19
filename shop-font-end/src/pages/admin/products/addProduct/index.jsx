@@ -160,7 +160,9 @@ const AddProduct = () => {
   const { mutate, isLoading: isPending } = usePostProduct({
     onSuccess: () => {
       messageApi.success("Thêm sản phẩm thành công");
-      navigate("/admin/products");
+      setTimeout(() => {
+        navigate("/admin/products");
+      }, 500)
       form.resetFields();
     },
     onError: () => {

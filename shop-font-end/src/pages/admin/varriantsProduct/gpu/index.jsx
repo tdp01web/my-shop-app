@@ -13,7 +13,7 @@ const ListGPU = () => {
   const searchInput = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
-  const { data: brand, isLoading, isError } = useGetAllGPU({
+  const { data: GPU, isLoading, isError } = useGetAllGPU({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -26,7 +26,7 @@ const ListGPU = () => {
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Xoá GPU thành công",
+        content: "Thay đổi trạng thái GPU thành công",
       });
       queryClient.invalidateQueries({ queryKey: ["get-all-gpu"] });
     },
@@ -97,13 +97,23 @@ const ListGPU = () => {
       ),
   });
 
-  const dataSource = brand?.data.map((item) => {
+  const dataSource = GPU?.data.map((item) => {
     return {
       key: item.id,
-      ...item,
+      _id: item._id,
+      name: item.name,
+      status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
     };
   });
   const columns = [
+    {
+      title: "Mã GPU",
+      dataIndex: "_id",
+      key: "_id",
+      width: '20%',
+      ...getColumnSearchProps('_id'),
+      sorter: (a, b) => a._id.localeCompare(b._id),
+    },
     {
       title: "Tên GPU",
       dataIndex: "name",
@@ -113,26 +123,39 @@ const ListGPU = () => {
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      width: '15%',
+      ...getColumnSearchProps('status'),
+      sorter: (a, b) => a.status.localeCompare(b.status),
+    },
+    {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, gpu) => (
-        <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa GPU"
-            onConfirm={() => mutate(gpu._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
+      render: (_, GPU) => {
+        const isActive = GPU.status === "Sử dụng";
+        return (
+          <div className="flex space-x-3">
+            <Popconfirm
+              title={isActive ? "Đình chỉ GPU?" : "Kích hoạt GPU?"}
+              onConfirm={() => {
+                mutate(GPU._id);
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
+              </Button>
+            </Popconfirm>
+            <Button>
+              <Link to={`/admin/gpu/${GPU._id}/edit`}>Cập nhật</Link>
             </Button>
-          </Popconfirm>
-          <Button>
-            <Link to={`/admin/gpu/${gpu._id}/edit`}>Cập nhật</Link>
-          </Button>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
   if (isLoading) return <p>Loading...</p>

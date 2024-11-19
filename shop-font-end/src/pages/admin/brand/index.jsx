@@ -26,7 +26,7 @@ const ListBrand = () => {
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Xoá hãng thành công",
+        content: "Thay đổi trạng thái hãng thành công",
       });
       queryClient.invalidateQueries({ queryKey: ["get-all-brand"] });
     },
@@ -100,10 +100,20 @@ const ListBrand = () => {
   const dataSource = brand?.data.map((item) => {
     return {
       key: item.id,
-      ...item,
+      _id: item._id,
+      title: item.title,
+      status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
     };
   });
   const columns = [
+    {
+      title: "Mã hãng",
+      dataIndex: "_id",
+      key: "_id",
+      width: '20%',
+      ...getColumnSearchProps('_id'),
+      sorter: (a, b) => a._id.localeCompare(b._id),
+    },
     {
       title: "Tên hãng",
       dataIndex: "title",
@@ -113,26 +123,39 @@ const ListBrand = () => {
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      width: '15%',
+      ...getColumnSearchProps('status'),
+      sorter: (a, b) => a.status.localeCompare(b.status),
+    },
+    {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, brand) => (
-        <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa hãng"
-            onConfirm={() => mutate(brand._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Xóa
+      render: (_, brand) => {
+        const isActive = brand.status === "Sử dụng";
+        return (
+          <div className="flex space-x-3">
+            <Popconfirm
+              title={isActive ? "Đình chỉ hãng?" : "Kích hoạt hãng?"}
+              onConfirm={() => {
+                mutate(brand._id);
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
+              </Button>
+            </Popconfirm>
+            <Button>
+              <Link to={`/admin/brand/${brand._id}/edit`}>Cập nhật</Link>
             </Button>
-          </Popconfirm>
-          <Button>
-            <Link to={`/admin/brand/${brand._id}/edit`}>Cập nhật</Link>
-          </Button>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
   if (isLoading) return <p>Loading...</p>

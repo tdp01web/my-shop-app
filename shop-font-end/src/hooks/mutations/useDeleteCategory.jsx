@@ -8,7 +8,7 @@ export const useDeleteCategory = ({ onSuccess, onError }) => {
     mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .delete(`category/deleteCategory/${id}`, id)
+          .post(`category/deleteCategory/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

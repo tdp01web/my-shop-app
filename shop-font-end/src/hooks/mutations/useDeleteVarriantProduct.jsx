@@ -8,7 +8,7 @@ export const useDeleteVarriantsProuduct = ({ onSuccess, onError }) => {
     mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .delete(`product/variant/${id}`, id)
+          .post(`product/variant/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

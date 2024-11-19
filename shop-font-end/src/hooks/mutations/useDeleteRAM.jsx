@@ -8,7 +8,7 @@ export const useDeleteRAM = ({ onSuccess, onError }) => {
     mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .delete(`ram/deleteRAM/${id}`, id)
+          .post(`ram/deleteRAM/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

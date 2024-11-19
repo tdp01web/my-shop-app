@@ -28,8 +28,14 @@ const deleteCategory = asyncHandle(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteCategory = await Category.findByIdAndDelete(id);
-    res.json(deleteCategory);
+    const category = await Category.findById(id);
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    category.status = category.status === 1 ? 0 : 1;
+    const updatedCategory = await category.save();
+
+    res.json(updatedCategory);
   } catch (error) {
     throw new Error(error);
   }

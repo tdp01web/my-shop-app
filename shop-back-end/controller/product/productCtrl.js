@@ -59,6 +59,7 @@ const createProduct = asyncHandler(async (req, res) => {
       lcd,
       images,
       variants,
+      status
     } = req.body;
 
     // Tạo product mới
@@ -71,6 +72,7 @@ const createProduct = asyncHandler(async (req, res) => {
       brand,
       lcd, // lcd is now part of the main product schema
       images,
+      status
     });
 
     // Thêm các biến thể cho sản phẩm
@@ -88,6 +90,7 @@ const createProduct = asyncHandler(async (req, res) => {
           quantity,
           price,
           images,
+          status
         });
 
         product.variants.push(productVariant._id);
@@ -198,21 +201,41 @@ const updateProduct = asyncHandler(async (req, res) => {
 });
 
 //! Xóa sản phẩm
+// const deleteProduct = asyncHandler(async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     // Tìm và xóa sản phẩm cùng với các biến thể
+//     const product = await Product.findByIdAndDelete(id);
+
+//     if (!product) {
+//       return res.status(404).json({ message: "Product not found" });
+//     }
+
+//     // Xóa tất cả các biến thể liên quan đến sản phẩm này
+//     await ProductVariant.deleteMany({ product: product._id });
+
+//     res.status(200).json({ message: "Product deleted successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
 const deleteProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-
-    // Tìm và xóa sản phẩm cùng với các biến thể
-    const product = await Product.findByIdAndDelete(id);
-
+    const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Xóa tất cả các biến thể liên quan đến sản phẩm này
-    await ProductVariant.deleteMany({ product: product._id });
+    product.status = product.status === 1 ? 0 : 1;
+    const updatedProduct = await product.save();
 
-    res.status(200).json({ message: "Product deleted successfully" });
+    await ProductVariant.updateMany(
+      { product: product._id },
+      { status: 0 }
+    );
+    res.json(updatedProduct);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -417,27 +440,49 @@ const updateProductVariant = asyncHandler(async (req, res) => {
   }
 });
 
-//xóa biến thể của sản phẩm
-const deleteProductVariant = asyncHandler(async (req, res) => {
-  try {
-    const { variantId } = req.params;
+//!xóa biến thể của sản phẩm
+// const deleteProductVariant = asyncHandler(async (req, res) => {
+//   try {
+//     const { variantId } = req.params;
 
-    const variant = await ProductVariant.findByIdAndDelete(variantId);
-    if (!variant) {
-      return res.status(404).json({ message: "Không tìm thấy biến thể" });
+//     const variant = await ProductVariant.findByIdAndDelete(variantId);
+//     if (!variant) {
+//       return res.status(404).json({ message: "Không tìm thấy biến thể" });
+//     }
+
+//     // Xóa biến thể khỏi mảng biến thể của sản phẩm
+//     await Product.findByIdAndUpdate(variant.product, {
+//       $pull: { variants: variant._id },
+//     });
+
+//     res.status(200).json({ message: "Đã xóa biến thể thành công" });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
+const deleteProductVariant = asyncHandler(async (req, res) => {
+  const { variantId } = req.params;
+  try {
+    const productVariant = await ProductVariant.findById(variantId);
+    if (!productVariant) {
+      return res.status(404).json({ message: "ProductVariant not found" });
+    }
+    const product = await Product.findById(productVariant.product);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    if (product.status === 0) {
+      return res.status(400).json({ message: "Cannot activate variant because the product is suspended." });
     }
 
-    // Xóa biến thể khỏi mảng biến thể của sản phẩm
-    await Product.findByIdAndUpdate(variant.product, {
-      $pull: { variants: variant._id },
-    });
+    productVariant.status = productVariant.status === 1 ? 0 : 1;
+    const updatedProductVariant = await productVariant.save();
 
-    res.status(200).json({ message: "Đã xóa biến thể thành công" });
+    res.json(updatedProductVariant);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
 //! Lấy danh sách tất cả các biến thể
 const getAllVariants = asyncHandler(async (req, res) => {
   try {
@@ -475,8 +520,8 @@ const getVariant = asyncHandler(async (req, res) => {
 
 const getAllProductsForUsers = asyncHandler(async (req, res) => {
   try {
-    // Lọc chỉ các sản phẩm có status = 0
-    const products = await Product.find({ status: 0 })
+    // Lọc chỉ các sản phẩm có status = 1
+    const products = await Product.find({ status: 1 })
       .populate("category")
       .populate("brand")
       .populate("lcd")

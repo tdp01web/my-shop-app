@@ -44,6 +44,11 @@ var userSchema = new mongoose.Schema(
     passwordChangeAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    status: {
+      type: Number,
+      enum: [0, 1],
+      default: 1,
+    },
   },
   { timestamps: true }
 );

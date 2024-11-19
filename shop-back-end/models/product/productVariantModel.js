@@ -26,7 +26,6 @@ var productVariantSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "GPU",
     },
-
     quantity: {
       type: Number,
       required: true,
@@ -40,7 +39,12 @@ var productVariantSchema = new mongoose.Schema(
         public_id: String,
         url: String,
       },
-    ], // Hình ảnh riêng cho biến thể nếu cần
+    ],
+    status: {
+      type: Number,
+      enum: [0, 1],
+      default: 1,
+    },
   },
   {
     timestamps: true,

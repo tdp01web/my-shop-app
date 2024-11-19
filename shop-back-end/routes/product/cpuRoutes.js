@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/createCPU", authMiddleware, isAdmin, createCPU);
 router.put("/updateCPU/:id", authMiddleware, isAdmin, updateCPU);
-router.delete("/deleteCPU/:id", authMiddleware, isAdmin, deleteCPU);
+router.post("/deleteCPU/:id", authMiddleware, isAdmin, deleteCPU);
 router.get("/getCPU/:id", getCPU);
 router.get("/getAllCPU", getAllCPU);
 

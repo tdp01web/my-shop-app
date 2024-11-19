@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/createRAM", authMiddleware, isAdmin, createRAM);
 router.put("/updateRAM/:id", authMiddleware, isAdmin, updateRAM);
-router.delete("/deleteRAM/:id", authMiddleware, isAdmin, deleteRAM);
+router.post("/deleteRAM/:id", authMiddleware, isAdmin, deleteRAM);
 router.get("/getRAM/:id", getRAM);
 router.get("/getAllRAM", getAllRAM);
 
