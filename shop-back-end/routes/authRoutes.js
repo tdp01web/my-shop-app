@@ -58,7 +58,7 @@ router.put("/toggle-role/:id", authMiddleware, isAdmin, toggleUserRole);
 //! Đổi mật khẩu
 router.put("/updatePassword/:id", authMiddleware, updatePassword);
 //! Xóa user
-router.delete("/deleteUser/:id", deleteUser);
+router.post("/deleteUser/:id", deleteUser);
 
 //! đơn hàng
 router.post("/crateOrder", authMiddleware, crateOrder);

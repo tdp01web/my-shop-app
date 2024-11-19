@@ -345,8 +345,9 @@ const getOrderById = asyncHandler(async (req, res) => {
   validateMongoDbId(orderId);
   validateMongoDbId(_id);
 
+
   try {
-    const order = await Order.findOne({ _id: orderId, orderedBy: _id });
+    const order = await Order.findOne({ _id: orderId});//////
 
     if (!order) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
@@ -354,6 +355,7 @@ const getOrderById = asyncHandler(async (req, res) => {
 
     res.json(order);
   } catch (error) {
+    console.error("Error fetching order: ", error);
     res.status(500).json({ message: error.message });
   }
 });

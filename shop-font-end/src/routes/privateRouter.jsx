@@ -6,7 +6,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const isAuthenticated = token && user;
 
-  const hasAccess = isAuthenticated && (user.role === "admin" || allowedRoles.includes(user.role));
+  const hasAccess = isAuthenticated && (allowedRoles.includes(user.role));
 
   if (!hasAccess) {
     message.error("Bạn không có quyền để truy cập");

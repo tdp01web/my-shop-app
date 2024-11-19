@@ -1,10 +1,6 @@
 const Product = require("../../models/product/productModel");
 const ProductVariant = require("../../models/product/productVariantModel");
 const Brand = require("../../models/product/brandModel");
-const RAM = require("../../models/product/ramModel");
-const Storage = require("../../models/product/storageModel");
-const GPU = require("../../models/product/gpuModel");
-const Processor = require("../../models/product/processorModel");
 const Category = require("../../models/product/prodcategoryModel");
 const Order = require("../../models/orderModel");
 const asyncHandler = require("express-async-handler");
@@ -228,10 +224,30 @@ const deleteProduct = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
+    const brand = await Brand.findById(product.brand);
+    if (!brand) {
+      return res.status(404).json({ message: "Brand not found" });
+    }
+    if (brand.status === 0) {
+      return res.status(400).json({ message: "Cannot modify product because the brand is suspended." });
+    }
+
+    const category = await Category.findById(product.category);
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    if (category.status === 0) {
+      return res.status(400).json({ message: "Cannot modify product because the category is suspended." });
+    }
+
     product.status = product.status === 1 ? 0 : 1;
     const updatedProduct = await product.save();
 
-    await ProductVariant.updateMany({ product: product._id }, { status: 0 });
+    await ProductVariant.updateMany(
+      { product: product._id },
+      { status: 0 }
+    );
+
     res.json(updatedProduct);
   } catch (error) {
     res.status(500).json({ message: error.message });

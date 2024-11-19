@@ -40,9 +40,13 @@ const ListProduct = () => {
       queryClient.invalidateQueries({ queryKey: ["get-all-products"] });
     },
     onError(error) {
+      const errorMessage =
+        error.response && error.response.status === 400
+          ? "Danh mục hoặc hãng đình chỉ không thể sử dụng biến thể."
+          : error.message;
       messageApi.open({
         type: "error",
-        content: error.message,
+        content: errorMessage,
       });
     },
   });

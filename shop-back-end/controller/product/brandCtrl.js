@@ -1,4 +1,6 @@
 const Brand = require("../../models/product/brandModel");
+const Product = require("../../models/product/productModel");
+const ProductVariant = require("../../models/product/productVariantModel");
 const asyncHandle = require("express-async-handler");
 const validateMongoDbId = require("../../utils/validateMongodbId");
 
@@ -32,11 +34,24 @@ const deleteBrand = asyncHandle(async (req, res) => {
     if (!brand) {
       return res.status(404).json({ message: "Brand not found" });
     }
+
     brand.status = brand.status === 1 ? 0 : 1;
     const updatedBrand = await brand.save();
-    res.json(updatedBrand);
+
+    const products = await Product.find({ brand: id });
+    await Product.updateMany({ brand: id }, { status: 0 });
+
+    await ProductVariant.updateMany(
+      { product: { $in: products.map(p => p._id) } },
+      { status: 0 }
+    );
+
+    res.json({
+      updatedBrand,
+      message: "Brand and its products and variants status updated successfully."
+    });
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 

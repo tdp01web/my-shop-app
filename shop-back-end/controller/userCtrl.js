@@ -178,12 +178,18 @@ const updatedUser = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    const deleteUser = await User.findByIdAndDelete(id);
-    res.json(deleteUser);
+    const deleteUser = await User.findById(id);
+    if (!deleteUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    deleteUser.status = deleteUser.status === 1 ? 0 : 1;
+    const updateUser = await deleteUser.save();
+    res.json(updateUser);
   } catch (error) {
     throw new Error(error);
   }
 });
+
 
 //! Block user
 const blockUser = asyncHandler(async (req, res) => {
@@ -290,8 +296,8 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
   try {
     const token = await user.createPasswordResetToken();
     await user.save();
-    const resetURL = `Hi, Please follow this link to reset your password. 
-    This link is valid till 10 minutes from now. 
+    const resetURL = `Hi, Please follow this link to reset your password.
+    This link is valid till 10 minutes from now.
     <a href='http://localhost:5173/forgot-password/${token}'>Click here</a>`;
     const data = {
       to: email,

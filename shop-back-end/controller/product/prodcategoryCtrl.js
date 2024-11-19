@@ -1,4 +1,6 @@
 const Category = require("../../models/product/prodcategoryModel");
+const Product = require("../../models/product/productModel");
+const ProductVariant = require("../../models/product/productVariantModel");
 const asyncHandle = require("express-async-handler");
 const validateMongoDbId = require("../../utils/validateMongodbId");
 
@@ -24,20 +26,33 @@ const updateCategory = asyncHandle(async (req, res) => {
   }
 });
 
+
 const deleteCategory = asyncHandle(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
     const category = await Category.findById(id);
-    if (!category) {
-      return res.status(404).json({ message: "Category not found" });
-    }
+      if (!category) {
+          return res.status(404).json({ message: "Category not found" });
+      }
+
     category.status = category.status === 1 ? 0 : 1;
     const updatedCategory = await category.save();
 
-    res.json(updatedCategory);
+    const products = await Product.find({ category: id });
+    await Product.updateMany({ category: id }, { status: 0 });
+
+    await ProductVariant.updateMany(
+      { product: { $in: products.map(p => p._id) } },
+      { status: 0 }
+    );
+
+    res.json({
+      updatedCategory,
+      message: "Category and its products and variants status updated successfully."
+    });
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 

@@ -137,7 +137,7 @@ const Router = () => {
           <Route
             path="admin"
             element={
-              <PrivateRoute allowedRoles={["admin"]}>
+              <PrivateRoute allowedRoles={["Owner","Admin"]}>
                 <LayoutAdmin />
               </PrivateRoute>
             }
@@ -187,7 +187,7 @@ const Router = () => {
           <Route
             path="staff"
             element={
-              <PrivateRoute allowedRoles={["admin", "staff"]}>
+              <PrivateRoute allowedRoles={["Owner","Admin", "Staff"]}>
                 <LayoutAdminStaff />
               </PrivateRoute>
             }
@@ -203,7 +203,7 @@ const Router = () => {
           <Route
             path="shipper"
             element={
-              <PrivateRoute allowedRoles={["admin", "shipper"]}>
+              <PrivateRoute allowedRoles={["Owner","Admin", "Shipper"]}>
                 <LayoutAdminShipper />
               </PrivateRoute>
             }

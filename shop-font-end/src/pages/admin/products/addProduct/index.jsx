@@ -39,8 +39,6 @@ const AddProduct = () => {
   const [form] = Form.useForm();
 
   const handleUploadChange = ({ fileList }) => {
-    console.log("🚀 ~ handleUploadChange ~ fileList:", fileList);
-
     const structuredData = fileList
       .flatMap(
         (file) =>
