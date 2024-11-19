@@ -26,6 +26,7 @@ function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [cartUpdated, setCartUpdated] = useState(false);
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -37,13 +38,14 @@ function MainHeader() {
           0
         );
         setCartItemCount(totalCount);
+        setCartUpdated(products);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
       }
     };
 
     fetchCartData();
-  }, []);
+  }, [cartUpdated]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
