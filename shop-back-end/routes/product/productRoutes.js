@@ -16,6 +16,8 @@ const {
   getAllProductsForUsers,
   getProductComments,
   getAllProductComments,
+  deleteComment,
+  deleteCommentDetail
 } = require("../../controller/product/productCtrl");
 const router = express.Router();
 const {
@@ -50,7 +52,8 @@ router.get("/get-all-comments", getAllProductComments);
 router.put("/updateProduct/:id", authMiddleware, isAdmin, updateProduct);
 //! Delete product
 router.post("/deleteProduct/:id", authMiddleware, isAdmin, deleteProduct);
-
+router.post("/deleteComment/:id", authMiddleware, isAdmin, deleteComment);
+router.post("/deleteCommentDetail/:id", authMiddleware, isAdmin, deleteCommentDetail);
 // Các route cho biến thể
 router.get("/variants", getAllVariants); // Route lấy tất cả biến thể
 router.get("/variant/:variantId", getVariant); // Route lấy một biến thể cụ thể

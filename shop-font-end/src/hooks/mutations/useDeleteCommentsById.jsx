@@ -2,13 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import { instance } from "../../configs/instance";
 
 
-export const usePutUser = (id, { onSuccess, onError }) => {
+export const useDeleteCommentsById = ({ onSuccess, onError }) => {
   return useMutation({
-    mutationKey: ["put-user", id],
-    mutationFn: async (data) => {
+    mutationKey: ["delete-comments-detail"],
+    mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .put(`user/updateUser/${id}`, data)
+          .post(`product/deleteCommentDetail/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

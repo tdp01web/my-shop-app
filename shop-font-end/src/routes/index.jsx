@@ -12,7 +12,6 @@ import AddProduct from "../pages/admin/products/addProduct";
 import EditProduct from "../pages/admin/products/editProduct";
 import { ListUser } from "../pages/admin/user";
 import { AddUser } from "../pages/admin/user/addUser";
-import EditUser from "../pages/admin/user/editUser";
 import ListCart from "../pages/admin/carts";
 import Dashboard from "../pages/admin/dashboard";
 import ListComment from "../pages/admin/comments";
@@ -48,6 +47,7 @@ import ListCartShipper from "../pages/shipper/carts";
 import DetailCartShipper from "../pages/shipper/carts/detailCart";
 import AddVouchers from "../pages/admin/vouchers/add";
 import EditVouchers from "../pages/admin/vouchers/edit";
+import EditUser from "../pages/admin/user/editUser";
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
 const LayoutClient = lazy(() => import("../layouts/client"));

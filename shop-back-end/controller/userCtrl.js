@@ -46,7 +46,7 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
   }
 
   // Check if the user is blocked
-  if (findUser.isBlocked) {
+  if (findUser.status === 0 && findUser.role !== 'Owner') {
     throw new Error(
       "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên."
     );
@@ -163,6 +163,9 @@ const updatedUser = asyncHandler(async (req, res) => {
         lastName: req?.body?.lastName,
         mobile: req?.body?.mobile,
         email: req?.body?.email,
+        password: req?.body?.password,
+        address: req?.body?.address,
+        role: req?.body?.role,
       },
       {
         new: true,

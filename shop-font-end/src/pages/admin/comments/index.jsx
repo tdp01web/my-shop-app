@@ -4,13 +4,43 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, message, Popconfirm, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
-import { instance } from "../../../configs/instance";
-
+import { useGetAllComments } from "../../../hooks/queries/useGetAllComments";
+import { useDeleteComments } from "../../../hooks/mutations/useDeleteComments";
+import moment from "moment/moment";
 const ListComment = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+  const [messageApi, contextHolder] = message.useMessage();
+  const queryClient = useQueryClient();
 
+  const { data: cmt, isLoading, isError } = useGetAllComments({
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
+  const { mutate } = useDeleteComments({
+    onSuccess: () => {
+      messageApi.open({
+        type: "success",
+        content: "Thay đổi trạng thái bình luận đánh giá thành công",
+      });
+      queryClient.invalidateQueries({ queryKey: ["get-all-comments"] });
+    },
+    onError(error) {
+      const errorMessage =
+        error.response && error.response.status === 400
+          ? "Sản phẩm đình chỉ không thể mở bình luận"
+          : error.message;
+      messageApi.open({
+        type: "error",
+        content: errorMessage,
+      });
+    },
+  })
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -70,43 +100,31 @@ const ListComment = () => {
         text
       ),
   });
+  const dataSource = cmt?.data?.data.map((item) => {
+    return {
+      key: item.id,
+      id: item.id,
+      title: item.productTitle,
+      countComments: item.totalComments,
+      countRate: item.averageRating,
+      dateNewComments: item.latestCommentDate ? moment(item.latestCommentDate).format("YYYY-MM-DD") : "Không có dữ liệu",
+      statusCmt: item.statusCmt === 1 ? "Sử dụng" : "Đình chỉ",
+      ratings: item.ratings,
+    }
+  });
 
-  const dataSource = [
-    {
-      key: '1',
-      title: 'Sản phẩm A',
-      countComments: 25,
-      countRate: 20,
-      dateNewComments: '2024-09-10',
-    },
-    {
-      key: '2',
-      title: 'Sản phẩm B',
-      countComments: 10,
-      countRate: 8,
-      dateNewComments: '2024-09-08',
-    },
-    {
-      key: '3',
-      title: 'Sản phẩm C',
-      countComments: 15,
-      countRate: 12,
-      dateNewComments: '2024-09-05',
-    },
-    {
-      key: '4',
-      title: 'Sản phẩm D',
-      countComments: 5,
-      countRate: 3,
-      dateNewComments: '2024-09-01',
-    },
-  ];
   const columns = [
+    {
+      title: "Mã bình luận",
+      dataIndex: "id",
+      key: "id",
+      ...getColumnSearchProps('id'),
+      sorter: (a, b) => a.id.localeCompare(b.id),
+    },
     {
       title: "Tên sản phẩm",
       dataIndex: "title",
       key: "title",
-      width: '30%',
       ...getColumnSearchProps('title'),
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
@@ -117,7 +135,7 @@ const ListComment = () => {
       sorter: (a, b) => a.countComments - b.countComments,
     },
     {
-      title: "Tổng lượt đánh giá",
+      title: "Trung bình đánh giá",
       dataIndex: "countRate",
       key: "countRate",
       sorter: (a, b) => a.countRate - b.countRate,
@@ -126,27 +144,33 @@ const ListComment = () => {
       title: "Ngày đánh giá mới nhất",
       dataIndex: "dateNewComments",
       key: "dateNewComments",
+      ...getColumnSearchProps('dateNewComments'),
       sorter: (a, b) => a.dateNewComments.localeCompare(b.dateNewComments),
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "statusCmt",
+      key: "statusCmt",
+      ...getColumnSearchProps('statusCmt'),
+      sorter: (a, b) => a.statusCmt.localeCompare(b.statusCmt),
     },
     {
       title: "Hành động",
       dataIndex: "action",
-      width: 250,
-      render: (_, cart) => (
+      render: (_, cmts) => (
         <div className="flex space-x-3">
-          <Button>
-            <Link to={`/admin/carts/${cart._id}/detail`}>Chi tiết bình luận</Link>
-          </Button>
-          <Button>
-            <Link to={`/admin/carts/${cart._id}/update`}>Dừng bình luận</Link>
+          <Button onClick={() => mutate(cmts?.id)}>
+            Dừng bình luận
           </Button>
         </div>
       ),
     },
   ];
-
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error loading data.</p>
   return (
     <div>
+      {contextHolder}
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-semibold text-2xl">Quản lý bình luận</h1>
         <Button type="primary">

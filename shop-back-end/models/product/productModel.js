@@ -54,11 +54,21 @@ var productSchema = new mongoose.Schema(
         comment: String,
         postedby: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         createdAt: { type: Date, default: Date.now },
+        isClose: {
+          type: Number,
+          enum: [0, 1],
+          default: 1,
+        },
       },
     ],
     totalrating: {
       type: Number,
       default: 0,
+    },
+    statusCmt: {
+      type: Number,
+      enum: [0, 1],
+      default: 1,
     },
   },
   { timestamps: true }

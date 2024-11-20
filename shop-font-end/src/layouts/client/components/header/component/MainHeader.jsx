@@ -67,15 +67,15 @@ function MainHeader() {
   };
 
   return (
-    <Box className="w-full bg-[#E30019]">
-      <div className="flex items-center text-white py-3 md:py-5 2xl:w-[80%] mx-auto justify-between px-4 xl:px-0">
+    <Box className="bg-[#E30019] w-full">
+      <div className="flex justify-between items-center mx-auto px-4 xl:px-0 py-3 md:py-5 2xl:w-[80%] text-white">
         <div className="md:hidden text-[25px]">
           <AiOutlineMenu onClick={handleDrawerOpen} />
         </div>
         <Link to="/">
           <img
             fit="contain"
-            className="md:w-[160px]  w-[40px]"
+            className="w-[40px] md:w-[160px]"
             src={
               laptop
                 ? "/images/logo/logoDesktop.png"
@@ -84,7 +84,7 @@ function MainHeader() {
             alt="Logo"
           />
         </Link>
-        <button className="md:flex hidden  gap-2 px-2 py-2 rounded-sm font-500 text-white items-center bg-[#BE1529]">
+        <button className="md:flex items-center gap-2 hidden bg-[#BE1529] px-2 py-2 rounded-sm font-500 text-white">
           <span className="text-[25px]">
             <AiOutlineMenu />
           </span>
@@ -94,11 +94,11 @@ function MainHeader() {
         {links.map((link, index) => (
           <Link
             to={link.to}
-            className="md:flex gap-2  items-center hidden "
+            className="md:flex items-center gap-2 hidden"
             key={index}
           >
             <span className="text-[20px]">{link.icon}</span>
-            <span className="2xl:flex hidden flex-col font-500 text-[13px] leading-4">
+            <span className="2xl:flex flex-col hidden font-500 text-[13px] leading-4">
               <span>{link.label}</span>
 
               <span>{link.sublabel}</span>
@@ -111,7 +111,7 @@ function MainHeader() {
               <div className="icon">
                 <AiOutlineUser />
               </div>
-              <div className="hidden md:block">
+              <div className="md:block hidden">
                 Xin chào <br /> {data.email.split("@")[0]}
               </div>
             </div>
@@ -120,34 +120,39 @@ function MainHeader() {
               <Link to={"/account"} className="flex items-center gap-2">
                 <MdWavingHand /> {data.email.split("@")[0]}
               </Link>
-
-              {data.role === "admin" && (
+              {data.role === "Admin" || data.role === "Owner" ? (
                 <Link to={"/admin"} className="flex items-center gap-2">
                   <MdOutlineAdminPanelSettings /> Vào trang quản lý
                 </Link>
-              )}
+              ) : data.role === "Shipper" ?
+                <Link to={"/shipper"} className="flex items-center gap-2">
+                  <MdOutlineAdminPanelSettings /> Vào trang giao hàng
+                </Link> : data.role === "Staff" ?
+                  <Link to={"/staff"} className="flex items-center gap-2">
+                    <MdOutlineAdminPanelSettings /> Vào trang nhân viên
+                  </Link> : null}
               <hr />
               <Link to={"/favorites-list"} className="flex items-center gap-2">
-                <CiHeart /> sản phẩm yêu thích
+                <CiHeart /> Sản phẩm yêu thích
               </Link>
               <Link
                 to={"account/orders-history"}
                 className="flex items-center gap-2"
               >
-                <PiNotepadBold /> đơn hàng của tôi
+                <PiNotepadBold /> Đơn hàng của tôi
               </Link>
               <hr />
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2"
               >
-                <HiOutlineLogout /> đăng xuất
+                <HiOutlineLogout /> Đăng xuất
               </button>
             </div>
           </div>
         ) : (
           <Link to={"/login"}>
-            <button className="md:flex hidden items-center gap-2 bg-[#BE1529] px-2 py-1 rounded-lg font-500 text-[13px] leading-4">
+            <button className="md:flex items-center gap-2 hidden bg-[#BE1529] px-2 py-1 rounded-lg font-500 text-[13px] leading-4">
               <FiUser style={{ width: "25px", height: "25px" }} />
               <p className="2xl:block hidden">
                 Đăng <br /> nhập
@@ -158,7 +163,7 @@ function MainHeader() {
 
         <Link
           to="/cart"
-          className="flex bg-[#BE1529] p-2 rounded-lg items-center md:hidden"
+          className="flex items-center md:hidden bg-[#BE1529] p-2 rounded-lg"
         >
           <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />
         </Link>

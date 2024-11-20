@@ -13,13 +13,13 @@ const Login = () => {
   const recaptchaRef = useRef();
   const navigate = useNavigate();
 
-  const mutation = useMutation({
+  const { mutate, isError, error, isLoading } = useMutation({
     mutationFn: async (data) => {
       try {
         const response = await instance.post("/user/login", data);
         return response.data;
       } catch (error) {
-        console.log("🚀 ~ mutationFn: ~ error:", error);
+        throw error;
       }
     },
     onSuccess: (data) => {
@@ -28,17 +28,16 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(data));
         localStorage.setItem("token", data.token);
         navigate("/");
-      } else {
-        message.error("Tài khoản hoặc mật khẩu không chính xác!");
       }
     },
     onError: (error) => {
-      message.error(error.response?.data?.message || "Có lỗi xảy ra!");
+      const errorMessage = error?.response?.data?.message || "Đã xảy ra lỗi. Vui lòng thử lại.";
+      message.error(errorMessage);
     },
   });
   const onFinish = async (value) => {
     if (isVerified) {
-      mutation.mutate(value);
+      mutate(value);
     } else {
       message.error("Vui đoan xác thực Recaptcha trước khi đăng ký!");
     }
@@ -59,18 +58,18 @@ const Login = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
         }}
-        className="w-full h-[75vh]  flex  relative  z-99 bg-white"
+        className="relative z-99 flex bg-white w-full h-[75vh]"
       >
         <Form
-          className="absolute left-[10%] top-[10%] sm:w-[400px] rounded-xl"
+          className="top-[10%] left-[10%] absolute rounded-xl sm:w-[400px]"
           name="login_form"
           layout="vertical"
           onFinish={onFinish}
           autoComplete="off"
         >
-          <p className="text-xl w-full text-center font-bold">Đăng nhập</p>
+          <p className="w-full font-bold text-center text-xl">Đăng nhập</p>
           <Form.Item
-            className="text-black font-bold"
+            className="font-bold text-black"
             name="email"
             label="Email"
             rules={[
@@ -82,12 +81,12 @@ const Login = () => {
             ]}
           >
             <Input
-              className="font-mono border border-gray-700 h-[48px]"
+              className="border-gray-700 border h-[48px] font-mono"
               placeholder="Nhập email"
             />
           </Form.Item>
           <Form.Item
-            className="text-black font-bold"
+            className="font-bold text-black"
             name="password"
             label="Mật khẩu"
             rules={[
@@ -100,7 +99,7 @@ const Login = () => {
           >
             <Input.Password
               type="password"
-              className="font-mono border border-gray-700 h-[48px]"
+              className="border-gray-700 border h-[48px] font-mono"
               placeholder="Nhập mật khẩu"
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -130,17 +129,17 @@ const Login = () => {
           </Link>
           <Button
             htmlType="submit"
-            className="w-full h-[52px] text-center py-3 rounded text-[20px] bg-[#d32026] hover:bg-blue-600 text-white hover:bg-green-dark focus:outline-none my-1"
-            loading={mutation.isLoading}
+            className="bg-[#d32026] hover:bg-blue-600 hover:bg-green-dark my-1 py-3 rounded w-full h-[52px] text-[20px] text-center text-white focus:outline-none"
+            loading={isLoading}
           >
             Đăng nhập
           </Button>
         </Form>
-        <div className="absolute right-[10%]  bottom-0 w-[20%]">
+        <div className="right-[10%] bottom-0 absolute w-[20%]">
           <img src="/images/dk-dn/untitled-1-03-20220324065349.png" alt="" />
         </div>
         <Fade
-          className="absolute bottom-0 left-[55%] w-[13%]"
+          className="bottom-0 left-[55%] absolute w-[13%]"
           triggerOnce={true}
           direction="left"
           delay={1e3}
