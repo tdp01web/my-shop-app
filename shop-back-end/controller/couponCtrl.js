@@ -6,18 +6,30 @@ const validateMongoDbId = require("../utils/validateMongodbId");
 const createCoupon = asyncHandle(async (req, res) => {
   try {
     const newCoupon = await Coupon.create(req.body);
-    res.json(newCoupon);
+    res.status(201).json(newCoupon);
   } catch (error) {
-    throw new Error(error);
+    res.status(400).json({ message: error.message });
   }
 });
+
 //! lấy toàn bộ mã giảm giá
-const getAllCoupons = asyncHandle(async (req, res) => {
+const getAllCouponsForUser = asyncHandle(async (req, res) => {
+  const userId = req.user._id; // Lấy userId từ token
+  validateMongoDbId(userId);
+
   try {
-    const coupons = await Coupon.find();
-    res.json(coupons);
+    const now = new Date();
+
+    const coupons = await Coupon.find({
+      status: 1, // Đang hoạt động
+      startDate: { $lte: now }, // Đã bắt đầu
+      expiry: { $gte: now }, // Chưa hết hạn
+      usedBy: { $ne: userId }, // Loại trừ mã user đã sử dụng
+    });
+
+    res.status(200).json(coupons);
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -58,4 +70,20 @@ const deleteCoupon = asyncHandle(async (req, res) => {
   }
 });
 
-module.exports = { createCoupon, getAllCoupons, updateCoupon, deleteCoupon, getCoupon };
+const getAllCouponsForAdmin = asyncHandle(async (req, res) => {
+  try {
+    const coupons = await Coupon.find();
+    res.status(200).json(coupons);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = {
+  createCoupon,
+  getAllCouponsForUser,
+  updateCoupon,
+  deleteCoupon,
+  getCoupon,
+  getAllCouponsForAdmin,
+};
