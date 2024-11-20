@@ -22,6 +22,7 @@ const {
   updateOrderStatus,
   getAllOrders,
   toggleUserRole,
+  updateUserByAdmin,
 } = require("../controller/userCtrl");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddlewares");
 
@@ -55,6 +56,8 @@ router.put("/blockUser/:id", authMiddleware, isAdmin, blockUser);
 router.put("/unblockUser/:id", authMiddleware, isAdmin, unblockUser);
 //! Thay đổi quyền
 router.put("/toggle-role/:id", authMiddleware, isAdmin, toggleUserRole);
+//! update user của admin
+router.put("/admin/user/update/:id", isAdmin, updateUserByAdmin);
 //! Đổi mật khẩu
 router.put("/updatePassword/:id", authMiddleware, updatePassword);
 //! Xóa user
