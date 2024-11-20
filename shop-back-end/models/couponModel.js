@@ -38,6 +38,10 @@ const couponSchema = new mongoose.Schema({
     enum: [0, 1], // 0: Không hoạt động, 1: Hoạt động
     default: 0,
   },
+  usageCount: {
+    type: Number,
+    default: 0, // Số lần mã giảm giá được sử dụng
+  },
 });
 
 // Middleware trước khi đọc dữ liệu

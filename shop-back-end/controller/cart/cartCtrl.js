@@ -209,6 +209,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
 
     cart.applyCoupon(coupon); // Áp dụng giảm giá vào giỏ hàng
     coupon.usedBy.push(userId); // Thêm user vào danh sách đã sử dụng
+    coupon.usageCount += 1; // Tăng số lần sử dụng
     await coupon.save();
 
     res.status(200).json({
@@ -231,8 +232,37 @@ const cancelCoupon = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Giỏ hàng không tồn tại." });
     }
 
-    cart.appliedCoupon = null; // Xóa mã giảm giá
-    cart.totalAfterDiscount = cart.cartTotal; // Tính lại tổng tiền
+    if (!cart.appliedCoupon) {
+      return res.status(400).json({ message: "Không có mã giảm giá để hủy." });
+    }
+
+    // console.log("Canceling coupon:", cart.appliedCoupon, "User ID:", userId);
+
+    // Truy vấn mã giảm giá
+    const coupon = await Coupon.findOne({ _id: cart.appliedCoupon });
+    if (!coupon) {
+      return res.status(404).json({ message: "Không tìm thấy mã giảm giá." });
+    }
+
+    // console.log("Before update usedBy list:", coupon.usedBy);
+
+    // Xóa userId khỏi usedBy
+    const result = await Coupon.updateOne(
+      { _id: cart.appliedCoupon },
+      { $pull: { usedBy: userId } }
+    );
+
+    // console.log("Update result:", result);
+
+    if (result.modifiedCount === 0) {
+      return res.status(400).json({
+        message: "Không tìm thấy mã giảm giá hoặc không cập nhật được.",
+      });
+    }
+
+    // Xóa mã giảm giá trong giỏ hàng
+    cart.appliedCoupon = null;
+    cart.totalAfterDiscount = cart.cartTotal; // Khôi phục tổng tiền gốc
     await cart.save();
 
     res.status(200).json({
