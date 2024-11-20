@@ -7,15 +7,16 @@ const FooterTop = () => {
     {
       title: "VỀ GEARVN",
       items: [
-        { text: "Giới thiệu", link: "/" },
+        { text: "Giới thiệu", link: "/abouts" },
         { text: "Tuyển dụng", link: "/" },
+        { text: "Liên hệ", link: "/contacts" },
       ],
     },
     {
       title: "CHÍNH SÁCH",
       items: [
         { text: "Chính sách bảo hành", link: "/" },
-        { text: "Chính sách thanh toán", link: "/" },
+        { text: "Chính sách thanh toán", link: "/payment-manual" },
         { text: "Chính sách giao hàng", link: "/" },
         { text: "Chính sách bảo mật", link: "/" },
       ],
@@ -25,6 +26,7 @@ const FooterTop = () => {
       items: [
         { text: "Hệ thống cửa hàng", link: "/" },
         { text: "Hướng dẫn mua hàng", link: "/" },
+        { text: "Hướng dẫn trả góp", link: "/installment" },
         { text: "Tra cứu địa chỉ bảo hành", link: "/" },
       ],
     },
