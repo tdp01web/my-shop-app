@@ -179,25 +179,43 @@ const applyCoupon = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Mã giảm giá không hợp lệ." });
     }
 
-    const expiryDate = new Date(coupon.expiry);
-    if (expiryDate < new Date()) {
+    const now = new Date();
+
+    if (coupon.startDate > now) {
+      return res.status(400).json({ message: "Mã giảm giá chưa bắt đầu." });
+    }
+
+    if (coupon.expiry < now) {
       return res.status(400).json({ message: "Mã giảm giá đã hết hạn." });
     }
 
+    if (coupon.usedBy.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "Bạn đã sử dụng mã giảm giá này." });
+    }
+
+    if (coupon.usedBy.length >= coupon.maxUses) {
+      return res
+        .status(400)
+        .json({ message: "Mã giảm giá đã đạt giới hạn sử dụng." });
+    }
+
+    // Áp dụng mã giảm giá
     const cart = await Cart.findOne({ orderedBy: userId });
     if (!cart) {
       return res.status(404).json({ message: "Giỏ hàng không tồn tại." });
     }
 
-    // Áp dụng mã giảm giá trực tiếp vào giỏ hàng
-    await cart.applyCoupon(coupon);
+    cart.applyCoupon(coupon); // Áp dụng giảm giá vào giỏ hàng
+    coupon.usedBy.push(userId); // Thêm user vào danh sách đã sử dụng
+    await coupon.save();
 
     res.status(200).json({
-      message: "Mã giảm giá đã được áp dụng thành công",
-      totalAfterDiscount: cart.totalAfterDiscount, // Trả về tổng sau giảm giá
+      message: "Mã giảm giá đã được áp dụng thành công.",
+      totalAfterDiscount: cart.totalAfterDiscount,
     });
   } catch (error) {
-    console.error("Lỗi khi áp dụng mã giảm giá:", error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -213,12 +231,8 @@ const cancelCoupon = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Giỏ hàng không tồn tại." });
     }
 
-    // Xóa mã giảm giá khỏi giỏ hàng
     cart.appliedCoupon = null; // Xóa mã giảm giá
-
-    // Tính lại tổng tiền sau khi hủy mã giảm giá
-    cart.totalAfterDiscount = cart.cartTotal;
-
+    cart.totalAfterDiscount = cart.cartTotal; // Tính lại tổng tiền
     await cart.save();
 
     res.status(200).json({
@@ -226,7 +240,6 @@ const cancelCoupon = asyncHandler(async (req, res) => {
       totalAfterDiscount: cart.totalAfterDiscount,
     });
   } catch (error) {
-    console.error("Lỗi khi hủy mã giảm giá:", error);
     res.status(500).json({ message: error.message });
   }
 });
