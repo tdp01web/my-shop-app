@@ -46,7 +46,7 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
   }
 
   // Check if the user is blocked
-  if (findUser.status === 0 && findUser.role !== 'Owner') {
+  if (findUser.status === 0 && findUser.role !== "Owner") {
     throw new Error(
       "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên."
     );
@@ -192,7 +192,6 @@ const deleteUser = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
-
 
 //! Block user
 const blockUser = asyncHandler(async (req, res) => {
@@ -537,6 +536,35 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 });
 
+const updateUserByAdmin = asyncHandler(async (req, res) => {
+  const { id } = req.params; // Lấy id từ params
+  const { firstName, lastName, email, mobile } = req.body; // Các thông tin cần cập nhật
+
+  try {
+    // Kiểm tra user có tồn tại không
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại." });
+    }
+
+    // Cập nhật các trường được cho phép
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.email = email || user.email;
+    user.mobile = mobile || user.mobile;
+
+    // Lưu lại thay đổi
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      message: "Cập nhật người dùng thành công.",
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = {
   createUser,
   loginUserCtrl,
@@ -559,4 +587,5 @@ module.exports = {
   updateOrderStatus,
   getAllOrders,
   toggleUserRole,
+  updateUserByAdmin,
 };

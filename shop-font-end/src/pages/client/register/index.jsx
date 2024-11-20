@@ -189,7 +189,7 @@ const Register = () => {
           <img src="/images/dk-dn/untitled-1-03-20220324065349.png" alt="" />
         </div>
         <Fade
-          className="absolute bottom-0 left-[55%] w-[13%]"
+          className="absolute bottom-[-0.3rem] sm:bottom-[-0.6rem] md:bottom-[-1rem] 2xl:bottom-[-1.2rem] left-[55%] w-[13%]"
           triggerOnce={true}
           direction="left"
           delay={1000}
