@@ -60,10 +60,10 @@ const ProductDetail = () => {
     );
 
   return (
-    <div className="w-[80%] flex flex-col mx-auto gap-5  p-5">
+    <div className="lg:w-[80%] w-full flex flex-col mx-auto gap-5  p-5">
       {data && <ProductDetailMain product={data} />}
 
-      <div className="flex gap-4">
+      <div className="flex flex-col lg:flex-row gap-4">
         {data && <ProductDescription description={data.description} />}
 
         {relatedProductsData && (

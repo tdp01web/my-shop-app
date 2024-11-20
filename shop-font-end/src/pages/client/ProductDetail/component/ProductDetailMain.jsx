@@ -89,12 +89,16 @@ const ProductDetailMain = ({ product }) => {
   });
 
   return (
-    <div className="w-full flex gap-4 bg-white rounded-md">
-      <div className="slider-product w-1/3 ">
+    <div className="w-full flex flex-col lg:flex-row gap-4 bg-white rounded-lg">
+      <div className="slider-product w-full lg:w-1/3">
         <Slider asNavFor={nav2} ref={(slider) => (sliderRef1 = slider)}>
           {product.images.map((image) => (
             <div key={image._id}>
-              <img src={image.url} alt="Product" />
+              <img
+                src={image.url}
+                alt="Product"
+                className="inset-0 w-full h-full object-cover object-center rounded-lg"
+              />
             </div>
           ))}
         </Slider>
@@ -108,12 +112,16 @@ const ProductDetailMain = ({ product }) => {
         >
           {product.images.map((image) => (
             <div key={image._id}>
-              <img src={image.url} alt="Product Thumbnail" />
+              <img
+                src={image.url}
+                alt="Product Thumbnail"
+                className="inset-0 w-full h-full p-1 object-cover cursor-pointer"
+              />
             </div>
           ))}
         </Slider>
       </div>
-      <div className="w-2/3 p-5 border-l-2 flex flex-col gap-4 border-solid">
+      <div className="w-full lg:w-2/3 p-5 border-l-2 flex flex-col gap-4 border-solid">
         <h2 className="text-[24px] font-600">{product.title}</h2>
         <p className="text-[20px] font-500 text-red-600">
           {new Intl.NumberFormat("vi-VN", {

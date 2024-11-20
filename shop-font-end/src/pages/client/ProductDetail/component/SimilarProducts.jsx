@@ -50,7 +50,7 @@ const SimilarProducts = ({ dataProductCategory }) => {
   };
   console.log(dataProductCategory);
   return (
-    <div className="w-[40%] bg-cover rounded-md flex bg-white  flex-col bg-center gap-3 h-auto p-4">
+    <div className="w-full lg:w-[40%] bg-cover rounded-md flex bg-white  flex-col bg-center gap-3 h-auto p-4">
       <h2 className="text-[24px] font-600">Các sản phẩm tương tự </h2>
       <div className="w-full h-full flex flex-col gap-2 ">
         {dataProductCategory.map((product) => (
@@ -70,7 +70,7 @@ const SimilarProducts = ({ dataProductCategory }) => {
                 {product?.title}
               </p>
               <div className="leading-none text-gray-500 flex items-center gap-2">
-                <p className="text-red-500 font-600 text-[14px] md:text-[18px]">
+                <p className="text-red-500 font-600 text-[14px] lg:text-[18px]">
                   {product?.variants[0].price.toLocaleString()}đ
                 </p>
               </div>
