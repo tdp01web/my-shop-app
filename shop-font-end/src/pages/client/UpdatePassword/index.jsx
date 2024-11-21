@@ -68,46 +68,69 @@ const UpdatePassword = () => {
     <div className="flex flex-col gap-3 p-5 justify-center items-center">
       <Title level={3}>Đổi mật khẩu</Title>
       <div className="flex flex-col gap-3 w-[40%]">
-        <Input.Password
-          placeholder="Mật khẩu hiện tại"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          status={error.currentPassword ? "error" : ""}
-        />
-        <Input.Password
-          placeholder="Mật khẩu mới"
-          value={newPassword}
-          onChange={(e) => {
-            setNewPassword(e.target.value);
-            setError({
-              ...error,
-              newPassword:
-                e.target.value.length < 8
-                  ? "Mật khẩu mới phải có ít nhất 8 ký tự!"
-                  : "",
-            });
-          }}
-          status={error.newPassword ? "error" : ""}
-        />
-        {error.newPassword && <Text type="danger">{error.newPassword}</Text>}
-        <Input.Password
-          placeholder="Xác nhận mật khẩu mới"
-          value={confirmPassword}
-          onChange={(e) => {
-            setConfirmPassword(e.target.value);
-            setError({
-              ...error,
-              confirmPassword:
-                e.target.value !== newPassword
-                  ? "Mật khẩu xác nhận không khớp!"
-                  : "",
-            });
-          }}
-          status={error.confirmPassword ? "error" : ""}
-        />
-        {error.confirmPassword && (
-          <Text type="danger">{error.confirmPassword}</Text>
-        )}
+       <div>
+          <p className="mb-[4px]">
+            <span className="text-[14px]">Mật khẩu hiện tại</span>
+            <span className="text-red-500"> *</span>
+          </p>
+          <Input.Password
+            placeholder="Mật khẩu hiện tại"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            status={error.currentPassword ? "error" : ""}
+          />
+       </div>
+
+        <div>
+          <p className="mb-[4px]">
+            <span className="text-[14px]">Mật khẩu mới</span>
+            <span className="text-red-500"> *</span>
+          </p>
+
+          <Input.Password
+            placeholder="Mật khẩu mới"
+            value={newPassword}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+              setError({
+                ...error,
+                newPassword:
+                  e.target.value.length < 8
+                    ? "Mật khẩu mới phải có ít nhất 8 ký tự!"
+                    : "",
+              });
+            }}
+            status={error.newPassword ? "error" : ""}
+          />
+          {error.newPassword && <Text type="danger">{error.newPassword}</Text>}
+        </div>
+
+        <div>
+          <p className="mb-[4px]">
+            <span className="text-[14px]">Xác nhận mật khẩu</span>
+            <span className="text-red-500"> *</span>
+          </p>
+
+          <Input.Password
+            placeholder="Xác nhận mật khẩu mới"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setError({
+                ...error,
+                confirmPassword:
+                  e.target.value !== newPassword
+                    ? "Mật khẩu xác nhận không khớp!"
+                    : "",
+              });
+            }}
+            status={error.confirmPassword ? "error" : ""}
+          />
+          {error.confirmPassword && (
+            <Text type="danger">{error.confirmPassword}</Text>
+          )}
+        </div>
+
         {error.form && <Text type="danger">{error.form}</Text>}
         <Button
           type="primary"
