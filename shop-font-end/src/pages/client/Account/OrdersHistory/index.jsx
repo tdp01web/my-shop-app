@@ -40,11 +40,16 @@ const TABS = [
 
 const OrdersHistory = () => {
   const [activeTab, setActiveTab] = useState(TABS[0].label);
+  const [searchStr, setSearchStr] = useState();
 
-  const { data: orders } = useQuery({
+  const { data: orders, refetch } = useQuery({
     queryKey: ["USER_ORDERS_HISTORY"],
     queryFn: async () => {
-      const r = await instance.get("/order");
+      const r = await instance.get("/order", {
+        params: {
+          search: searchStr,
+        },
+      });
 
       return r.data;
     },
@@ -104,8 +109,19 @@ const OrdersHistory = () => {
           placeholder="Tìm đơn hàng theo Mã đơn hàng"
           className="my-3 rounded"
           size="large"
+          value={searchStr}
+          onChange={(e) => setSearchStr(e.target.value)}
           prefix={<IoSearchSharp className="text-[#111] text-[16px]" />}
-          suffix={<p className="text-[#1982f9] cursor-pointer">Tìm đơn hàng</p>}
+          suffix={
+            <p className="text-[#1982f9] cursor-pointer" onClick={refetch}>
+              Tìm đơn hàng
+            </p>
+          }
+          onKeyDown={(e) => {
+            if (e.code === "Enter") {
+              refetch();
+            }
+          }}
         />
       </div>
 

@@ -321,15 +321,31 @@ const transactionStatus = asyncHandler(async (req, res) => {
 // API lấy danh sách tất cả các đơn hàng của một người dùng
 const getUserOrders = asyncHandler(async (req, res) => {
   const { _id } = req.user;
+  const { search } = req.query;
 
   validateMongoDbId(_id);
 
   try {
-    const orders = await Order.find({ orderedBy: _id }).sort({ createdAt: -1 });
+    let filters = {
+      orderedBy: _id,
+    };
 
-    if (!orders || orders.length === 0) {
-      return res.status(404).json({ message: "Không tìm thấy đơn hàng nào." });
+    // tìm kiếm đơn hàng theo tên/sdt
+    if (search) {
+      filters = {
+        ...filters,
+        $or: [
+          { 'shippingAddress.name': { $regex: search, $options: 'i' } },
+          { 'shippingAddress.phone': { $regex: search, $options: 'i' } }
+        ]
+      }
     }
+
+    const orders = await Order.find(filters).sort({ createdAt: -1 });
+
+    // if (!orders || orders.length === 0) {
+    //   return res.status(404).json({ message: "Không tìm thấy đơn hàng nào." });
+    // }
 
     res.json(orders);
   } catch (error) {
