@@ -47,7 +47,7 @@ const SlideBanner = () => {
         </div>
         <div className="md:flex w-1/3 flex-col gap-2 hidden ">
           <img
-            src="/images/homepage/artboard_12.webp"
+            src="/images/homepage/thang_10_layout_web_-04.webp"
             className="w-full object-cover"
             alt=""
           />
@@ -70,7 +70,7 @@ const SlideBanner = () => {
           className="w-full object-cover"
         />
         <img
-          src="/images/homepage/artboard_5.webp"
+          src="/images/homepage/thang_10_layout_web_-05.webp"
           alt=""
           className="w-full object-cover"
         />
