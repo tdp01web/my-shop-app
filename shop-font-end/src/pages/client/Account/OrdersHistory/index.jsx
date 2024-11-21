@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./index.module.css";
 import { Empty, Input } from "antd";
 import { IoSearchSharp } from "react-icons/io5";
@@ -41,19 +41,20 @@ const TABS = [
 const OrdersHistory = () => {
   const [activeTab, setActiveTab] = useState(TABS[0].label);
   const [searchStr, setSearchStr] = useState();
+  const [orders, setOrders] = useState([]);
 
-  const { data: orders, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["USER_ORDERS_HISTORY"],
     queryFn: async () => {
-      const r = await instance.get("/order", {
-        params: {
-          search: searchStr,
-        },
-      });
+      const r = await instance.get("/order");
 
       return r.data;
     },
   });
+
+  useEffect(() => {
+    setOrders(data);
+  }, [data]);
 
   const selectedOrders = useMemo(() => {
     if (activeTab === TABS[0].label) {
@@ -75,6 +76,11 @@ const OrdersHistory = () => {
     if (count > 0) {
       return `(${count})`;
     }
+  };
+
+  const onSearch = () => {
+    const orderFilters = data?.filter((it) => it._id.includes(searchStr));
+    setOrders(orderFilters);
   };
 
   return (
@@ -113,13 +119,13 @@ const OrdersHistory = () => {
           onChange={(e) => setSearchStr(e.target.value)}
           prefix={<IoSearchSharp className="text-[#111] text-[16px]" />}
           suffix={
-            <p className="text-[#1982f9] cursor-pointer" onClick={refetch}>
+            <p className="text-[#1982f9] cursor-pointer" onClick={onSearch}>
               Tìm đơn hàng
             </p>
           }
           onKeyDown={(e) => {
             if (e.code === "Enter") {
-              refetch();
+              onSearch();
             }
           }}
         />
