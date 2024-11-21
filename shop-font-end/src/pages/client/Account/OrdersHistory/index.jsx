@@ -21,10 +21,6 @@ const TABS = [
     label: "Đã Xác Nhận",
   },
   {
-    id: 4,
-    label: "Đang Đóng Gói",
-  },
-  {
     id: 5,
     label: "Đang Giao Hàng",
   },
@@ -34,6 +30,10 @@ const TABS = [
   },
   {
     id: 7,
+    label: "Hoàn Thành",
+  },
+  {
+    id: 8,
     label: "Đã Hủy",
   },
 ];

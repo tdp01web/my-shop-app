@@ -49,7 +49,7 @@ const OrderDetail = () => {
 
         {data.orderStatus === "Đang Xử Lý" && (
           <Button danger type="primary" onClick={onOpenModal}>
-            Huỷ ĐH
+            Huỷ Đơn hàng
           </Button>
         )}
       </div>

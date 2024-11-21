@@ -44,7 +44,7 @@ const OrderCard = ({ data }) => {
 
               <div className="flex-1">
                 <Link
-                  to={`/products/${data._id}`}
+                  to={`/products/${product.prodId}`}
                   className="text-[#111] font-semibold"
                 >
                   {product?.title} | {product?.gpu} | {product?.ram} |{" "}
