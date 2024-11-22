@@ -74,7 +74,7 @@ const createProduct = asyncHandler(async (req, res) => {
     // Thêm các biến thể cho sản phẩm
     if (variants && variants.length > 0) {
       for (const variant of variants) {
-        const { ram, storage, processor, gpu, quantity, price, images } =
+        const { ram, storage, processor, gpu, quantity, price, images, attributes } =
           variant;
 
         const productVariant = await ProductVariant.create({
@@ -87,6 +87,7 @@ const createProduct = asyncHandler(async (req, res) => {
           price,
           images,
           status,
+          attributes
         });
 
         product.variants.push(productVariant._id);
@@ -155,7 +156,7 @@ const updateProduct = asyncHandler(async (req, res) => {
 
     if (Array.isArray(variants) && variants.length > 0) {
       for (const variant of variants) {
-        const { _id, ram, storage, processor, gpu, quantity, price } = variant;
+        const { _id, ram, storage, processor, gpu, quantity, price, attributes } = variant;
 
         if (_id && mongoose.Types.ObjectId.isValid(_id)) {
           const existingVariant = await ProductVariant.findById(_id);
@@ -166,6 +167,7 @@ const updateProduct = asyncHandler(async (req, res) => {
             existingVariant.gpu = gpu || existingVariant.gpu;
             existingVariant.quantity = quantity || existingVariant.quantity;
             existingVariant.price = price || existingVariant.price;
+            existingVariant.attributes = attributes || existingVariant.attributes
 
             await existingVariant.save();
             newVariantIds.push(existingVariant._id);
@@ -179,6 +181,7 @@ const updateProduct = asyncHandler(async (req, res) => {
             gpu,
             quantity,
             price,
+            attributes
           });
 
           newVariantIds.push(newVariant._id);

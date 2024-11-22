@@ -538,7 +538,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 
 const updateUserByAdmin = asyncHandler(async (req, res) => {
   const { id } = req.params; // Lấy id từ params
-  const { firstName, lastName, email, mobile } = req.body; // Các thông tin cần cập nhật
+  const { firstName, lastName, email, mobile, address, role, password } = req.body; // Các thông tin cần cập nhật
 
   try {
     // Kiểm tra user có tồn tại không
@@ -552,6 +552,9 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     user.lastName = lastName || user.lastName;
     user.email = email || user.email;
     user.mobile = mobile || user.mobile;
+    user.address = address || user.address;
+    user.role = role || user.role;
+    user.password = password || user.password;
 
     // Lưu lại thay đổi
     const updatedUser = await user.save();

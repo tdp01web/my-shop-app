@@ -57,7 +57,7 @@ router.put("/unblockUser/:id", authMiddleware, isAdmin, unblockUser);
 //! Thay đổi quyền
 router.put("/toggle-role/:id", authMiddleware, isAdmin, toggleUserRole);
 //! update user của admin
-router.put("/update-user-admin/:id", isAdmin, updateUserByAdmin);
+router.put("/update-user-admin/:id",authMiddleware, isAdmin, updateUserByAdmin);
 //! Đổi mật khẩu
 router.put("/updatePassword/:id", authMiddleware, updatePassword);
 //! Xóa user

@@ -157,13 +157,15 @@ const ListComment = () => {
     {
       title: "Hành động",
       dataIndex: "action",
-      render: (_, cmts) => (
+      render: (_, cmts) => {
+        const isActive = cmts.statusCmt === "Sử dụng";
+        return(
         <div className="flex space-x-3">
           <Button onClick={() => mutate(cmts?.id)}>
-            Dừng bình luận
+            {isActive ?" Đóng bình luận" : "Mở bình luận"}
           </Button>
         </div>
-      ),
+      )}
     },
   ];
   if (isLoading) return <p>Loading...</p>

@@ -1,5 +1,6 @@
 import {
   BackwardFilled,
+  CloseOutlined,
   Loading3QuartersOutlined,
   MinusCircleOutlined,
   PlusOutlined,
@@ -7,11 +8,13 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
+  Card,
   Form,
   Input,
   InputNumber,
   message,
   Select,
+  Space,
   Upload,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -243,6 +246,8 @@ const EditProduct = () => {
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 1280 }}
           onFinish={onFinish}
+          autoComplete="off"
+          disabled={isPending}
           initialValues={{
             title: product?.data?.title,
             images: product?.data?.images || [],
@@ -257,10 +262,13 @@ const EditProduct = () => {
               price: item.price,
               quantity: item.quantity,
               key: item._id,
+              attributes: item.attributes.map((itemA) => ({
+                keyA: itemA._id,
+                keyA: itemA.keyA,
+                valueA: itemA.valueA
+              }))
             })),
           }}
-          autoComplete="off"
-          disabled={isPending}
         >
           <Form.Item
             label="Tên sản phẩm"
@@ -290,8 +298,11 @@ const EditProduct = () => {
               </button>
             </Upload>
           </Form.Item>
-
-          <Form.Item label="Mô tả" name="description" placeholder="Mô tả">
+          <Form.Item label="Mô tả" name="description" placeholder="Mô tả"
+            rules={[
+              { required: true, message: "Mô tả sản phẩm bắt buộc phải điền" },
+            ]}
+          >
             <TextArea rows={4} />
           </Form.Item>
           <Form.Item
@@ -318,151 +329,204 @@ const EditProduct = () => {
               options={optionBrand}
             />
           </Form.Item>
-          <Form.List
-            name="variants"
-            initialValue={product?.data?.variants.map((item) => ({
-              processor: item.processor._id,
-              gpu: item.gpu._id,
-              ram: item.ram._id,
-              storage: item.storage._id,
-              price: item.price,
-              quantity: item.quantity,
-              key: item._id,
-            }))}
-          >
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, fieldKey, ...restField }) => (
-                  <Form.Item key={key} required={false} label="Biến thể">
-                    <Form.Item
-                      {...restField}
-                      name={[name]}
-                      fieldKey={[fieldKey]}
+          <Form.Item label="Biến thể">
+            <Form.List
+              name="variants"
+              initialValue={product?.data?.variants.map((item) => {
+                return ({
+                  processor: item.processor._id,
+                  gpu: item.gpu._id,
+                  ram: item.ram._id,
+                  storage: item.storage._id,
+                  price: item.price,
+                  quantity: item.quantity,
+                  key: item._id,
+                  attributes: item.attributes
+                })
+              })}
+            >
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, fieldKey, ...restField }) => (
+                    <Card
+                      style={{ marginTop: "10px" }}
+                      size="small"
+                      title={`Biến thể ${name + 1}`}
+                      extra={
+                        fields.length > 1 ? (
+                          <CloseOutlined
+                            onClick={() => remove(name)}
+                          />
+                        ) : null
+                      }
                     >
-                      <Form.Item
-                        {...restField}
-                        label={"CPU"}
-                        name={[name, "processor"]}
-                        fieldKey={[fieldKey, "processor"]}
-                        rules={[
-                          { required: true, message: "CPU bắt buộc phải điền" },
-                        ]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder="Chọn CPU"
-                          optionFilterProp="label"
-                          options={optionCPU}
-                        />
+                      <Form.Item key={key} required={false} >
+                        <Form.Item
+                          {...restField}
+                          name={[name]}
+                          fieldKey={[fieldKey]}
+                        >
+                          <Form.Item
+                            {...restField}
+                            label={"CPU"}
+                            name={[name, "processor"]}
+                            fieldKey={[fieldKey, "processor"]}
+                            rules={[
+                              { required: true, message: "CPU bắt buộc phải điền" },
+                            ]}
+                          >
+                            <Select
+                              showSearch
+                              placeholder="Chọn CPU"
+                              optionFilterProp="label"
+                              options={optionCPU}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            label={"GPU"}
+                            name={[name, "gpu"]}
+                            fieldKey={[fieldKey, "gpu"]}
+                            rules={[
+                              { required: true, message: "GPU bắt buộc phải điền" },
+                            ]}
+                          >
+                            <Select
+                              showSearch
+                              placeholder="Chọn GPU"
+                              optionFilterProp="label"
+                              options={optionGPU}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            label={"RAM"}
+                            name={[name, "ram"]}
+                            fieldKey={[fieldKey, "ram"]}
+                            rules={[
+                              { required: true, message: "RAM bắt buộc phải điền" },
+                            ]}
+                          >
+                            <Select
+                              showSearch
+                              placeholder="Chọn RAM"
+                              optionFilterProp="label"
+                              options={optionRAM}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            label={"SSD"}
+                            name={[name, "storage"]}
+                            fieldKey={[fieldKey, "storage"]}
+                            rules={[
+                              { required: true, message: "SSD bắt buộc phải điền" },
+                            ]}
+                          >
+                            <Select
+                              showSearch
+                              placeholder="Chọn SSD"
+                              optionFilterProp="label"
+                              options={optionSSD}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            label={"Gía"}
+                            name={[name, "price"]}
+                            fieldKey={[fieldKey, "price"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Giá sản phẩm bắt buộc phải điền",
+                              },
+                              {
+                                type: "number",
+                                min: 0,
+                                message: "Giá sản phẩm không được âm",
+                              },
+                            ]}
+                          >
+                            <InputNumber style={{ width: "100%" }} />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            label={"Số lượng "}
+                            name={[name, "quantity"]}
+                            fieldKey={[fieldKey, "quantity"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Số lượng bắt buộc phải điền",
+                              },
+                              {
+                                type: "number",
+                                min: 0,
+                                message: "Số lượng không được âm",
+                              },
+                            ]}
+                          >
+                            <InputNumber style={{ width: "100%" }} />
+                          </Form.Item>
+                          <Form.Item label="Thuộc tính thêm">
+                            <Form.List name={[name, 'attributes']}
+                            >
+                              {(subFields, subOpt) => (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    rowGap: 16,
+                                  }}
+                                >
+                                  {subFields.map((subField) => {
+                                    return (
+                                      <Space key={subField.key}>
+                                        <Form.Item label="Tên" name={[subField.name, 'keyA']}
+                                          rules={[
+                                            { required: true, message: "Tên thuộc tính bắt buộc phải điền" },
+                                          ]}
+                                        >
+                                          <Input placeholder="Tên " />
+                                        </Form.Item>
+                                        <Form.Item label="Thuộc tính" name={[subField.name, 'valueA']}
+                                          rules={[
+                                            { required: true, message: "Thuộc tính bắt buộc phải điền" },
+                                          ]}
+                                        >
+                                          <Input placeholder="Thuộc tính" />
+                                        </Form.Item>
+                                        <CloseOutlined
+                                          onClick={() => {
+                                            subOpt.remove(subField.name);
+                                          }}
+                                        />
+                                      </Space>
+                                    )
+                                  })}
+                                  <Button type="dashed" onClick={() => subOpt.add()} block>
+                                    + Thêm thuộc tính
+                                  </Button>
+                                </div>
+                              )}
+                            </Form.List>
+                          </Form.Item>
+                        </Form.Item>
                       </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        label={"GPU"}
-                        name={[name, "gpu"]}
-                        fieldKey={[fieldKey, "gpu"]}
-                        rules={[
-                          { required: true, message: "GPU bắt buộc phải điền" },
-                        ]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder="Chọn GPU"
-                          optionFilterProp="label"
-                          options={optionGPU}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        label={"RAM"}
-                        name={[name, "ram"]}
-                        fieldKey={[fieldKey, "ram"]}
-                        rules={[
-                          { required: true, message: "RAM bắt buộc phải điền" },
-                        ]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder="Chọn RAM"
-                          optionFilterProp="label"
-                          options={optionRAM}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        label={"SSD"}
-                        name={[name, "storage"]}
-                        fieldKey={[fieldKey, "storage"]}
-                        rules={[
-                          { required: true, message: "SSD bắt buộc phải điền" },
-                        ]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder="Chọn SSD"
-                          optionFilterProp="label"
-                          options={optionSSD}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        label={"Giá"}
-                        name={[name, "price"]}
-                        fieldKey={[fieldKey, "price"]}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Giá sản phẩm bắt buộc phải điền",
-                          },
-                          {
-                            type: "number",
-                            min: 0,
-                            message: "Giá sản phẩm không được âm",
-                          },
-                        ]}
-                      >
-                        <InputNumber style={{ width: "100%" }} />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        label={"Số lượng"}
-                        name={[name, "quantity"]}
-                        fieldKey={[fieldKey, "quantity"]}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Số lượng bắt buộc phải điền",
-                          },
-                          {
-                            type: "number",
-                            min: 0,
-                            message: "Số lượng không được âm",
-                          },
-                        ]}
-                      >
-                        <InputNumber style={{ width: "100%" }} />
-                      </Form.Item>
-                    </Form.Item>
-                    {fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => remove(name)}
-                      />
-                    ) : null}
-                  </Form.Item>
-                ))}
-                <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+                    </Card>
+                  ))}
                   <Button
                     type="dashed"
                     onClick={() => add()}
-                    style={{ width: "30%" }}
+                    style={{ width: "30%", alignItems: "center", display: "flex", marginTop: "10px" }}
                     icon={<PlusOutlined />}
                   >
                     Thêm biến thể
                   </Button>
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
+                </>
+              )}
+            </Form.List>
+          </Form.Item>
           <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
             <Button type="primary" htmlType="submit" disabled={isPending}>
               {isPending ? (

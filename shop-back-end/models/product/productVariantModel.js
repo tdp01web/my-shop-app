@@ -40,6 +40,12 @@ var productVariantSchema = new mongoose.Schema(
         url: String,
       },
     ],
+    attributes: [
+      {
+        keyA: String,
+        valueA: String,
+      },
+    ],
     status: {
       type: Number,
       enum: [0, 1],

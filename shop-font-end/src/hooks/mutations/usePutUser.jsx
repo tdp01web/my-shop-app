@@ -8,7 +8,7 @@ export const usePutUser = (id, { onSuccess, onError }) => {
     mutationFn: async (data) => {
       try {
         const apiResult = await instance
-          .put(`user/updateUser/${id}`, data)
+          .put(`user/update-user-admin/${id}`, data)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

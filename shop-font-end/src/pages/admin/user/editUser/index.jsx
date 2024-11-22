@@ -19,7 +19,6 @@ const EditUser = () => {
   const inputRef = useRef(null);
   const { id } = useParams();
   const queryClient = useQueryClient();
-
   const optionRoleAdmin = roleAdmin.map((item) => ({
     value: item,
     label: item
@@ -35,8 +34,8 @@ const EditUser = () => {
         console.log(error);
       }
     })
-  const right = JSON.parse(localStorage.getItem("user"));
-  const isRight = data?.data._id === right._id;
+    const right = JSON.parse(localStorage.getItem("user"));
+    const isRight = data?.data._id === right._id;
   const { mutate, isPending } = usePutUser(
     id,
     {
@@ -140,13 +139,14 @@ const EditUser = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Mật khấu"
-            name="password"
-            rules={[{ required: true, message: "Mật khẩu bắt buộc phải điền" }]}
-          >
-            <Input.Password />
-          </Form.Item>
+          {isRight ?
+            <Form.Item
+              label="Mật khấu"
+              name="password"
+              rules={[{ required: true, message: "Mật khẩu bắt buộc phải điền" }]}
+            >
+              <Input.Password />
+            </Form.Item> : null}
           <Form.Item
             label="Số điện thoại"
             name="mobile"
@@ -158,7 +158,7 @@ const EditUser = () => {
             label="Địa chỉ"
             name="address"
           >
-            <Input.Password />
+            <Input />
           </Form.Item>
           {isRight ? null : <Form.Item
             label="Vai trò"
