@@ -58,173 +58,165 @@ const Register = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
         }}
-        className="w-full h-[94vh] flex relative z-99 bg-white"
+        className="w-full h-[130vh] flex relative z-99 bg-white"
       >
         <Form
-          className="absolute left-[10%] top-[5%] sm:w-[620px] rounded-xl"
+          className="absolute left-[10%] top-[5%] sm:w-[400px] rounded-xl"
           name="form_item_path"
           layout="vertical"
           onFinish={onFinish}
           autoComplete="off"
         >
           <p className="text-xl w-full text-center font-bold">Đăng ký</p>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-1">
-              <Form.Item
-                className="text-black font-bold"
-                name="firstName"
-                label="Họ"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập họ!",
-                  },
-                ]}
-              >
-                <Input
-                  className="border-gray-700 font-mono border h-[48px]"
-                  placeholder="Nhập họ"
-                />
-              </Form.Item>
+          <Form.Item
+            className="text-black font-bold"
+            name="firstName"
+            label="Họ"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập họ!",
+              },
+            ]}
+          >
+            <Input
+              className="border-gray-700 font-mono border h-[48px]"
+              placeholder="Nhập họ"
+            />
+          </Form.Item>
 
-              <Form.Item
-                className="text-black font-bold"
-                name="lastName"
-                label="Tên"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập tên!",
-                  },
-                ]}
-              >
-                <Input
-                  className="border-gray-700 font-mono border h-[48px]"
-                  placeholder="Nhập tên"
-                />
-              </Form.Item>
-              <Form.Item
-                className="text-black font-bold"
-                name="email"
-                label="Email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập email!",
-                  },
-                  {
-                    type: "email",
-                    message: "Email không đúng định dạng!",
-                  },
-                ]}
-              >
-                <Input
-                  className="border-gray-700 font-mono border h-[48px]"
-                  placeholder="Nhập email"
-                />
-              </Form.Item>
+          <Form.Item
+            className="text-black font-bold"
+            name="lastName"
+            label="Tên"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập tên!",
+              },
+            ]}
+          >
+            <Input
+              className="border-gray-700 font-mono border h-[48px]"
+              placeholder="Nhập tên"
+            />
+          </Form.Item>
+          <Form.Item
+            className="text-black font-bold"
+            name="email"
+            label="Email"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập email!",
+              },
+              {
+                type: "email",
+                message: "Email không đúng định dạng!",
+              },
+            ]}
+          >
+            <Input
+              className="border-gray-700 font-mono border h-[48px]"
+              placeholder="Nhập email"
+            />
+          </Form.Item>
 
-              <Form.Item
-                className="text-black font-bold"
-                name="mobile"
-                label="Số điện thoại"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập số điện thoại!",
-                  },
-                  {
-                    pattern: /^[0-9]{10,11}$/,
-                    message: "Số điện thoại phải có 10-11 chữ số!",
-                  },
-                ]}
-              >
-                <Input
-                  className="border-gray-700 font-mono border h-[48px]"
-                  placeholder="Nhập số điện thoại"
-                />
-              </Form.Item>
-            </div>
-            <div className="col-span-1">
-              <Form.Item
-                className="text-black font-bold"
-                name="password"
-                label="Mật khẩu"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập mật khẩu!",
-                    min: 6,
-                    max: 20,
-                    message: "Mật khẩu phải dài từ 6 đến 20 ký tự!",
-                  },
-                ]}
-              >
-                <Input.Password
-                  type="password"
-                  className="font-mono border border-gray-700 h-[48px]"
-                  placeholder="Nhập mật khẩu"
-                  iconRender={(visible) =>
-                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+          <Form.Item
+            className="text-black font-bold"
+            name="mobile"
+            label="Số điện thoại"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập số điện thoại!",
+              },
+              {
+                pattern: /^[0-9]{10,11}$/,
+                message: "Số điện thoại phải có 10-11 chữ số!",
+              },
+            ]}
+          >
+            <Input
+              className="border-gray-700 font-mono border h-[48px]"
+              placeholder="Nhập số điện thoại"
+            />
+          </Form.Item>
+          <Form.Item
+            className="text-black font-bold"
+            name="password"
+            label="Mật khẩu"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mật khẩu!",
+                min: 6,
+                max: 20,
+                message: "Mật khẩu phải dài từ 6 đến 20 ký tự!",
+              },
+            ]}
+          >
+            <Input.Password
+              type="password"
+              className="font-mono border border-gray-700 h-[48px]"
+              placeholder="Nhập mật khẩu"
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            className="text-black font-bold"
+            name="confirmPassword"
+            label="Nhập lại mật khẩu"
+            dependencies={["password"]}
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập lại mật khẩu!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
                   }
-                />
-              </Form.Item>
-              <Form.Item
-                className="text-black font-bold"
-                name="confirmPassword"
-                label="Nhập lại mật khẩu"
-                dependencies={["password"]}
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập lại mật khẩu!",
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      if (!value || getFieldValue("password") === value) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        new Error(
-                          "Mật khẩu và xác nhận mật khẩu không trùng khớp!"
-                        )
-                      );
-                    },
-                  }),
-                ]}
-              >
-                <Input.Password
-                  type="password"
-                  className="font-mono border border-gray-700 h-[48px]"
-                  placeholder="Nhập lại mật khẩu"
-                  iconRender={(visible) =>
-                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                  }
-                />
-              </Form.Item>
-              <Form.Item>
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey="6Ld_Ek8mAAAAAKtnDYdUCNiClx9m52L_aafio6we"
-                  onChange={handleRecaptcha}
-                />
-                {isVerified ? (
-                  <p>Xác thực thành công!</p>
-                ) : (
-                  <p className="text-[red]">
-                    Vui lòng xác thực bằng Recaptcha trước khi tiếp tục.
-                  </p>
-                )}
-              </Form.Item>
-              <Button
-                htmlType="submit"
-                className="w-full h-[52px] text-center py-3 rounded text-[20px] bg-[#d32026] hover:bg-blue-600 text-white hover:bg-green-dark focus:outline-none my-1"
-                loading={mutation.isLoading}
-              >
-                Đăng ký
-              </Button>
-            </div>
-          </div>
+                  return Promise.reject(
+                    new Error("Mật khẩu và xác nhận mật khẩu không trùng khớp!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              type="password"
+              className="font-mono border border-gray-700 h-[48px]"
+              placeholder="Nhập lại mật khẩu"
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
+            />
+          </Form.Item>
+          <Form.Item>
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey="6Ld_Ek8mAAAAAKtnDYdUCNiClx9m52L_aafio6we"
+              onChange={handleRecaptcha}
+            />
+            {isVerified ? (
+              <p>Xác thực thành công!</p>
+            ) : (
+              <p className="text-[red]">
+                Vui lòng xác thực bằng Recaptcha trước khi tiếp tục.
+              </p>
+            )}
+          </Form.Item>
+          <Button
+            htmlType="submit"
+            className="w-full h-[52px] text-center py-3 rounded text-[20px] bg-[#d32026] hover:bg-blue-600 text-white hover:bg-green-dark focus:outline-none my-1"
+            loading={mutation.isLoading}
+          >
+            Đăng ký
+          </Button>
         </Form>
         <div className="absolute right-[10%] bottom-0 w-[20%]">
           <img src="/images/dk-dn/untitled-1-03-20220324065349.png" alt="" />
