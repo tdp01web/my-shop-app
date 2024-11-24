@@ -6,9 +6,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import Quantity from "../../../../components/quantity";
 import { instance } from "../../../../configs/instance";
+import { useCartContext } from "../../../../hooks/CartContext";
 
 const ProductDetailMain = ({ product }) => {
   console.log("🚀 ~ ProductDetailMain ~ product:", product);
+
+  const { updateCart } = useCartContext(); 
 
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
   const [count, setCount] = useState(1);
@@ -80,6 +83,7 @@ const ProductDetailMain = ({ product }) => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries(["cart"]);
+      updateCart(count);
       message.success("Thêm vào giỏ hàng thành công");
     },
     onError: (error) => {

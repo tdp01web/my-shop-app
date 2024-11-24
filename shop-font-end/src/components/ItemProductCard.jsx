@@ -7,10 +7,11 @@ import { Link } from "react-router-dom";
 import Quantity from "../components/quantity";
 import { instance } from "../configs/instance";
 import Swal from "sweetalert2";
+import { useCartContext } from "../hooks/CartContext";
 
 const ItemProductCard = ({ item }) => {
   const queryClient = useQueryClient();
-
+  const { deleteCart } = useCartContext();
   const mutationDelete = useMutation({
     mutationFn: async (cartData) => {
       const token = localStorage.getItem("token");
@@ -46,6 +47,7 @@ const ItemProductCard = ({ item }) => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries(["cart"]);
+      deleteCart(item.product._id);
     },
     onError: (error) => {
       message.error("Đã có lỗi xảy ra");
