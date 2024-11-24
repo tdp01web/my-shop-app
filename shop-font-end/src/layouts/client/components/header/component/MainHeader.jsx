@@ -20,11 +20,30 @@ import useGetProfile from "../../../../../hooks/queries/useGetProfile";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { CiHeart } from "react-icons/ci";
 import { instance } from "../../../../../configs/instance";
-import { useCartContext } from "../../../../../hooks/CartContext";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
-  const { cartItemCount, setCartUpdated } = useCartContext(); // Lấy giỏ hàng từ CartContext
+  const [cartItemCount, setCartItemCount] = useState(0);
+  const [cartUpdated, setCartUpdated] = useState(false);
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const response = await instance.get("/cart/getCart");
+        const products = response.data.products || [];
+        const totalCount = products.reduce(
+          (total, product) => total + product.count,
+          0
+        );
+        setCartItemCount(totalCount);
+        setCartUpdated(products);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
+      }
+    };
+
+    fetchCartData();
+  }, [cartUpdated]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -136,13 +155,15 @@ function MainHeader() {
                 <Link to={"/admin"} className="flex items-center gap-2">
                   <MdOutlineAdminPanelSettings /> Vào trang quản lý
                 </Link>
-              ) : data.role === "Shipper" ? 
+              ) : data.role === "Shipper" ? (
                 <Link to={"/shipper"} className="flex items-center gap-2">
                   <MdOutlineAdminPanelSettings /> Vào trang giao hàng
-                </Link> : data.role === "Staff" ? 
+                </Link>
+              ) : data.role === "Staff" ? (
                 <Link to={"/staff"} className="flex items-center gap-2">
                   <MdOutlineAdminPanelSettings /> Vào trang nhân viên
-                </Link> : null}
+                </Link>
+              ) : null}
               <hr />
               <Link to={"/favorites-list"} className="flex items-center gap-2">
                 <CiHeart /> Sản phẩm yêu thích
