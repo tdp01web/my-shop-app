@@ -103,8 +103,11 @@ export const ListVouchers = () => {
     id: voucher._id,
     title: voucher.name,
     discounts: voucher.discount,
+    maxUses: voucher.maxUses,
     date: moment(voucher.startDate).format("YYYY-MM-DD"),
     endDate: moment(voucher.expiry).format("YYYY-MM-DD"),
+    status: voucher.status === 1 ? "Sử dụng" : "Đình chỉ",
+    isDisabled: voucher.status !== 1,
   }))
   const columns = [
     {
@@ -122,28 +125,47 @@ export const ListVouchers = () => {
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
-      title: "Discounts",
+      title: "Giá giảm",
       dataIndex: "discounts",
       key: "discounts",
+      ...getColumnSearchProps('discounts'),
       sorter: (a, b) => a.discounts - b.discounts,
+    },
+    {
+      title: "Số lần sử dụng",
+      dataIndex: "maxUses",
+      key: "maxUses",
+      ...getColumnSearchProps('maxUses'),
+      sorter: (a, b) => a.maxUses - b.maxUses,
     },
     {
       title: "Ngày bắt đầu",
       dataIndex: "date",
       key: "date",
+      ...getColumnSearchProps('date'),
       sorter: (a, b) => a.date - b.date,
     },
     {
       title: "Ngày hết hạn",
       dataIndex: "endDate",
       key: "endDate",
-      sorter: (a, b) => a.date - b.date,
+      ...getColumnSearchProps('endDate'),
+      sorter: (a, b) => a.endDate - b.endDate,
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      ...getColumnSearchProps('status'),
+      sorter: (a, b) => a.status - b.status,
     },
     {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, voucher) => (
+      render: (_, voucher) => {
+        const isActive = voucher.status ==="Sử dụng"
+        return (
         <div className="flex space-x-3">
           <Popconfirm
             title="Xóa hãng"
@@ -151,15 +173,15 @@ export const ListVouchers = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button type="primary" danger>
-              Xóa
+            <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
+              {isActive ? "Đình chỉ" : "Sử dụng"}
             </Button>
           </Popconfirm>
           <Button>
-            <Link to={`/admin/vouchers/${voucher.id}/edit`}>Cập nhật</Link>
+            <Link to={`/admin/vouchers/${voucher.id}/edit`}>Chi tiết</Link>
           </Button>
         </div>
-      ),
+      )}
     },
   ];
   if (isLoading) return <p>Loading...</p>
@@ -175,7 +197,7 @@ export const ListVouchers = () => {
           </Link>
         </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')} />
     </div>
   );
 };

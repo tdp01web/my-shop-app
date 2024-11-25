@@ -97,6 +97,16 @@ const AddVouchers = () => {
             <InputNumber />
           </Form.Item>
           <Form.Item
+            label="Số lần sử dụng"
+            name="maxUses"
+            rules={[
+              { required: true, message: "Số tiền giảm tối đa là bắt buộc!" },
+              { type: 'number', min: 0, message: "Số tiền giảm tối đa phải lớn hơn hoặc bằng 0!" }
+            ]}
+          >
+            <InputNumber />
+          </Form.Item>
+          <Form.Item
             label="Ngày bắt đầu"
             name="startDate"
             rules={[{ required: true, message: "Ngày bắt đầu là bắt buộc!" }]}

@@ -164,6 +164,7 @@ const ListProduct = () => {
           variants: item.variants || [],
           prices: prices,
           status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+          isDisabled: item.status !== 1,
         };
       })
       : product?.data.map((item) => {
@@ -181,6 +182,7 @@ const ListProduct = () => {
           variants: item.variants || [],
           prices: prices,
           status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+          isDisabled: item.status !== 1,
         };
       });
 
@@ -222,21 +224,6 @@ const ListProduct = () => {
       key: "price",
       sorter: (a, b) => a.price - b.price,
     },
-    // {
-    //   title: "Mô tả",
-    //   dataIndex: "description",
-    //   key: "description",
-    //   render: (text) => (
-    //     <Popover
-    //       content={text}
-    //       title="Mô tả đầy đủ"
-    //       trigger="hover"
-    //       overlayStyle={{ maxWidth: 900, overflow: "auto" }}
-    //     >
-    //       <span>{text.length > 50 ? `${text.substring(0, 50)}...` : text}</span>
-    //     </Popover>
-    //   ),
-    // },
     {
       title: "Danh mục",
       dataIndex: "category",
@@ -272,12 +259,12 @@ const ListProduct = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button type="primary" danger>
+              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
                 {isActive ? "Đình chỉ" : "Sử dụng"}
               </Button>
             </Popconfirm>
             <Button>
-              <Link to={`/admin/products/${product.id}/edit`}>Cập nhật</Link>
+              <Link to={`/admin/products/${product.id}/edit`}>Chi tiết</Link>
             </Button>
           </div>
         );
@@ -340,12 +327,12 @@ const ListProduct = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button type="primary" danger>
+              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
                 {isActive ? "Đình chỉ" : "Sử dụng"}
               </Button>
             </Popconfirm>
             <Button>
-              <Link to={`/admin/variants/${record.id}/edit`}>Cập nhật</Link>
+              <Link to={`/admin/variants/${record.id}/edit`}>Chi tiết</Link>
             </Button>
           </div>
         );
@@ -360,9 +347,10 @@ const ListProduct = () => {
       gpu: variant?.gpu?.name,
       ram: variant?.ram?.size,
       ssd: variant?.storage?.capacity,
-      quantity: variant.quantity,
-      price: variant.price,
+      quantity: (variant.quantity).toString(),
+      price:( variant.price).toString(),
       statusVr: variant.status === 1 ? "Sử dụng" : "Đình chỉ",
+      isDisabled: variant.status !== 1,
     }));
 
     return (
@@ -370,6 +358,7 @@ const ListProduct = () => {
         columns={expandColumns}
         dataSource={variantsData}
         pagination={false}
+        rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')}
       />
     );
   };
@@ -389,6 +378,7 @@ const ListProduct = () => {
           dataSource={dataSource}
           columns={columns}
           expandable={{ expandedRowRender }}
+          rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')}
         />
       </>
     </div>

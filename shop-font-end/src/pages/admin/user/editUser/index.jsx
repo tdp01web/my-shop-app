@@ -34,8 +34,8 @@ const EditUser = () => {
         console.log(error);
       }
     })
-    const right = JSON.parse(localStorage.getItem("user"));
-    const isRight = data?.data._id === right._id;
+  const right = JSON.parse(localStorage.getItem("user"));
+  const isRight = data?.data._id === right._id;
   const { mutate, isPending } = usePutUser(
     id,
     {
@@ -94,7 +94,7 @@ const EditUser = () => {
     <div className="">
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Cập nhật tài khoản</h1>
+        <h1 className="font-semibold text-2xl">Chi tiết tài khoản</h1>
         <Button type="primary">
           <Link to="/admin/users">
             <BackwardFilled /> Quay lại
@@ -201,10 +201,10 @@ const EditUser = () => {
               {isPending ? (
                 <>
                   <Loading3QuartersOutlined className="mr-2 animate-spin" />
-                  Submit
+                  Cập nhật
                 </>
               ) : (
-                "Submit"
+                "Cập nhật"
               )}
             </Button>
           </Form.Item>

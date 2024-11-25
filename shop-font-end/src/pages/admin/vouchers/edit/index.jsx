@@ -1,5 +1,5 @@
 import { BackwardFilled, Loading3QuartersOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, InputNumber, message} from "antd";
+import { Button, DatePicker, Form, Input, InputNumber, message } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { usePutVouchers } from "../../../../hooks/mutations/usePutVouchers";
 import { useQueryClient } from "@tanstack/react-query";
@@ -66,7 +66,7 @@ const EditVouchers = () => {
     <div className="">
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Cập nhật vouchers</h1>
+        <h1 className="font-semibold text-2xl">Chi tiết vouchers</h1>
         <Button type="primary">
           <Link to="/admin/vouchers">
             <BackwardFilled /> Quay lại
@@ -86,8 +86,9 @@ const EditVouchers = () => {
             name: data?.data.name,
             discount: data?.data.discount,
             maxDiscountAmount: data?.data.maxDiscountAmount,
-            startDate:  moment(data?.data.startDate),
+            startDate: moment(data?.data.startDate),
             expiry: moment(data?.data.expiry),
+            masUses: data?.data?.maxUses
           }}
           disabled={isPending}
         >
@@ -112,6 +113,16 @@ const EditVouchers = () => {
           <Form.Item
             label="Số tiền giảm tối đa"
             name="maxDiscountAmount"
+            rules={[
+              { required: true, message: "Số tiền giảm tối đa là bắt buộc!" },
+              { type: 'number', min: 0, message: "Số tiền giảm tối đa phải lớn hơn hoặc bằng 0!" }
+            ]}
+          >
+            <InputNumber />
+          </Form.Item>
+          <Form.Item
+            label="Số lần sử dụng"
+            name="maxUses"
             rules={[
               { required: true, message: "Số tiền giảm tối đa là bắt buộc!" },
               { type: 'number', min: 0, message: "Số tiền giảm tối đa phải lớn hơn hoặc bằng 0!" }

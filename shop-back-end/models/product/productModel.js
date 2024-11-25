@@ -28,8 +28,7 @@ var productSchema = new mongoose.Schema(
       // required: true,
     },
     lcd: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "LCD",
+      type: String,
     },
     status: {
       type: Number,
@@ -50,6 +49,10 @@ var productSchema = new mongoose.Schema(
     ], // liên kết tới bảng ProductVariant để quản lý các biến thể
     ratings: [
       {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: mongoose.Types.ObjectId,
+        },
         star: Number,
         comment: String,
         postedby: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

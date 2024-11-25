@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useGetAllComments } from "../../../hooks/queries/useGetAllComments";
 import { useDeleteComments } from "../../../hooks/mutations/useDeleteComments";
 import moment from "moment/moment";
+import { useDeleteCommentsById } from "../../../hooks/mutations/useDeleteCommentsById";
 const ListComment = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -34,6 +35,25 @@ const ListComment = () => {
       const errorMessage =
         error.response && error.response.status === 400
           ? "Sản phẩm đình chỉ không thể mở bình luận"
+          : error.message;
+      messageApi.open({
+        type: "error",
+        content: errorMessage,
+      });
+    },
+  })
+  const { mutate: mutateDetail } = useDeleteCommentsById({
+    onSuccess: () => {
+      messageApi.open({
+        type: "success",
+        content: "Thay đổi trạng thái bình luận đánh giá thành công",
+      });
+      queryClient.invalidateQueries({ queryKey: ["get-all-comments"] });
+    },
+    onError(error) {
+      const errorMessage =
+        error.response && error.response.status === 400
+          ? "Bình luận sản phẩm đóng không thể mở lại bình luận"
           : error.message;
       messageApi.open({
         type: "error",
@@ -110,12 +130,13 @@ const ListComment = () => {
       dateNewComments: item.latestCommentDate ? moment(item.latestCommentDate).format("YYYY-MM-DD") : "Không có dữ liệu",
       statusCmt: item.statusCmt === 1 ? "Sử dụng" : "Đình chỉ",
       ratings: item.ratings,
+      isDisabled: item.statusCmt !== 1,
     }
   });
 
   const columns = [
     {
-      title: "Mã bình luận",
+      title: "Mã sản phẩm",
       dataIndex: "id",
       key: "id",
       ...getColumnSearchProps('id'),
@@ -159,15 +180,91 @@ const ListComment = () => {
       dataIndex: "action",
       render: (_, cmts) => {
         const isActive = cmts.statusCmt === "Sử dụng";
-        return(
-        <div className="flex space-x-3">
-          <Button onClick={() => mutate(cmts?.id)}>
-            {isActive ?" Đóng bình luận" : "Mở bình luận"}
-          </Button>
-        </div>
-      )}
+        return (
+          <div className="flex space-x-3">
+            <Button onClick={() => mutate(cmts?.id)} type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
+              {isActive ? "Đóng bình luận" : "Mở bình luận"}
+            </Button>
+          </div>
+        )
+      }
     },
   ];
+  const expandColumns = [
+    {
+      title: "Mã bình luận", dataIndex: "id", key: "id",
+      ...getColumnSearchProps('id'),
+      sorter: (a, b) => a.id.localeCompare(b.id),
+    },
+    {
+      title: "Người bình luận", dataIndex: "user", key: "user",
+      ...getColumnSearchProps('user'),
+      sorter: (a, b) => a.user.localeCompare(b.user),
+    },
+    {
+      title: "Email", dataIndex: "email", key: "email",
+      ...getColumnSearchProps('email'),
+      sorter: (a, b) => a.email.localeCompare(b.email),
+    },
+    {
+      title: "Bình luận", dataIndex: "comment", key: "comment",
+      ...getColumnSearchProps('comment'),
+      sorter: (a, b) => a.comment.localeCompare(b.comment),
+    },
+    {
+      title: "Đánh giá", dataIndex: "star", key: "star",
+      sorter: (a, b) => a.star.localeCompare(b.star),
+    },
+    {
+      title: "Ngày bình luận", dataIndex: "date", key: "date",
+      ...getColumnSearchProps('date'),
+      sorter: (a, b) => a.date.localeCompare(b.date),
+    },
+    {
+      title: "Trạng thái", dataIndex: "isClose", key: "isClose",
+      ...getColumnSearchProps('isClose'),
+      sorter: (a, b) => a.isClose.localeCompare(b.isClose),
+    },
+    {
+      title: "Hành động",
+      dataIndex: "action",
+      width: 250,
+      render: (_, record) => {
+        const isActive = record.isClose === "Hiển thị";
+        return (
+          <div className="flex space-x-3">
+            <Button onClick={() => {
+              mutateDetail(record.id);
+            }} type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
+              {isActive ? "Khóa" : "Mở"}
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
+  const expandedRowRender = (record) => {
+    const ratingsData = record.ratings.map((rating) => ({
+      id: rating.id,
+      user: rating.user,
+      email: rating.email,
+      comment: rating?.comment,
+      star: rating?.star,
+      date: moment(rating?.date).format("YYYY-MM-DD HH:mm"),
+      ssd: rating?.storage?.capacity,
+      isClose: rating.isClose === 1 ? "Hiển thị" : "Dừng hiển thị ",
+      isDisabled: rating.isClose !== 1,
+    }));
+    console.log("first", ratingsData)
+    return (
+      <Table
+        columns={expandColumns}
+        dataSource={ratingsData}
+        pagination={false}
+        rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')}
+      />
+    );
+  };
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error loading data.</p>
   return (
@@ -175,13 +272,10 @@ const ListComment = () => {
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-semibold text-2xl">Quản lý bình luận</h1>
-        <Button type="primary">
-          <Link to="/admin/carts">
-            <PlusCircleFilled /> Thống kê bình luận
-          </Link>
-        </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns}
+        expandable={{ expandedRowRender }}
+        rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')} />
     </div>
   );
 };

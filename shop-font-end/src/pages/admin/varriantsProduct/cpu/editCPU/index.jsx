@@ -11,6 +11,7 @@ const EditCPU = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
   const queryClient = useQueryClient();
+
   const { data, isLoading, isError } = useGetCPUByID(id,
     {
       onSuccess: (data) => {
@@ -65,7 +66,7 @@ const EditCPU = () => {
     <div className="">
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Sửa CPU</h1>
+        <h1 className="font-semibold text-2xl">Chi tiết CPU</h1>
         <Button type="primary">
           <Link to="/admin/cpu">
             <BackwardFilled /> Quay lại
@@ -86,19 +87,20 @@ const EditCPU = () => {
           <Form.Item
             label="Tên CPU"
             name="name"
-            rules={[{ required: true, message: "Tên CPU bắt buộc phải điền" }]}
+            rules={[{ required: true, message: "Tên CPU bắt buộc phải điền", max: 32, message: "Vui lòng nhập tên CPU nhỏ hơn 32 kí tự"}]}
           >
             <Input />
           </Form.Item>
+
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button type="primary" htmlType="submit" disabled={isPending}>
               {isPending ? (
                 <>
                   <Loading3QuartersOutlined className="mr-2 animate-spin" />
-                  Submit
+                  Cập nhật
                 </>
               ) : (
-                "Submit"
+                "Cập nhật"
               )}
             </Button>
           </Form.Item>

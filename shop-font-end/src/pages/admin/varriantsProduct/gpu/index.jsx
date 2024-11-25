@@ -103,6 +103,7 @@ const ListGPU = () => {
       _id: item._id,
       name: item.name,
       status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+      isDisabled: item.status !== 1,
     };
   });
   const columns = [
@@ -146,12 +147,12 @@ const ListGPU = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button type="primary" danger>
+              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
                 {isActive ? "Đình chỉ" : "Sử dụng"}
               </Button>
             </Popconfirm>
             <Button>
-              <Link to={`/admin/gpu/${GPU._id}/edit`}>Cập nhật</Link>
+              <Link to={`/admin/gpu/${GPU._id}/edit`}>Chi tiết</Link>
             </Button>
           </div>
         );
@@ -171,7 +172,7 @@ const ListGPU = () => {
           </Link>
         </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')} />
     </div>
   );
 };

@@ -103,6 +103,7 @@ const ListBrand = () => {
       _id: item._id,
       title: item.title,
       status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+      isDisabled: item.status !== 1,
     };
   });
   const columns = [
@@ -126,7 +127,6 @@ const ListBrand = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      width: '15%',
       ...getColumnSearchProps('status'),
       sorter: (a, b) => a.status.localeCompare(b.status),
     },
@@ -146,12 +146,12 @@ const ListBrand = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button type="primary" danger>
+              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
                 {isActive ? "Đình chỉ" : "Sử dụng"}
               </Button>
             </Popconfirm>
             <Button>
-              <Link to={`/admin/brand/${brand._id}/edit`}>Cập nhật</Link>
+              <Link to={`/admin/brand/${brand._id}/edit`}>Chi tiết</Link>
             </Button>
           </div>
         );
@@ -171,7 +171,11 @@ const ListBrand = () => {
           </Link>
         </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')}
+      />
     </div>
   );
 };

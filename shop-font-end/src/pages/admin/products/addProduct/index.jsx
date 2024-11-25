@@ -222,13 +222,12 @@ const AddProduct = () => {
         >
           <Form.Item
             label="Tên sản phẩm"
-            placeholder="Tên sản phẩm"
             name="title"
             rules={[
               { required: true, message: "Tên sản phẩm bắt buộc phải điền" },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập tên sản phẩm" />
           </Form.Item>
           <Form.Item
             label="Images"
@@ -253,7 +252,16 @@ const AddProduct = () => {
               { required: true, message: "Mô tả sản phẩm bắt buộc phải điền" },
             ]}
           >
-            <TextArea rows={4} />
+            <TextArea rows={4} placeholder="Nhập mô tả" />
+          </Form.Item>
+          <Form.Item
+            label="Kích thước màn hình"
+            name="lcd"
+            rules={[
+              { required: true, message: "Kích thước màn hình bắt buộc phải điền" },
+            ]}
+          >
+            <Input placeholder="Nhập tên sản phẩm" />
           </Form.Item>
           <Form.Item
             label="Danh mục"
@@ -262,7 +270,7 @@ const AddProduct = () => {
           >
             <Select
               showSearch
-              placeholder="Danh mục"
+              placeholder="Chọn danh mục"
               optionFilterProp="label"
               options={optionCategory}
             />
@@ -274,7 +282,7 @@ const AddProduct = () => {
           >
             <Select
               showSearch
-              placeholder="Hãng"
+              placeholder="Chọn hãng"
               optionFilterProp="label"
               options={optionBrand}
             />
@@ -284,10 +292,6 @@ const AddProduct = () => {
               name="variants"
               initialValue={[
                 {
-                  cpu: "",
-                  gpu: "",
-                  ram: "",
-                  ssd: "",
                   price: null,
                   quantity: null,
                 },
@@ -380,22 +384,22 @@ const AddProduct = () => {
                           </Form.Item>
                           <Form.Item
                             {...restField}
-                            label={"Gía"}
+                            label={"Giá"}
                             name={[name, "price"]}
                             fieldKey={[fieldKey, "price"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Giá sản phẩm bắt buộc phải điền",
+                                message: "Giá biến thể bắt buộc phải điền",
                               },
                               {
                                 type: "number",
                                 min: 0,
-                                message: "Giá sản phẩm không được âm",
+                                message: "Giá biến thể không được âm",
                               },
                             ]}
                           >
-                            <InputNumber style={{ width: "100%" }} />
+                            <InputNumber placeholder="Nhập giá biến thể" style={{ width: "100%" }} />
                           </Form.Item>
                           <Form.Item
                             {...restField}
@@ -414,7 +418,7 @@ const AddProduct = () => {
                               },
                             ]}
                           >
-                            <InputNumber style={{ width: "100%" }} />
+                            <InputNumber placeholder="Nhập số lượng biến thể" style={{ width: "100%" }} />
                           </Form.Item>
                           <Form.Item label="Thuộc tính thêm">
                             <Form.List name={[name, 'attributes']}>
@@ -477,10 +481,10 @@ const AddProduct = () => {
               {isPending ? (
                 <>
                   <Loading3QuartersOutlined className="mr-2 animate-spin" />
-                  Submit
+                  Cập nhật
                 </>
               ) : (
-                "Submit"
+                "Cập nhật"
               )}
             </Button>
           </Form.Item>

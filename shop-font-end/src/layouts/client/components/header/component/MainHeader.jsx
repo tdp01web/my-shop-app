@@ -43,7 +43,7 @@ function MainHeader() {
     };
 
     fetchCartData();
-  }, [cartUpdated]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -75,7 +75,7 @@ function MainHeader() {
         <div className="relative">
           <MdOutlineShoppingCart style={{ width: "25px", height: "25px" }} />
           {cartItemCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-[#ebff50] text-black text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="-top-2 -right-2 absolute flex justify-center items-center bg-[#ebff50] rounded-full w-5 h-5 text-[10px] text-black">
               {cartItemCount}
             </span>
           )}

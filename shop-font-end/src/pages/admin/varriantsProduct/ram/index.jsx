@@ -103,6 +103,7 @@ const ListRAM = () => {
       _id: item._id,
       size: item.size,
       status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+      isDisabled: item.status !== 1,
     };
   });
   const columns = [
@@ -139,19 +140,20 @@ const ListRAM = () => {
         return (
           <div className="flex space-x-3">
             <Popconfirm
-              title={isActive ? "Đình chỉ hãng?" : "Kích hoạt hãng?"}
+              title={isActive ? "Đình chỉ RAM?" : "Kích hoạt RAM?"}
               onConfirm={() => {
                 mutate(RAM._id);
               }}
               okText="Yes"
               cancelText="No"
             >
-              <Button type="primary" danger>
+              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
                 {isActive ? "Đình chỉ" : "Sử dụng"}
               </Button>
             </Popconfirm>
             <Button>
-              <Link to={`/admin/ram/${RAM._id}/edit`}>Cập nhật</Link>
+              <Link to={`/admin/ram/${RAM._id}/edit`}>
+                Chi tiết</Link>
             </Button>
           </div>
         );
@@ -171,7 +173,7 @@ const ListRAM = () => {
           </Link>
         </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')} />
     </div>
   );
 };

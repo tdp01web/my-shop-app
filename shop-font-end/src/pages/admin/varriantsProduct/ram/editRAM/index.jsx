@@ -11,6 +11,7 @@ const EditRAM = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
   const queryClient = useQueryClient();
+
   const { data, isLoading, isError } = useGetRAMByID(id,
     {
       onSuccess: (data) => {
@@ -65,7 +66,7 @@ const EditRAM = () => {
     <div className="">
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Sửa RAM</h1>
+        <h1 className="font-semibold text-2xl">Chi tiết RAM</h1>
         <Button type="primary">
           <Link to="/admin/ram">
             <BackwardFilled /> Quay lại
@@ -86,19 +87,19 @@ const EditRAM = () => {
           <Form.Item
             label="Tên RAM"
             name="size"
-            rules={[{ required: true, message: "Tên RAM bắt buộc phải điền" }]}
+            rules={[{ required: true, message: "Tên RAM bắt buộc phải điền", max: 32, message: "Vui lòng nhập tên RAM nhỏ hơn 32 kí tự" }]}
           >
-            <Input />
+            <Input placeholder="Nhập tên RAM" />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button type="primary" htmlType="submit" disabled={isPending}>
               {isPending ? (
                 <>
                   <Loading3QuartersOutlined className="mr-2 animate-spin" />
-                  Submit
+                  Cập nhật
                 </>
               ) : (
-                "Submit"
+                "Cập nhật"
               )}
             </Button>
           </Form.Item>

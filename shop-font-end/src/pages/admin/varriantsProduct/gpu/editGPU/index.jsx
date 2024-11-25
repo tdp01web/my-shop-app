@@ -11,6 +11,7 @@ const EditGPU = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
   const queryClient = useQueryClient();
+
   const { data, isLoading, isError } = useGetGPUByID(id,
     {
       onSuccess: (data) => {
@@ -65,7 +66,7 @@ const EditGPU = () => {
     <div className="">
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Sửa GPU</h1>
+        <h1 className="font-semibold text-2xl">Chi tiết GPU</h1>
         <Button type="primary">
           <Link to="/admin/gpu">
             <BackwardFilled /> Quay lại
@@ -86,10 +87,11 @@ const EditGPU = () => {
           <Form.Item
             label="Tên GPU"
             name="name"
-            rules={[{ required: true, message: "Tên GPU bắt buộc phải điền" }]}
+            rules={[{ required: true, message: "Tên GPU bắt buộc phải điền", max: 32, message: "Vui lòng nhập tên GPU nhỏ hơn 32 kí tự" }]}
           >
-            <Input />
+            <Input placeholder="Nhập tên GPU" />
           </Form.Item>
+
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button type="primary" htmlType="submit" disabled={isPending}>
               {isPending ? (

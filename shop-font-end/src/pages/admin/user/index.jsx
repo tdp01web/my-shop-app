@@ -109,6 +109,7 @@ export const ListUser = () => {
       role: item.role,
       address: item.address ? item.address : "Chưa cập nhật địa chỉ",
       status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+      isDisabled: item.status !== 1,
     };
   });;
   const columns = [
@@ -123,6 +124,7 @@ export const ListUser = () => {
       title: "Tên tài khoản",
       dataIndex: "name",
       key: "name",
+      width: "15%",
       ...getColumnSearchProps('name'),
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
@@ -137,13 +139,14 @@ export const ListUser = () => {
       title: "Số điện thoại",
       dataIndex: "mobile",
       key: "mobile",
+      width: "10%",
       ...getColumnSearchProps('mobile'),
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
       key: "address",
-      width: "25%",
+      width: "30%",
       ...getColumnSearchProps('address'),
       sorter: (a, b) => a.address.localeCompare(b.address),
     },
@@ -158,7 +161,6 @@ export const ListUser = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      width: '15%',
       ...getColumnSearchProps('status'),
       sorter: (a, b) => a.status.localeCompare(b.status),
     },
@@ -182,14 +184,14 @@ export const ListUser = () => {
                 okText="Yes"
                 cancelText="No"
               >
-                <Button type="primary" danger>
+                <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
                   {isActive ? "Đình chỉ" : "Sử dụng"}
                 </Button>
               </Popconfirm>
             ) : null}
             {isSelf || isStaffUser || isOwner ? (
               <Button>
-                <Link to={`/admin/users/${user.id}/edit`}>Cập nhật</Link>
+                <Link to={`/admin/users/${user.id}/edit`}>Chi tiết</Link>
               </Button>
             ) : null}
           </div>
@@ -210,7 +212,7 @@ export const ListUser = () => {
           </Link>
         </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')} />
     </div>
   );
 };

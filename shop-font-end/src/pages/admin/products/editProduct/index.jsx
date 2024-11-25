@@ -44,6 +44,7 @@ const EditProduct = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
   const [uploadedImages, setUploadedImages] = useState([]);
+
   const handleUploadChange = ({ fileList }) => {
     const structuredData = fileList
       .map((file) => {
@@ -231,7 +232,7 @@ const EditProduct = () => {
     <div>
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Chỉnh sửa sản phẩm</h1>
+        <h1 className="font-semibold text-2xl">Chi tiết sản phẩm</h1>
         <Button type="primary">
           <Link to="/admin/products">
             <BackwardFilled /> Quay lại
@@ -252,6 +253,7 @@ const EditProduct = () => {
             title: product?.data?.title,
             images: product?.data?.images || [],
             description: product?.data?.description,
+            lcd: product?.data?.lcd,
             category: product?.data?.category?._id,
             brand: product?.data?.brand?._id,
             variants: product?.data?.variants.map((item) => ({
@@ -304,6 +306,15 @@ const EditProduct = () => {
             ]}
           >
             <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item
+            label="Kích thước màn hình"
+            name="lcd"
+            rules={[
+              { required: true, message: "Kích thước màn hình bắt buộc phải điền" },
+            ]}
+          >
+            <Input placeholder="Nhập kích thước" />
           </Form.Item>
           <Form.Item
             label="Danh mục"
@@ -432,7 +443,7 @@ const EditProduct = () => {
                           </Form.Item>
                           <Form.Item
                             {...restField}
-                            label={"Gía"}
+                            label={"Giá"}
                             name={[name, "price"]}
                             fieldKey={[fieldKey, "price"]}
                             rules={[
@@ -532,10 +543,10 @@ const EditProduct = () => {
               {isPending ? (
                 <>
                   <Loading3QuartersOutlined className="mr-2 animate-spin" />
-                  Submit
+                  Cập nhật
                 </>
               ) : (
-                "Submit"
+                "Cập nhật"
               )}
             </Button>
           </Form.Item>

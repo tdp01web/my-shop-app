@@ -8,7 +8,7 @@ import { useGetOrderByID } from "../../../hooks/queries/useGetOrderByID";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
-
+import moment from "moment/moment";
 const DetailCart = () => {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
@@ -20,7 +20,6 @@ const DetailCart = () => {
   const options = [
     { value: "Đang Xử Lý", label: "Đang Xử Lý" },
     { value: "Đã Xác Nhận", label: "Đã Xác Nhận" },
-    { value: "Đang Đóng Gói", label: "Đang Đóng Gói" },
     { value: "Đang Giao Hàng", label: "Đang Giao Hàng" },
     { value: "Đã Giao Hàng", label: "Đã Giao Hàng" },
     { value: "Hoàn Thành", label: "Hoàn Thành" },
@@ -90,15 +89,17 @@ const DetailCart = () => {
       </div>
 
       <div className="px-6 py-4">
-        <p className="text-[24px] font-semibold text-[#FF7A00]">
+        <p className="font-semibold text-[#FF7A00] text-[24px]">
           Trạng thái: {order.orderStatus}
         </p>
-
-        <div className="grid grid-cols-12 gap-4 mt-6">
-          <div className="col-span-12 md:col-span-8 border rounded p-4">
+        <p className="font-semibold text-[24px]">
+          Ngày đặt: {moment(order.createdAt).format("YYYY-MM-DD HH:mm")}
+        </p>
+        <div className="gap-4 grid grid-cols-12 mt-6">
+          <div className="col-span-12 md:col-span-8 p-4 border rounded">
             <div className="flex items-center gap-x-3 mb-3">
               <img src="/svg/customer-info.svg" alt="Icon" className="h-7" />
-              <p className="text-[#333] font-semibold">Thông tin khách hàng</p>
+              <p className="font-semibold text-[#333]">Thông tin khách hàng</p>
             </div>
             <p>Người nhận: {order.shippingAddress.name}</p>
             <p>Số điện thoại: {order.shippingAddress.phone}</p>
@@ -111,21 +112,21 @@ const DetailCart = () => {
               <p>Lý do hủy: {order.cancellationReason}</p>
             )}
           </div>
-          <div className="col-span-12 md:col-span-4 border rounded p-4">
+          <div className="col-span-12 md:col-span-4 p-4 border rounded">
             <div className="flex items-center gap-x-3 mb-3">
               <img src="/svg/payment-method.svg" alt="Icon" className="h-7" />
 
-              <p className="text-[#333] font-semibold">Hình thức thanh toán</p>
+              <p className="font-semibold text-[#333]">Hình thức thanh toán</p>
             </div>
             <p className="text-[#FF7A00]">{order.paymentMethod}</p>
           </div>
         </div>
 
-        <div className="border rounded mt-6 p-4">
+        <div className="mt-6 p-4 border rounded">
           <div className="flex items-center gap-x-3 mb-3">
             <img src="/svg/product-info.svg" alt="Icon" className="h-7" />
 
-            <p className="text-[#333] font-semibold">Thông tin sản phẩm</p>
+            <p className="font-semibold text-[#333]">Thông tin sản phẩm</p>
           </div>
           {order.products.map((product) => (
             <div key={product._id} className="flex justify-between mb-4">
@@ -133,10 +134,10 @@ const DetailCart = () => {
                 <img
                   src={product?.images?.[0]?.url}
                   alt={product.title}
-                  className="w-16 h-16 object-cover mr-4"
+                  className="mr-4 w-16 h-16 object-cover"
                 />
                 <div>
-                  <p>{product.title} | {product.gpu} | {product.ram} | {product.storage}</p>
+                  <p>{product.title} | {product.processor} | {product.gpu} | {product.ram} | {product.storage}</p>
                   <p>Số lượng: {product.count}</p>
                 </div>
               </div>
@@ -147,17 +148,17 @@ const DetailCart = () => {
           ))}
         </div>
 
-        <div className="md:ml-[50%] mt-4">
+        <div className="mt-4 md:ml-[50%]">
           <div className="flex items-center mb-3">
             <p className="w-1/2">Giá tạm tính:</p>
-            <p className="w-1/2 text-right">
+            <p className="text-right w-1/2">
               {order.totalProductPrice.toLocaleString()}đ
             </p>
           </div>
 
           <div className="flex items-center mb-3">
             <p className="w-1/2">Phí vận chuyển:</p>
-            <p className="w-1/2 text-right">
+            <p className="text-right w-1/2">
               {order.shippingFee === 0
                 ? "Miễn phí"
                 : `${order.shippingFee.toLocaleString()}đ`}
@@ -165,22 +166,22 @@ const DetailCart = () => {
           </div>
           <div className="flex items-center mb-3">
             <p className="w-1/2">Tổng tiền:</p>
-            <p className="w-1/2 text-right">
+            <p className="text-right w-1/2">
               {order.totalPrice.toLocaleString()}đ
             </p>
           </div>
 
           <div className="flex items-center mb-3">
-            <p className="w-1/2 flex items-center gap-x-1">
-              <FaCheckCircle className="text-[14px] text-[#24b400]" />
+            <p className="flex items-center gap-x-1 w-1/2">
+              <FaCheckCircle className="text-[#24b400] text-[14px]" />
               <span>Số tiền đã thanh toán:</span>
             </p>
-            <p className="w-1/2 text-right font-bold text-[#e30019]">
+            <p className="text-right w-1/2 font-bold text-[#e30019]">
               {order.paidAmount?.toLocaleString() || "0"}đ
             </p>
           </div>
         </div>
-        <div className="mt-6 border rounded p-4">
+        <div className="mt-6 p-4 border rounded">
           <Form
             form={form}
             name="basic"
@@ -222,7 +223,7 @@ const DetailCart = () => {
                 disabled={isPending}
                 loading={isPending}
               >
-                Submit
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>

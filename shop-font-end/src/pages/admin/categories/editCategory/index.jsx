@@ -65,7 +65,7 @@ const EditCategory = () => {
     <div className="">
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
-        <h1 className="font-semibold text-2xl">Sửa danh mục</h1>
+        <h1 className="font-semibold text-2xl">Chi tiết danh mục</h1>
         <Button type="primary">
           <Link to="/admin/categories">
             <BackwardFilled /> Quay lại
@@ -86,7 +86,10 @@ const EditCategory = () => {
           <Form.Item
             label="Tên danh mục"
             name="name"
-            rules={[{ required: true, message: "Tên danh mục bắt buộc phải điền" }]}
+            rules={[{
+              required: true, message: "Tên danh mục bắt buộc phải điền",
+              max: 32, message: "Vui lòng nhập tên danh mục nhỏ hơn 32 kí tự"
+            }]}
           >
             <Input />
           </Form.Item>
@@ -95,10 +98,10 @@ const EditCategory = () => {
               {isPending ? (
                 <>
                   <Loading3QuartersOutlined className="mr-2 animate-spin" />
-                  Submit
+                  Cập nhật
                 </>
               ) : (
-                "Submit"
+                "Cập nhật"
               )}
             </Button>
           </Form.Item>

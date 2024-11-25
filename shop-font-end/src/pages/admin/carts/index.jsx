@@ -7,25 +7,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { instance } from "../../../configs/instance";
 import { useGetAllOrders } from "../../../hooks/queries/useGetAllOrder";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
+import moment from "moment/moment";
 
 const DetailCart = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
-  const navigate = useNavigate()
-  const [messageApi, contextHolder] = message.useMessage();
-  const { id } = useParams();
-  const queryClient = useQueryClient();
-  const [selectedStatus, setSelectedStatus] = useState("");
-
-  const options = [
-    { value: "Đang Xử Lý", label: "Đang Xử Lý" },
-    { value: "Đã Xác Nhận", label: "Đã Xác Nhận" },
-    { value: "Đang Đóng Gói", label: "Đang Đóng Gói" },
-    { value: "Đang Giao Hàng", label: "Đang Giao Hàng" },
-    { value: "Đã Giao Hàng", label: "Đã Giao Hàng" },
-    { value: "Đã Hủy", label: "Đã Hủy" },
-  ];
   const { data: carts, isLoading, isError } = useGetAllOrders(
     {
       onSuccess: (data) => {
@@ -34,19 +21,6 @@ const DetailCart = () => {
       onError: (error) => {
         console.log(error);
       }
-    })
-  const { mutate, isPending, isError: isErrorPut } = usePutOrder(
-    id,
-    {
-      onSuccess: () => {
-        messageApi.success("Cập nhật trạng thái thành công");
-        queryClient.invalidateQueries({
-          queryKey: ["get-all-orders"],
-        })
-      },
-      onError: () => {
-        messageApi.error("Cập nhật trạng thái thất bại");
-      },
     })
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -114,10 +88,13 @@ const DetailCart = () => {
       id: item._id,
       key: item._id,
       title: item._id,
-      count: item?.products.length,
-      totalPrice: item?.totalPrice,
+      count: (item?.products.length).toString(),
+      totalPrice: (item.totalPrice).toString(),
       users: item?.shippingAddress.name,
-      comple: item?.orderStatus
+      date: moment(item.createdAt).format("YYYY-MM-DD HH:mm"),
+      comple: item?.orderStatus,
+      isDone: item?.orderStatus === "Hoàn Thành",
+      isCancel: item?.orderStatus === "Đã Hủy"
     }
   })
 
@@ -130,24 +107,38 @@ const DetailCart = () => {
       sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
+      title: "Kháng hàng",
+      dataIndex: "users",
+      key: "users",
+      ...getColumnSearchProps('users'),
+      sorter: (a, b) => a.users.localeCompare(b.users),
+    },
+    {
       title: "Số lượng",
       dataIndex: "count",
       key: "count",
+      ...getColumnSearchProps('count'),
+      sorter: (a, b) => a.count.localeCompare(b.count)
     },
     {
       title: "Giá tiền",
       dataIndex: "totalPrice",
       key: "totalPrice",
+      sorter: (a, b) => a.totalPrice.localeCompare(b.totalPrice)
     },
     {
-      title: "Kháng hàng",
-      dataIndex: "users",
-      key: "users",
+      title: "Ngày đặt",
+      dataIndex: "date",
+      key: "date",
+      ...getColumnSearchProps('date'),
+      sorter: (a, b) => a.date.localeCompare(b.date),
     },
     {
       title: "Trạng thái",
       dataIndex: "comple",
       key: "comple",
+      ...getColumnSearchProps('title'),
+      sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
       title: "Hành động",
@@ -174,7 +165,7 @@ const DetailCart = () => {
           </Link>
         </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isCancel ? 'bg-gray-300 ' : record.isDone ? 'bg-[#66FF99]': null)} />
     </div>
   );
 };

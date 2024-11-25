@@ -1,12 +1,13 @@
 import { instance } from "../../configs/instance";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetAllVouchers = ({ onSuccess, onError }) => {
+export const useGetAllBlog = ({ onSuccess, onError }) => {
   return useQuery({
-    queryKey: ["get-all-vouchers"],
+    queryKey: ["get-all-blog"],
+
     queryFn: async () => {
       try {
-        const apiResult = await instance.get("coupon/getallCouponsAdmin");
+        const apiResult = await instance.get("Blog/getAllBlog");
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

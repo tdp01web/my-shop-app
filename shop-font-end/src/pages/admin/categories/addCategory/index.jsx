@@ -67,19 +67,22 @@ const AddCategory = () => {
           <Form.Item
             label="Tên danh mục"
             name="name"
-            rules={[{ required: true, message: "Tên danh mục bắt buộc phải điền" }]}
+            rules={[{
+              required: true, message: "Tên danh mục bắt buộc phải điền",
+              max: 32, message: "Vui lòng nhập tên danh mục nhỏ hơn 32 kí tự"
+            }]}
           >
-            <Input />
+            <Input placeholder="Nhập danh mục" />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button type="primary" htmlType="submit" disabled={isPending}>
               {isPending ? (
                 <>
                   <Loading3QuartersOutlined className="mr-2 animate-spin" />
-                  Submit
+                  Cập nhật
                 </>
               ) : (
-                "Submit"
+                "Cập nhật"
               )}
             </Button>
           </Form.Item>

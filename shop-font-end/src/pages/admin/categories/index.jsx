@@ -13,7 +13,7 @@ const ListCategory = () => {
   const searchInput = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
-  const { data: categories, isLoading, isError} = useGetAllCategory({
+  const { data: categories, isLoading, isError } = useGetAllCategory({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -102,7 +102,8 @@ const ListCategory = () => {
       key: item.id,
       _id: item._id,
       status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
-      name: item.name
+      name: item.name,
+      isDisabled: item.status !== 1,
     };
   });
   const columns = [
@@ -146,12 +147,12 @@ const ListCategory = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button type="primary" danger>
+              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
                 {isActive ? "Đình chỉ" : "Sử dụng"}
               </Button>
             </Popconfirm>
             <Button>
-              <Link to={`/admin/categories/${categories._id}/edit`}>Cập nhật</Link>
+              <Link to={`/admin/categories/${categories._id}/edit`}>Chi tiết</Link>
             </Button>
           </div>
         );
@@ -171,7 +172,7 @@ const ListCategory = () => {
           </Link>
         </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')} />
     </div>
   );
 };

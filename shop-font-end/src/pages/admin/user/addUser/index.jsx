@@ -138,7 +138,7 @@ export const AddUser = () => {
             label="Địa chỉ"
             name="address"
           >
-            <Input.Password />
+            <Input />
           </Form.Item>
           <Form.Item
             label="Vai trò"

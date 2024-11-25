@@ -11,38 +11,9 @@ var blogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    category: {
-      type: String,
-      required: true,
-    },
     numView: {
       type: Number,
       default: 0,
-    },
-    isLiked: {
-      type: Boolean,
-      default: false,
-    },
-    likes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    isDisliked: {
-      type: Boolean,
-      default: false,
-    },
-    dislikes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    image: {
-      type: String,
-      default:
-        "https://nguyencongpc.vn/media/product/250-26232-b----pc-gaming.jpg",
     },
     author: {
       type: String,
@@ -51,12 +22,6 @@ var blogSchema = new mongoose.Schema(
     images: [],
   },
   {
-    toJSON: {
-      virtuals: true,
-    },
-    toObject: {
-      virtuals: true,
-    },
     timestamps: true,
   }
 );
