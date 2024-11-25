@@ -7,7 +7,7 @@ export const useGetAllBlog = ({ onSuccess, onError }) => {
 
     queryFn: async () => {
       try {
-        const apiResult = await instance.get("Blog/getAllBlog");
+        const apiResult = await instance.get("blog/getallBlog");
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {

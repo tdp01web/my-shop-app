@@ -2,16 +2,16 @@ const Blog = require("../models/blogsModel");
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const validateMongoDbId = require("../utils/validateMongodbId");
-const { cloudinaryUploadImg } = require("../utils/cloudinary");
-const fs = require("fs");
 
 //! Create blog
 const createBlog = asyncHandler(async (req, res) => {
   try {
-    const newBlog = await Blog.create(req.body);
-    res.json(newBlog);
+    // Lấy ID của người dùng đang đăng nhập từ req.user
+    const author = req.user._id; // Giả sử bạn đã xác thực người dùng và lưu thông tin vào req.user
+    const newBlog = await Blog.create({ ...req.body, author });
+    res.status(201).json(newBlog);
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -20,12 +20,13 @@ const UpdateBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const updateBlog = await Blog.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    res.json(updateBlog);
+    const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updatedBlog) {
+      return res.status(404).json({ message: 'Blog không tồn tại' });
+    }
+    res.json(updatedBlog);
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -34,31 +35,24 @@ const getBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const getBlog = await Blog.findById(id)
-      .populate("likes")
-      .populate("dislikes");
-    const updateView = await Blog.findByIdAndUpdate(
-      id,
-      {
-        $inc: { numView: 1 },
-      },
-      {
-        new: true,
-      }
-    );
-    res.json(updateView);
+    const blog = await Blog.findById(id).populate('author');
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog không tồn tại' });
+    }
+    await Blog.findByIdAndUpdate(id, { $inc: { numView: 1 } }, { new: true });
+    res.json(blog);
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
-//! get all blog
+//! Get all blogs
 const getAllBlog = asyncHandler(async (req, res) => {
   try {
-    const getallBlog = await Blog.find();
-    res.json(getallBlog);
+    const blogs = await Blog.find().populate('author');
+    res.json(blogs);
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -67,133 +61,13 @@ const deleteBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteBlog = await Blog.findByIdAndDelete(id);
-    res.json(deleteBlog);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-
-const likeBlog = asyncHandler(async (req, res) => {
-  const { blogId } = req.body;
-  validateMongoDbId(blogId);
-  // Find the blog which you want to be liked
-  const blog = await Blog.findById(blogId);
-  // find the login user
-  const loginUserId = req?.user?._id;
-  // find if the user has liked the blog
-  const isLiked = blog?.isLiked;
-  // find if the user has disliked the blog
-  const alreadyDisliked = blog?.dislikes?.find(
-    (userId) => userId?.toString() === loginUserId?.toString()
-  );
-  if (alreadyDisliked) {
-    const blog = await Blog.findByIdAndUpdate(
-      blogId,
-      {
-        $pull: { dislikes: loginUserId },
-        isDisliked: false,
-      },
-      { new: true }
-    );
-    res.json(blog);
-  }
-  if (isLiked) {
-    const blog = await Blog.findByIdAndUpdate(
-      blogId,
-      {
-        $pull: { likes: loginUserId },
-        isLiked: false,
-      },
-      { new: true }
-    );
-    res.json(blog);
-  } else {
-    const blog = await Blog.findByIdAndUpdate(
-      blogId,
-      {
-        $push: { likes: loginUserId },
-        isLiked: true,
-      },
-      { new: true }
-    );
-    res.json(blog);
-  }
-});
-const dislikeBlog = asyncHandler(async (req, res) => {
-  const { blogId } = req.body;
-  validateMongoDbId(blogId);
-  // Find the blog which you want to be liked
-  const blog = await Blog.findById(blogId);
-  // find the login user
-  const loginUserId = req?.user?._id;
-  // find if the user has liked the blog
-  const isDisLiked = blog?.isDisliked;
-  // find if the user has disliked the blog
-  const alreadyLiked = blog?.likes?.find(
-    (userId) => userId?.toString() === loginUserId?.toString()
-  );
-  if (alreadyLiked) {
-    const blog = await Blog.findByIdAndUpdate(
-      blogId,
-      {
-        $pull: { likes: loginUserId },
-        isLiked: false,
-      },
-      { new: true }
-    );
-    res.json(blog);
-  }
-  if (isDisLiked) {
-    const blog = await Blog.findByIdAndUpdate(
-      blogId,
-      {
-        $pull: { dislikes: loginUserId },
-        isDisliked: false,
-      },
-      { new: true }
-    );
-    res.json(blog);
-  } else {
-    const blog = await Blog.findByIdAndUpdate(
-      blogId,
-      {
-        $push: { dislikes: loginUserId },
-        isDisliked: true,
-      },
-      { new: true }
-    );
-    res.json(blog);
-  }
-});
-
-//! upload ảnh
-const uploadImages = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
-  try {
-    const uploader = (path) => cloudinaryUploadImg(path, "images");
-    const urls = [];
-    const files = req.files;
-    for (const file of files) {
-      const { path } = file;
-      const newpath = await uploader(path);
-      console.log(newpath);
-      urls.push(newpath);
-      fs.unlinkSync(path);
+    const deleteBlog = await Blog.findById(id);
+    if (!deleteBlog) {
+      return res.status(404).json({ message: "Blog not found" });
     }
-    const findBlog = await Blog.findByIdAndUpdate(
-      id,
-      {
-        images: urls.map((file) => {
-          return file;
-        }),
-      },
-      {
-        new: true,
-      }
-    );
-    res.json(findBlog);
+    deleteBlog.status = deleteBlog.status === 1 ? 0 : 1;
+    const updateBlog = await deleteBlog.save();
+    res.json(updateBlog);
   } catch (error) {
     throw new Error(error);
   }
@@ -205,7 +79,4 @@ module.exports = {
   getBlog,
   getAllBlog,
   deleteBlog,
-  likeBlog,
-  dislikeBlog,
-  uploadImages,
 };

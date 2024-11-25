@@ -48,6 +48,9 @@ import DetailCartShipper from "../pages/shipper/carts/detailCart";
 import AddVouchers from "../pages/admin/vouchers/add";
 import EditVouchers from "../pages/admin/vouchers/edit";
 import EditUser from "../pages/admin/user/editUser";
+import ListBlog from "../pages/admin/blog";
+import AddBlog from "../pages/admin/blog/addBlog";
+import EditBlog from "../pages/admin/blog/editBlog";
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
 const LayoutClient = lazy(() => import("../layouts/client"));
@@ -137,7 +140,7 @@ const Router = () => {
           <Route
             path="admin"
             element={
-              <PrivateRoute allowedRoles={["Owner","Admin"]}>
+              <PrivateRoute allowedRoles={["Owner", "Admin"]}>
                 <LayoutAdmin />
               </PrivateRoute>
             }
@@ -179,15 +182,20 @@ const Router = () => {
             <Route path="comments" element={<ListComment />} />
             {/* Vouchers */}
             <Route path="vouchers" element={<ListVouchers />} />
-            <Route path="NotSearch" element={<NotSearch />} />
             <Route path="vouchers/add" element={<AddVouchers />} />
             <Route path="vouchers/:id/edit" element={<EditVouchers />} />
+            {/* Blogs */}
+            <Route path="blog" element={<ListBlog />} />
+            <Route path="blog/add" element={<AddBlog />} />
+            <Route path="blog/:id/edit" element={<EditBlog />} />
+            {/* Not search */}
+            <Route path="NotSearch" element={<NotSearch />} />
           </Route>
           //#region Staff
           <Route
             path="staff"
             element={
-              <PrivateRoute allowedRoles={["Owner","Admin", "Staff"]}>
+              <PrivateRoute allowedRoles={["Owner", "Admin", "Staff"]}>
                 <LayoutAdminStaff />
               </PrivateRoute>
             }
@@ -203,7 +211,7 @@ const Router = () => {
           <Route
             path="shipper"
             element={
-              <PrivateRoute allowedRoles={["Owner","Admin", "Shipper"]}>
+              <PrivateRoute allowedRoles={["Owner", "Admin", "Shipper"]}>
                 <LayoutAdminShipper />
               </PrivateRoute>
             }

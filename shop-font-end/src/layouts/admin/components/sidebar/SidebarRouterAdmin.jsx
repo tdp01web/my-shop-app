@@ -71,5 +71,8 @@ export const items = [
   getItem('Vouchers', 'Vouchers', <TagsOutlined />, [
     getItem(<Link to="/admin/vouchers">Danh sách Vouchers</Link>, '/admin/vouchers'),
   ]),
+  getItem('Tin tức', 'Tin tức', <TagsOutlined />, [
+    getItem(<Link to="/admin/blog">Danh sách Tin tức</Link>, '/admin/blog'),
+  ]),
   getItem(<Link to="/">Trở lại trang chủ</Link>, "home", <HomeOutlined />),
 ];

@@ -16,10 +16,20 @@ var blogSchema = new mongoose.Schema(
       default: 0,
     },
     author: {
-      type: String,
-      default: "Admin",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-    images: [],
+    images: [
+      {
+        public_id: String,
+        url: String,
+      },
+    ],
+    status: {
+      type: Number,
+      enum: [0, 1],
+      default: 1,
+    },
   },
   {
     timestamps: true,

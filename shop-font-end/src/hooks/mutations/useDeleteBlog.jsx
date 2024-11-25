@@ -2,13 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import { instance } from "../../configs/instance";
 
 
-export const usePutBlog = (id ,{ onSuccess, onError }) => {
+export const useDeleteBlog = ({ onSuccess, onError }) => {
   return useMutation({
-    mutationKey: ["put-blog", id],
-    mutationFn: async (data) => {
+    mutationKey: ["delete-blog"],
+    mutationFn: async (id) => {
       try {
         const apiResult = await instance
-          .put(`blog/updateBlog/${id}`, data)
+          .post(`blog/deleteBlog/${id}`, id)
         onSuccess?.(apiResult);
         return apiResult;
       } catch (error) {
