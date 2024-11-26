@@ -20,7 +20,11 @@ const CartPage = () => {
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
 
-  const { data: cartData, refetch } = useQuery({
+  const {
+    data: cartData,
+    refetch,
+    isLoading: isLoadingCart,
+  } = useQuery({
     queryKey: ["CartPage"],
     queryFn: async () => {
       const { data } = await instance.get("/cart/getCart", {
@@ -126,6 +130,7 @@ const CartPage = () => {
           totalAfterDiscount={totalAfterDiscount ?? cartData.totalAfterDiscount}
           handleNext={handleNext}
           onApplyCouponSuccess={handleApplyCouponSuccess}
+          isLoadingCart={isLoadingCart}
         />
       )}
       {activeStep === 1 && (

@@ -7,12 +7,14 @@ import CouponDropdown from "./CouponDropdown";
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "../../../../configs/instance";
 import Loader from "../../../../components/Loading";
+import CartSkeleton from "../../../../components/CartSkeleton";
 
 const CartItems = ({
   cartItems,
   handleNext,
   totalAfterDiscount,
   onApplyCouponSuccess,
+  isLoadingCart,
 }) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["Mã Giảm Giá"],
@@ -28,7 +30,6 @@ const CartItems = ({
       }
     },
   });
-  console.log(cartItems.products.some((item) => item.unavailable));
 
   return cartItems ? (
     cartItems.products.length === 0 ? (
@@ -47,9 +48,15 @@ const CartItems = ({
     ) : (
       <React.Fragment>
         <div className="flex flex-col gap-3">
-          {cartItems.products.map((item) => (
-            <ItemProductCard key={item._id} item={item} />
-          ))}
+          {cartItems ? (
+            cartItems?.products.map((item) => (
+              <ItemProductCard key={item._id} item={item} />
+            ))
+          ) : (
+            <div>
+              <CartSkeleton />
+            </div>
+          )}
           <hr className="border border-gray-300" />
           <CouponDropdown
             data={data}

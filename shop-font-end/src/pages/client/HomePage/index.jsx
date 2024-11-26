@@ -23,7 +23,7 @@ const HomePage = () => {
       console.log(error);
     },
   });
-  const { data: ListData } = useQuery({
+  const { data: ListData, isLoading: isLoadingBlog } = useQuery({
     queryKey: ["List_Data_Blog"],
     queryFn: async () => {
       try {
@@ -44,7 +44,9 @@ const HomePage = () => {
       {/* <PCSellWell /> */}
       {data && <LaptopSellWell products={data} />}
 
-      {ListData && <TechnologyNews ListData={ListData} />}
+      {ListData && (
+        <TechnologyNews ListData={ListData} isLoadingBlog={isLoadingBlog} />
+      )}
     </div>
   );
 };
