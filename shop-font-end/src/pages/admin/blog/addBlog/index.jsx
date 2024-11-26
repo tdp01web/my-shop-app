@@ -1,5 +1,17 @@
-import { BackwardFilled, Loading3QuartersOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, InputNumber, message, Select, Upload } from "antd";
+import {
+  BackwardFilled,
+  Loading3QuartersOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Select,
+  Upload,
+} from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { usePostBrand } from "../../../../hooks/mutations/usePostBrand";
 import { usePostBlog } from "../../../../hooks/mutations/usePostBlog";
@@ -7,7 +19,7 @@ import { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 
 const AddBlog = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -38,7 +50,7 @@ const AddBlog = () => {
         content: "Thêm tin tức thành công",
       });
       setTimeout(() => {
-        navigate('/admin/blog');
+        navigate("/admin/blog");
       }, 1000);
       form.resetFields();
     },
@@ -65,7 +77,12 @@ const AddBlog = () => {
     },
   });
   const onFinish = (values) => {
-    mutate(values);
+    const blogData = {
+      ...values,
+      images: uploadedImages,
+    };
+    console.log(blogData);
+    mutate(blogData);
   };
   return (
     <div className="">
@@ -92,10 +109,13 @@ const AddBlog = () => {
           <Form.Item
             label="Tiêu đề tin tức"
             name="title"
-            rules={[{
-              required: true, message: "Tên tiêu dề bắt buộc phải điền",
-              max: 32, message: "Vui lòng nhập tên hãng nhỏ hơn 32 kí tự"
-            }]}
+            rules={[
+              {
+                required: true,
+                message: "Tên tiêu dề bắt buộc phải điền",
+                message: "Vui lòng nhập tên hãng nhỏ hơn 32 kí tự",
+              },
+            ]}
           >
             <Input placeholder="Nhập tiêu đề" />
           </Form.Item>
@@ -117,7 +137,10 @@ const AddBlog = () => {
               </button>
             </Upload>
           </Form.Item>
-          <Form.Item label="Mô tả" name="description" placeholder="Mô tả"
+          <Form.Item
+            label="Mô tả"
+            name="description"
+            placeholder="Mô tả"
             rules={[
               { required: true, message: "Mô tả sản phẩm bắt buộc phải điền" },
             ]}

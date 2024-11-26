@@ -91,44 +91,48 @@ export default function CouponDropdown({ data, onApplyCouponSuccess }) {
             isDropdownOpen ? "max-h-full" : "max-h-0"
           }`}
         >
-          <div className="h-full mt-2 space-y-2">
-            {data?.map((coupon) => (
-              <div
-                key={coupon._id}
-                className="flex items-center justify-between border border-gray-500 p-2 rounded-md"
-              >
-                <div className="flex items-center">
-                  <div className="text-white w-[15%]">
-                    <img
-                      src="/images/danhmucsp/ma-giam-gia.webp"
-                      alt=""
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-[15px] font-semibold">
-                      Giảm {coupon.discount}%
-                    </p>
-                    <p className="text-[14px] font-semibold">
-                      Mã {coupon.name}
-                    </p>
-                    <p className="text-[13px]">
-                      HSD: {formatDate(coupon.expiry)}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  className={`bg-blue-500 w-[20%] md:w-[15%] text-white px-4 py-1 rounded-md ${
-                    selectedCoupon ? "hidden" : ""
-                  }`}
-                  onClick={() => handleApplyCoupon(coupon._id)}
-                  disabled={selectedCoupon} // Disable nút áp dụng khi đã có mã giảm giá
+          {data?.length === 0 ? (
+            <p className="mt-4 text-red-600">Không có voucher nào khả dụng</p>
+          ) : (
+            <div className="h-full mt-2 space-y-2">
+              {data?.map((coupon) => (
+                <div
+                  key={coupon._id}
+                  className="flex items-center justify-between border border-gray-500 p-2 rounded-md"
                 >
-                  Áp dụng
-                </button>
-              </div>
-            ))}
-          </div>
+                  <div className="flex items-center">
+                    <div className="text-white w-[15%]">
+                      <img
+                        src="/images/danhmucsp/ma-giam-gia.webp"
+                        alt=""
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-[15px] font-semibold">
+                        Giảm {coupon.discount}%
+                      </p>
+                      <p className="text-[14px] font-semibold">
+                        Mã {coupon.name}
+                      </p>
+                      <p className="text-[13px]">
+                        HSD: {formatDate(coupon.expiry)}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    className={`bg-blue-500 w-[20%] md:w-[15%] text-white px-4 py-1 rounded-md ${
+                      selectedCoupon ? "hidden" : ""
+                    }`}
+                    onClick={() => handleApplyCoupon(coupon._id)}
+                    disabled={selectedCoupon} // Disable nút áp dụng khi đã có mã giảm giá
+                  >
+                    Áp dụng
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

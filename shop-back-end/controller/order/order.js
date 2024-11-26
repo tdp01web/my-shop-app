@@ -128,6 +128,7 @@ const createOrder = asyncHandler(async (req, res) => {
         update: { $inc: { quantity: -item.count, sold: +item.count } },
       },
     }));
+    console.log(updateProducts);
 
     await Product.bulkWrite(updateProducts, {});
 
@@ -349,9 +350,8 @@ const getOrderById = asyncHandler(async (req, res) => {
   validateMongoDbId(orderId);
   validateMongoDbId(_id);
 
-
   try {
-    const order = await Order.findOne({ _id: orderId});//////
+    const order = await Order.findOne({ _id: orderId }); //////
 
     if (!order) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
@@ -596,8 +596,7 @@ const cancelMyOrder = asyncHandler(async (req, res) => {
     order,
   });
 });
-
-//Thanh toán online
+//Lấy top 5 sản phẩm bán chạy
 
 module.exports = {
   createOrder,

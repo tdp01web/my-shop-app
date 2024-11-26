@@ -59,7 +59,7 @@ const Product = ({
   return (
     <Link
       to={`/products/${_id}`}
-      className="relative bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm group"
+      className="relative h-[100%] bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm group"
     >
       {/* Biểu tượng trái tim cho wishlist */}
       <div
@@ -80,7 +80,7 @@ const Product = ({
           {firstVariant?.price.toLocaleString()}đ
         </p>
       </div>
-      <div className="flex flex-wrap gap-3 bg-[#ECECEC] p-2 rounded-md">
+      <div className="flex flex-col gap-3 bg-[#ECECEC] p-2 rounded-md">
         {specs.map((spec, index) => (
           <p
             key={index}

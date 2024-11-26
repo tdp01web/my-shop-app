@@ -64,9 +64,14 @@ const CartPage = () => {
           console.log("🚀 ~ CartPage ~ error:", error);
         }
       } else {
-        console.log(data);
+        console.log(data.order);
         message.success("Đặt hàng thành công");
         queryClient.invalidateQueries(["CartPage"]);
+        // 1. Làm mới dữ liệu sản phẩm
+        const productIds = data.order.products.map((product) => product.prodId);
+        productIds.forEach((id) => {
+          queryClient.invalidateQueries(["PRODUCTS", id]); // Thêm dòng này
+        });
         setActiveStep(3);
         setOrderInfo(data.order);
       }

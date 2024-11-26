@@ -4,7 +4,7 @@ function Banner() {
       <div className="fixed-left fixed left-0 top-[200px] z-999">
         <img
           className="w-[100px] rounded-xl"
-          src="/images/banner3.webp"
+          src="/images/bannernew.webp"
           alt=""
         />
       </div>

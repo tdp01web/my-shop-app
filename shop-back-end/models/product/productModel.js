@@ -51,7 +51,7 @@ var productSchema = new mongoose.Schema(
       {
         _id: {
           type: mongoose.Schema.Types.ObjectId,
-          default: mongoose.Types.ObjectId,
+          default: () => new mongoose.Types.ObjectId(),
         },
         star: Number,
         comment: String,
@@ -72,6 +72,14 @@ var productSchema = new mongoose.Schema(
       type: Number,
       enum: [0, 1],
       default: 1,
+    },
+    views: {
+      type: Number,
+      default: 0, // Lượt xem
+    },
+    sold: {
+      type: Number,
+      default: 0, // Lượt bán
     },
   },
   { timestamps: true }

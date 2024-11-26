@@ -23,6 +23,17 @@ const HomePage = () => {
       console.log(error);
     },
   });
+  const { data: ListData } = useQuery({
+    queryKey: ["List_Data_Blog"],
+    queryFn: async () => {
+      try {
+        const { data } = await instance.get("/blog/getAllBlog");
+        return data;
+      } catch (error) {
+        console.log("🚀 ~ queryFn: ~ error:", error);
+      }
+    },
+  });
 
   return (
     <div className="relative z-20 flex flex-col gap-4 2xl:w-[80%] 2xl:mx-auto md:px-10">
@@ -31,8 +42,9 @@ const HomePage = () => {
       <Endow />
       <BannerSale />
       {/* <PCSellWell /> */}
-      <LaptopSellWell products={data} />
-      <TechnologyNews />
+      {data && <LaptopSellWell products={data} />}
+
+      {ListData && <TechnologyNews ListData={ListData} />}
     </div>
   );
 };

@@ -86,7 +86,7 @@ const ProductList = ({
         ))}
       </div>
 
-      <div className="w-full h-full ">
+      <div className="w-full h-full">
         <Slider {...settings}>
           {products.map((product) => (
             <Product key={product._id} {...product} />

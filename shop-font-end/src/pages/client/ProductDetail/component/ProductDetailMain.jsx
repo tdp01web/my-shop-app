@@ -7,10 +7,7 @@ import Slider from "react-slick";
 import Quantity from "../../../../components/quantity";
 import { instance } from "../../../../configs/instance";
 
-const ProductDetailMain = ({ product }) => {
-  console.log("🚀 ~ ProductDetailMain ~ product:", product);
-
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
   const [count, setCount] = useState(1);
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -26,7 +23,7 @@ const ProductDetailMain = ({ product }) => {
   }, []);
 
   const handleVariantChange = (variant) => {
-    setSelectedVariant(variant);
+    onVariantChange(variant); // Gọi callback để cập nhật state ở cha
   };
 
   const handleAddToCart = () => {
@@ -154,10 +151,7 @@ const ProductDetailMain = ({ product }) => {
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">LCD</td>
-              <td className="p-3">
-                {product.lcd?.resolution || "N/A"} |{" "}
-                {product.lcd?.size || "N/A"}
-              </td>
+              <td className="p-3">{product.lcd || "N/A"} | </td>
             </tr>
             <tr>
               <td className="p-3 bg-gray-100 font-semibold">Số lượng</td>

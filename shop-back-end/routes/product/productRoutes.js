@@ -17,7 +17,10 @@ const {
   getProductComments,
   getAllProductComments,
   deleteComment,
-  deleteCommentDetail
+  deleteCommentDetail,
+  getTopSellingProducts,
+  getProductsBySales,
+  getProductsByViews,
 } = require("../../controller/product/productCtrl");
 const router = express.Router();
 const {
@@ -53,11 +56,25 @@ router.put("/updateProduct/:id", authMiddleware, isAdmin, updateProduct);
 //! Delete product
 router.post("/deleteProduct/:id", authMiddleware, isAdmin, deleteProduct);
 router.post("/deleteComment/:id", authMiddleware, isAdmin, deleteComment);
-router.post("/deleteCommentDetail/:id", authMiddleware, isAdmin, deleteCommentDetail);
+router.post(
+  "/deleteCommentDetail/:id",
+  authMiddleware,
+  isAdmin,
+  deleteCommentDetail
+);
 // Các route cho biến thể
 router.get("/variants", getAllVariants); // Route lấy tất cả biến thể
 router.get("/variant/:variantId", getVariant); // Route lấy một biến thể cụ thể
 router.put("/variant/:variantId", updateProductVariant);
 router.post("/variant/:variantId", deleteProductVariant);
+
+// Lấy top 5 sản phẩm bán chạy
+router.get("/top-selling", getTopSellingProducts);
+
+// Lấy danh sách sản phẩm theo lượt bán giảm dần
+router.get("/products-by-sales", getProductsBySales);
+
+// Lấy danh sách sản phẩm theo lượt xem giảm dần
+router.get("/products-by-views", getProductsByViews);
 
 module.exports = router;

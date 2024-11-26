@@ -10,7 +10,7 @@ const SoldProgressBar = ({ sold, total }) => {
       <Box
         display="flex"
         alignItems="center"
-        bgcolor="#ff4d4f"
+        bgcolor="#E30019"
         borderRadius="20px"
         padding="2px 8px"
         marginRight="8px"

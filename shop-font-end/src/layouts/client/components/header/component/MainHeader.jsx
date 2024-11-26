@@ -31,6 +31,7 @@ function MainHeader() {
       try {
         const response = await instance.get("/cart/getCart");
         const products = response.data.products || [];
+
         const totalCount = products.reduce(
           (total, product) => total + product.count,
           0
@@ -43,7 +44,7 @@ function MainHeader() {
     };
 
     fetchCartData();
-  }, []);
+  }, [cartItemCount]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -99,7 +100,7 @@ function MainHeader() {
 
   return (
     <Box className="bg-[#E30019] w-full">
-      <div className="flex justify-between items-center mx-auto px-4 xl:px-0 py-3 md:py-5 2xl:w-[80%] text-white">
+      <div className="flex justify-between   items-center mx-auto px-4 xl:px-0 py-3 md:py-5 2xl:w-[80%] text-white">
         <div className="md:hidden text-[25px]">
           <AiOutlineMenu onClick={handleDrawerOpen} />
         </div>
@@ -113,6 +114,7 @@ function MainHeader() {
                 : "/images/logo/logoMobile.png"
             }
             alt="Logo"
+            // onClick={() => window.location.reload()}
           />
         </Link>
         <button className="md:flex items-center gap-2 hidden bg-[#BE1529] px-2 py-2 rounded-sm font-500 text-white">
