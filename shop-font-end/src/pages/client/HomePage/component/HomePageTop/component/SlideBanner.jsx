@@ -4,6 +4,7 @@ import {
   SampleNextArrow,
   SamplePrevArrow,
 } from "../../../../../../components/CarouselSlider";
+import { Link } from "react-router-dom";
 
 const SlideBanner = () => {
   const settings = {
@@ -19,21 +20,27 @@ const SlideBanner = () => {
   };
 
   const images = [
-    "/images/homepage/gear_thumb_web_5ab605acf5ac4a3ea7a7adc276bf063b.webp",
-    "/images/homepage/gearvn-laptop-slider.webp",
-    "/images/homepage/gearvn-pc-gvn-slider.webp",
-    "/images/homepage/gearvn-sam-laptop-msi-nhan-mo-hinh-katana-cuc-ngau-banner_5127b896ec22483e9a3fd020925b6021.webp",
-    "/images/homepage/gearvn-xa-kho-slider.webp",
-    "/images/homepage/loa_xin_slider_55571db8742146cd85eef265cf950b35.webp",
-    "/images/homepage/web_slider_800x400_b2s.webp",
-    "/images/homepage/web_slider_800x400_laptop_gaming.webp",
-    "/images/homepage/web_slider_800x400_man_hinh.webp",
+    "/images/homepage/anhtomoi1.webp",
+    // "/images/homepage/gearvn-laptop-slider.webp",
+    // "/images/homepage/laptop_banner-msi-800-x-400-t12.webp",
+    "/images/homepage/thang_11_laptop_asus_rog800x400.webp",
+    "/images/homepage/thang_11_laptop_vivobook_s_gearvn__800x400_.webp",
+    // "/images/homepage/gearvn-pc-gvn-slider.webp",
+    // "/images/homepage/gearvn-sam-laptop-msi-nhan-mo-hinh-katana-cuc-ngau-banner_5127b896ec22483e9a3fd020925b6021.webp",
+    // "/images/homepage/gearvn-xa-kho-slider.webp",
+    // "/images/homepage/loa_xin_slider_55571db8742146cd85eef265cf950b35.webp",
+    // "/images/homepage/web_slider_800x400_b2s.webp",
+    // "/images/homepage/web_slider_800x400_laptop_gaming.webp",
+    // "/images/homepage/web_slider_800x400_man_hinh.webp",
   ];
 
   return (
     <div className="w-full  md:w-4/5">
       <div className="w-full flex gap-2 p-2">
-        <div className="slider-container w-full md:w-2/3  rounded-lg ">
+        <Link
+          to={"/collection"}
+          className="slider-container w-full md:w-2/3  rounded-lg "
+        >
           <Slider {...settings}>
             {images.map((src, index) => (
               <img
@@ -44,7 +51,7 @@ const SlideBanner = () => {
               />
             ))}
           </Slider>
-        </div>
+        </Link>
         <div className="md:flex w-1/3 flex-col gap-2 hidden ">
           <img
             src="/images/homepage/thang_10_layout_web_-04.webp"

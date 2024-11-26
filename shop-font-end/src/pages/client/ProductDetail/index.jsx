@@ -1,5 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { instance } from "../../../configs/instance";
 import ProductDetailMain from "./component/ProductDetailMain";
@@ -7,86 +6,80 @@ import Loader from "../../../components/Loading";
 import SimilarProducts from "./component/SimilarProducts";
 import ProductDescription from "./component/ProductDescription";
 import ProductComments from "./component/ProductComments";
+import Notification from "../../../components/Notification";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const queryClient = useQueryClient();
-
-  const getQuantities = (variants) => {
-    return variants?.map((variant) => variant.quantity) || [];
-  };
-
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["PRODUCTS", id],
-    queryFn: async () => {
-      const { data } = await instance.get(`product/getaProduct/${id}`);
-      return data;
-    },
-    staleTime: 1000 * 60, // Giữ stale trong 1 phút
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
-
-  const previousQuantitiesRef = useRef([]);
-
-  const haveQuantitiesChanged = (prev, current) => {
-    if (prev.length !== current.length) return true;
-    return current.some((qty, index) => qty !== prev[index]);
-  };
+  const [data, setData] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null); // Thêm state cho selectedVariant
 
   useEffect(() => {
-    const currentQuantities = getQuantities(data?.variants);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const { data } = await instance.get(`product/getaProduct/${id}`);
+        setData(data);
 
-    if (
-      currentQuantities.length > 0 &&
-      previousQuantitiesRef.current.length > 0 &&
-      haveQuantitiesChanged(previousQuantitiesRef.current, currentQuantities)
-    ) {
-      queryClient.invalidateQueries(["PRODUCTS", id]);
-      refetch();
-    }
+        if (data?.variants?.length > 0) {
+          setSelectedVariant(data.variants[0]);
+        }
 
-    previousQuantitiesRef.current = currentQuantities;
-  }, [data?.variants, refetch, id]);
+        if (data?.category?._id) {
+          const { data: relatedData } = await instance.get(
+            `/product/getRelatedProducts/${data.category._id}/${id}`
+          );
+          setRelatedProducts(relatedData);
+        }
+        setError(false);
+      } catch (err) {
+        setError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const {
-    data: relatedProductsData,
-    isLoading: isRelatedLoading,
-    isError: isRelatedError,
-  } = useQuery({
-    queryKey: ["Product_Relate", data?.category?._id, data?._id],
-    queryFn: async () => {
-      if (!data?.category?._id) return [];
-      const { data: relatedData } = await instance.get(
-        `/product/getRelatedProducts/${data.category._id}/${data._id}`
-      );
-      return relatedData;
-    },
-    enabled: !!data,
-  });
+    fetchData();
+  }, [id]);
 
-  if (isLoading || isRelatedLoading)
+  if (isLoading)
     return (
       <div>
         <Loader />
       </div>
     );
-  if (isError || isRelatedError)
+
+  if (error)
     return (
       <Link to={"/"}>
         Lỗi khi tải dữ liệu sản phẩm vui lòng quay trở về trang chủ.
       </Link>
     );
 
-  return (
+  return data?.status === 0 ? (
+    <Notification />
+  ) : (
     <div className="lg:w-[80%] w-full flex flex-col mx-auto gap-5  p-5">
-      {data && <ProductDetailMain product={data} />}
+      {data && (
+        <ProductDetailMain
+          product={data}
+          selectedVariant={selectedVariant}
+          onVariantChange={setSelectedVariant}
+        />
+      )}
 
       <div className="flex flex-col lg:flex-row gap-4">
-        {data && <ProductDescription description={data.description} />}
+        {data && (
+          <ProductDescription
+            description={data.description}
+            selectedVariant={selectedVariant}
+          />
+        )}
 
-        {relatedProductsData && (
-          <SimilarProducts dataProductCategory={relatedProductsData} />
+        {relatedProducts && (
+          <SimilarProducts dataProductCategory={relatedProducts} />
         )}
       </div>
       <ProductComments data={data} />

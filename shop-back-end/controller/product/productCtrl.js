@@ -306,11 +306,9 @@ const deleteComment = asyncHandler(async (req, res) => {
     }
 
     if (product.status === 0) {
-      return res
-        .status(400)
-        .json({
-          message: "Cannot modify comment because the product is suspended.",
-        });
+      return res.status(400).json({
+        message: "Cannot modify comment because the product is suspended.",
+      });
     }
     product.statusCmt = product.statusCmt === 1 ? 0 : 1;
 
@@ -331,11 +329,9 @@ const deleteCommentDetail = asyncHandler(async (req, res) => {
     }
 
     if (product.status === 0) {
-      return res
-        .status(400)
-        .json({
-          message: "Cannot modify comment because the product is suspended.",
-        });
+      return res.status(400).json({
+        message: "Cannot modify comment because the product is suspended.",
+      });
     }
 
     product.ratings[ratingIndex].isClose =
@@ -455,10 +451,10 @@ const addToWishlist = asyncHandler(async (req, res) => {
 //! Đánh giá cho sản phẩm
 const rateProduct = asyncHandler(async (req, res) => {
   const { prodId, star, comment } = req.body;
-  const { _id } = req.user;
+  const { _id: userId } = req.user;
 
   try {
-    // Kiểm tra sản phẩm có tồn tại không
+    // Kiểm tra sản phẩm tồn tại
     const product = await Product.findById(prodId);
     if (!product) {
       return res.status(404).json({ message: "Sản phẩm không tồn tại!" });
@@ -466,7 +462,7 @@ const rateProduct = asyncHandler(async (req, res) => {
 
     // Kiểm tra xem người dùng đã mua sản phẩm chưa
     const orderExists = await Order.findOne({
-      orderedBy: _id,
+      orderedBy: userId,
       "products.prodId": prodId,
       orderStatus: "Hoàn Thành",
     });
@@ -477,19 +473,19 @@ const rateProduct = asyncHandler(async (req, res) => {
         .json({ message: "Bạn chỉ có thể đánh giá sản phẩm đã mua." });
     }
 
-    // Tìm xem người dùng đã đánh giá trước đó chưa
+    // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
     const existingRating = product.ratings.find(
-      (rating) => rating.postedby.toString() === _id.toString()
+      (rating) => rating.postedby.toString() === userId.toString()
     );
 
     if (existingRating) {
-      // Nếu đã đánh giá trước đó, cập nhật lại
-      existingRating.star = star;
-      existingRating.comment = comment;
-    } else {
-      // Nếu chưa đánh giá, thêm mới
-      product.ratings.push({ star, comment, postedby: _id });
+      return res.status(403).json({
+        message: "Bạn chỉ được đánh giá sản phẩm này một lần.",
+      });
     }
+
+    // Nếu chưa đánh giá, thêm đánh giá mới
+    product.ratings.push({ star, comment, postedby: userId });
 
     // Tính tổng số sao trung bình
     const totalStars = product.ratings.reduce(
@@ -499,11 +495,12 @@ const rateProduct = asyncHandler(async (req, res) => {
     product.totalrating = (totalStars / product.ratings.length).toFixed(1);
 
     await product.save();
-    res.status(200).json({ message: "Đánh giá thành công!", product });
+    res.status(201).json({ message: "Đánh giá thành công!", product });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 const getProductComments = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -703,8 +700,17 @@ const getAllProductsForUsers = asyncHandler(async (req, res) => {
 const getTopSellingProducts = asyncHandler(async (req, res) => {
   try {
     const products = await Product.find()
-      .sort({ sold: -1 }) // Sắp xếp lượt bán giảm dần
-      .limit(5); // Lấy 5 sản phẩm đầu tiên
+      .sort({ sold: -1 })
+      .limit(5)
+      .populate({
+        path: "variants",
+        populate: [
+          { path: "ram", select: "size" },
+          { path: "storage", select: "name" },
+          { path: "processor", select: "name" },
+          { path: "gpu", select: "name" },
+        ],
+      });
 
     res.status(200).json({
       message: "Top 5 sản phẩm bán chạy nhất",

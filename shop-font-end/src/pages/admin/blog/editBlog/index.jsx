@@ -1,6 +1,18 @@
-import { BackwardFilled, Loading3QuartersOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  BackwardFilled,
+  Loading3QuartersOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Input, InputNumber, message, Select, Upload } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Select,
+  Upload,
+} from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetBrandByID } from "../../../../hooks/queries/useGetBrandByID";
 import { usePutBrand } from "../../../../hooks/mutations/usePutBrand";
@@ -10,7 +22,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
 
 const EditBlog = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const { id } = useParams();
@@ -36,15 +48,14 @@ const EditBlog = () => {
     }
     return e?.fileList;
   };
-  const { data, isLoading, isError } = useGetBlogByID(id,
-    {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      onError: (error) => {
-        console.log(error);
-      }
-    })
+  const { data, isLoading, isError } = useGetBlogByID(id, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
   const { mutate, isPending } = usePutBlog(id, {
     onSuccess: () => {
       messageApi.open({
@@ -52,7 +63,7 @@ const EditBlog = () => {
         content: "Sửa tin tức thành công",
       });
       setTimeout(() => {
-        navigate('/admin/blog');
+        navigate("/admin/blog");
       }, 1000);
       queryClient.invalidateQueries({
         queryKey: ["get-all-blog"],
@@ -82,10 +93,15 @@ const EditBlog = () => {
   });
 
   const onFinish = (values) => {
-    mutate(values);
+    const blogData = {
+      ...values,
+      images: uploadedImages,
+    };
+    console.log(blogData);
+    mutate(blogData);
   };
-  if (isLoading) return <p>Loading...</p>
-  if (isError) return <p>Error loading data.</p>
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading data.</p>;
   return (
     <div className="">
       {contextHolder}
@@ -111,10 +127,13 @@ const EditBlog = () => {
           <Form.Item
             label="Tiêu đề tin tức"
             name="title"
-            rules={[{
-              required: true, message: "Tên tiêu dề bắt buộc phải điền",
-              max: 32, message: "Vui lòng nhập tên hãng nhỏ hơn 32 kí tự"
-            }]}
+            rules={[
+              {
+                required: true,
+                message: "Tên tiêu dề bắt buộc phải điền",
+                message: "Vui lòng nhập tên hãng nhỏ hơn 32 kí tự",
+              },
+            ]}
           >
             <Input placeholder="Nhập tiêu đề" />
           </Form.Item>
@@ -136,7 +155,10 @@ const EditBlog = () => {
               </button>
             </Upload>
           </Form.Item>
-          <Form.Item label="Mô tả" name="description" placeholder="Mô tả"
+          <Form.Item
+            label="Mô tả"
+            name="description"
+            placeholder="Mô tả"
             rules={[
               { required: true, message: "Mô tả sản phẩm bắt buộc phải điền" },
             ]}

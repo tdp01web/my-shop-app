@@ -6,6 +6,7 @@ import { instance } from "../../../../configs/instance";
 const ProductComments = ({ data }) => {
   const queryClient = useQueryClient();
   const productId = data?._id;
+  console.log(data?.statusCmt);
 
   // State cho đánh giá mới
   const [newRating, setNewRating] = useState(0);
@@ -69,7 +70,6 @@ const ProductComments = ({ data }) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      {/* Tiêu đề */}
       <h3 className="text-[24px] font-bold mb-6">
         Đánh giá và nhận xét về sản phẩm {data?.title}
       </h3>
@@ -108,47 +108,52 @@ const ProductComments = ({ data }) => {
       <hr className="my-6" />
 
       {/* Form đánh giá */}
-      <div className="mb-6">
-        <h4 className="text-lg font-bold mb-4">Gửi đánh giá của bạn</h4>
-        <Rate value={newRating} onChange={setNewRating} />
-        <Input.TextArea
-          rows={4}
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Nhập nhận xét của bạn"
-          className="mt-4"
-        />
-        <Button
-          type="primary"
-          loading={isSubmitting}
-          onClick={handleAddReview}
-          className="mt-4"
-        >
-          Gửi đánh giá
-        </Button>
-      </div>
-
-      <hr className="my-6" />
-
-      {/* Danh sách đánh giá */}
-      {isLoading ? (
-        <Spin />
+      {data?.statusCmt === 0 ? (
+        <p className="text-red-500 text-[20px] w-full text-center">
+          Sản phẩm này đã bị khóa bình luận
+        </p>
       ) : (
-        <div className="flex flex-col gap-6">
-          {reviews?.ratings?.length > 0 ? (
-            reviews.ratings.map((review) => (
-              <div key={review._id} className="p-4 border-b">
-                <Rate disabled value={review.star} />
-                <p className="mt-2">{review.comment}</p>
-                <small className="text-gray-500">
-                  Bởi {review.postedby?.email}
-                </small>
-              </div>
-            ))
+        <div className="mb-6">
+          <h4 className="text-lg font-bold mb-4">Gửi đánh giá của bạn</h4>
+          <Rate value={newRating} onChange={setNewRating} />
+          <Input.TextArea
+            rows={4}
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Nhập nhận xét của bạn"
+            className="mt-4"
+          />
+          <Button
+            type="primary"
+            loading={isSubmitting}
+            onClick={handleAddReview}
+            className="mt-4"
+          >
+            Gửi đánh giá
+          </Button>
+          <hr className="my-6" />
+
+          {/* Danh sách đánh giá */}
+          {isLoading ? (
+            <Spin />
           ) : (
-            <p className="text-gray-500">
-              Chưa có đánh giá nào cho sản phẩm này.
-            </p>
+            <div className="flex flex-col gap-6">
+              {reviews?.ratings?.length > 0 ? (
+                reviews.ratings.map((review) => (
+                  <div key={review._id} className="p-4 border-b">
+                    <Rate disabled value={review.star} />
+                    <p className="mt-2">{review.comment}</p>
+                    <small className="text-gray-500">
+                      Bởi {review.postedby?.email}
+                    </small>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">
+                  Chưa có đánh giá nào cho sản phẩm này.
+                </p>
+              )}
+            </div>
           )}
         </div>
       )}

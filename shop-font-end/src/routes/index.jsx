@@ -60,6 +60,9 @@ const SignupPage = lazy(() => import("../pages/SignupPage"));
 const Collection = lazy(() => import("../pages/client/Collection/Collection"));
 const AboutsPage = lazy(() => import("../pages/client/AboutsPage"));
 const BlogPage = lazy(() => import("../pages/client/PlogPage"));
+const BlogDetail = lazy(() =>
+  import("../pages/client/PlogPage/component/BlogDetail")
+);
 const Installment = lazy(() => import("../pages/client/Installment"));
 const ContactPage = lazy(() => import("../pages/client/ContactPage"));
 const HomePage = lazy(() => import("../pages/client/HomePage"));
@@ -128,6 +131,7 @@ const Router = () => {
             <Route path="payment-manual" element={<PaymentManual />} />
             <Route path="installment" element={<Installment />} />
             <Route path="blog" element={<BlogPage />} />
+            <Route path="blog/:id" element={<BlogDetail />} />
             <Route path="collection" element={<Collection />} />
             <Route path="search" element={<ProductListSearch />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
