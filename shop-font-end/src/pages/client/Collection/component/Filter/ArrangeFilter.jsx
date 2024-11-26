@@ -24,7 +24,7 @@ const ArrangeFilter = ({ onSortChange }) => {
   };
 
   return (
-    <div className="arrange-filter">
+    <div className="arrange-filter ">
       <Button
         variant="outlined"
         startIcon={<SortIcon />}
@@ -34,6 +34,7 @@ const ArrangeFilter = ({ onSortChange }) => {
           borderColor: onSortChange.length > 0 ? "grey.500" : "grey.500",
           color: onSortChange.length > 0 ? "black" : "black",
           fontWeight: onSortChange.length > 0 ? 450 : 400,
+          height: "100%",
         }}
       >
         Sắp xếp
