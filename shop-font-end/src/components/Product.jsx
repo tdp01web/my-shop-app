@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { BsDeviceSsd } from "react-icons/bs";
 import { FaMemory, FaStar, FaMicrochip } from "react-icons/fa6";
 import { PiCircuitryLight } from "react-icons/pi";
 import { Link } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { AiFillHeart } from "react-icons/ai";
 import { message } from "antd";
 import { instance } from "../configs/instance";
+import ProductSkeleton from "./ProductSkeleton";
+
 const Product = ({
   _id,
   title,
@@ -16,9 +18,9 @@ const Product = ({
   totalrating = 0,
   ratings,
 }) => {
-  const [isInWishlist, setIsInWishlist] = useState(false); // Trạng thái để xác định màu sắc trái tim
   const productImage = images[0]?.url || "NaN";
   const firstVariant = variants[0];
+  const queryClient = useQueryClient();
 
   const specs = [
     { icon: <FaMicrochip />, text: firstVariant?.processor?.name || "NaN" },
@@ -27,9 +29,25 @@ const Product = ({
     { icon: <FaMemory />, text: firstVariant?.storage?.capacity || "NaN" },
   ];
 
+  const { data: wishlist, isLoading } = useQuery({
+    queryKey: ["wishlist"],
+    queryFn: async () => {
+      const token = localStorage.getItem("token");
+      const { data } = await instance.get("user/getWishlist", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return data?.wishlist || [];
+    },
+  });
+
+  const isInWishlist = wishlist?.some((product) => product._id === _id);
+
   const mutation = useMutation({
     mutationFn: async () => {
       const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token");
+      }
       const { data } = await instance.put(
         "/product/wishlist",
         { prodId: _id },
@@ -40,14 +58,15 @@ const Product = ({
       return data;
     },
     onSuccess: (response) => {
-      setIsInWishlist(
-        response.message === "Thêm vào danh  sách yêu thích thành công"
-      );
       message.success(response.message);
+      queryClient.invalidateQueries(["wishlist"]);
     },
     onError: (error) => {
-      console.log("🚀 ~ error:", error);
-      message.error("Đã có lỗi xảy ra");
+      if (error.message == "No token") {
+        message.error("Vui lòng đăng nhập để thêm sản phẩm vào yêu thích");
+      } else {
+        message.error("Đã có lỗi xảy ra");
+      }
     },
   });
 
@@ -56,12 +75,19 @@ const Product = ({
     mutation.mutate();
   };
 
+  if (isLoading) {
+    return (
+      <div>
+        <ProductSkeleton />
+      </div>
+    );
+  }
+
   return (
     <Link
       to={`/products/${_id}`}
       className="relative h-[100%] bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm group"
     >
-      {/* Biểu tượng trái tim cho wishlist */}
       <div
         className={`absolute top-2 left-2 ${
           isInWishlist ? "text-red-500" : "text-gray-400"

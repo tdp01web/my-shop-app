@@ -1,6 +1,4 @@
-import {
-  BackwardFilled,
-} from "@ant-design/icons";
+import { BackwardFilled } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Input, message, Select } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -137,7 +135,10 @@ const DetailCart = () => {
                   className="mr-4 w-16 h-16 object-cover"
                 />
                 <div>
-                  <p>{product.title} | {product.processor} | {product.gpu} | {product.ram} | {product.storage}</p>
+                  <p>
+                    {product.title} | {product.processor} | {product.gpu} |{" "}
+                    {product.ram} | {product.storage}
+                  </p>
                   <p>Số lượng: {product.count}</p>
                 </div>
               </div>
@@ -171,7 +172,7 @@ const DetailCart = () => {
             </p>
           </div>
 
-          <div className="flex items-center mb-3">
+          {/* <div className="flex items-center mb-3">
             <p className="flex items-center gap-x-1 w-1/2">
               <FaCheckCircle className="text-[#24b400] text-[14px]" />
               <span>Số tiền đã thanh toán:</span>
@@ -179,7 +180,7 @@ const DetailCart = () => {
             <p className="text-right w-1/2 font-bold text-[#e30019]">
               {order.paidAmount?.toLocaleString() || "0"}đ
             </p>
-          </div>
+          </div> */}
         </div>
         <div className="mt-6 p-4 border rounded">
           <Form
