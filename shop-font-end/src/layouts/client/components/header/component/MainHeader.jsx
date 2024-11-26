@@ -63,7 +63,7 @@ function MainHeader() {
       icon: <FiMapPin style={{ width: "25px", height: "25px" }} />,
       label: "Hệ thống",
       sublabel: "Showroom",
-      to: "",
+      to: "/abouts",
     },
     {
       icon: <LuClipboardList style={{ width: "25px", height: "25px" }} />,

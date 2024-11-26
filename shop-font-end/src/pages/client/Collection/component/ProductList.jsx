@@ -46,7 +46,7 @@ const ProductList = ({ products }) => {
         justifyContent="space-between"
         flexWrap="wrap"
       >
-        <div className="block md:hidden w-full flex justify-between">
+        <div className=" md:hidden w-full flex justify-between">
           <TotalFilter />
           <ArrangeFilter onSortChange={sortProducts} />
         </div>
@@ -74,11 +74,9 @@ const ProductList = ({ products }) => {
             setPriceRange={setPriceRange}
             setSelectedSSD={setSelectedSSD}
           />
+          <ArrangeFilter onSortChange={sortProducts} />
         </div>
       </Box>
-      <div className="md:flex hidden" style={{ marginLeft: "auto" }}>
-        <ArrangeFilter onSortChange={sortProducts} />
-      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-5">
         {sortedProducts.length > 0 ? (

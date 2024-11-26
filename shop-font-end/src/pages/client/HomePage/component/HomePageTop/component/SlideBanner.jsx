@@ -53,34 +53,44 @@ const SlideBanner = () => {
           </Slider>
         </Link>
         <div className="md:flex w-1/3 flex-col gap-2 hidden ">
-          <img
-            src="/images/homepage/thang_10_layout_web_-04.webp"
-            className="w-full object-cover"
-            alt=""
-          />
-          <img
-            src="/images/homepage/artboard_2.webp"
-            alt=""
-            className="w-full object-cover"
-          />
+          <Link to={"/collection"}>
+            <img
+              src="/images/homepage/thang_10_layout_web_-04.webp"
+              className="w-full object-cover"
+              alt=""
+            />
+          </Link>
+          <Link to={"/collection"}>
+            <img
+              src="/images/homepage/artboard_2.webp"
+              alt=""
+              className="w-full object-cover"
+            />
+          </Link>
         </div>
       </div>
       <div className="md:grid grid-cols-3 gap-2 hidden">
-        <img
-          src="/images/homepage/artboard_3.webp"
-          alt=""
-          className="w-full object-cover"
-        />
-        <img
-          src="/images/homepage/artboard_4.webp"
-          alt=""
-          className="w-full object-cover"
-        />
-        <img
-          src="/images/homepage/thang_10_layout_web_-05.webp"
-          alt=""
-          className="w-full object-cover"
-        />
+        <Link to={"/collection"}>
+          <img
+            src="/images/homepage/artboard_3.webp"
+            alt=""
+            className="w-full object-cover"
+          />
+        </Link>
+        <Link to={"/collection"}>
+          <img
+            src="/images/homepage/artboard_4.webp"
+            alt=""
+            className="w-full object-cover"
+          />
+        </Link>
+        <Link to={"/collection"}>
+          <img
+            src="/images/homepage/thang_10_layout_web_-05.webp"
+            alt=""
+            className="w-full object-cover"
+          />
+        </Link>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import SvgIcon from "@mui/material/SvgIcon";
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "./../../../configs/instance";
 import ProductList from "./component/ProductList";
+import Loader from "../../../components/Loading";
 
 function HomeIcon(props) {
   return (
@@ -26,21 +27,19 @@ const Collection = () => {
     },
   });
 
-  if (isLoading) return <div>Loading products...</div>;
-  if (isError) return <div>Failed to load products. Please try again.</div>;
+  if (isLoading) return <Loader />;
+  if (isError)
+    return (
+      <div className="w-80% mx-auto ">
+        Failed to load products. Please try again.
+      </div>
+    );
   // console.log(products);
 
   return (
     <div className="relative z-20 flex flex-col gap-6 2xl:w-[80%] 2xl:mx-auto md:px-10">
-      <div className="ml-3 mt-3 flex items-center gap-3 whitespace-nowrap overflow-hidden">
-        <HomeIcon color="primary" />
-        <span className="text-[#1982F9] text-[16px] font-bold">Trang chủ</span>
-        <span className="text-gray-500">/</span>
-        <span className="text-[16px] font-semibold">Laptop</span>
-      </div>
-
       <img
-        src="/images/banner-filter.webp"
+        src="images/homepage/headblog_banner.webp"
         className="w-full h-auto rounded-lg shadow-md"
       />
       <div className="mx-auto w-full">
