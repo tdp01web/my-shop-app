@@ -74,8 +74,16 @@ const createProduct = asyncHandler(async (req, res) => {
     // Thêm các biến thể cho sản phẩm
     if (variants && variants.length > 0) {
       for (const variant of variants) {
-        const { ram, storage, processor, gpu, quantity, price, images, attributes } =
-          variant;
+        const {
+          ram,
+          storage,
+          processor,
+          gpu,
+          quantity,
+          price,
+          images,
+          attributes,
+        } = variant;
 
         const productVariant = await ProductVariant.create({
           product: product._id,
@@ -87,7 +95,7 @@ const createProduct = asyncHandler(async (req, res) => {
           price,
           images,
           status,
-          attributes
+          attributes,
         });
 
         product.variants.push(productVariant._id);
@@ -156,7 +164,16 @@ const updateProduct = asyncHandler(async (req, res) => {
 
     if (Array.isArray(variants) && variants.length > 0) {
       for (const variant of variants) {
-        const { _id, ram, storage, processor, gpu, quantity, price, attributes } = variant;
+        const {
+          _id,
+          ram,
+          storage,
+          processor,
+          gpu,
+          quantity,
+          price,
+          attributes,
+        } = variant;
 
         if (_id && mongoose.Types.ObjectId.isValid(_id)) {
           const existingVariant = await ProductVariant.findById(_id);
@@ -167,7 +184,8 @@ const updateProduct = asyncHandler(async (req, res) => {
             existingVariant.gpu = gpu || existingVariant.gpu;
             existingVariant.quantity = quantity || existingVariant.quantity;
             existingVariant.price = price || existingVariant.price;
-            existingVariant.attributes = attributes || existingVariant.attributes
+            existingVariant.attributes =
+              attributes || existingVariant.attributes;
 
             await existingVariant.save();
             newVariantIds.push(existingVariant._id);
@@ -181,7 +199,7 @@ const updateProduct = asyncHandler(async (req, res) => {
             gpu,
             quantity,
             price,
-            attributes
+            attributes,
           });
 
           newVariantIds.push(newVariant._id);
@@ -232,7 +250,9 @@ const deleteProduct = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Brand not found" });
     }
     if (brand.status === 0) {
-      return res.status(400).json({ message: "Cannot modify product because the brand is suspended." });
+      return res.status(400).json({
+        message: "Cannot modify product because the brand is suspended.",
+      });
     }
 
     const category = await Category.findById(product.category);
@@ -240,16 +260,17 @@ const deleteProduct = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
     if (category.status === 0) {
-      return res.status(400).json({ message: "Cannot modify product because the category is suspended." });
+      return res.status(400).json({
+        message: "Cannot modify product because the category is suspended.",
+      });
     }
 
     product.status = product.status === 1 ? 0 : 1;
     const updatedProduct = await product.save();
 
-    await ProductVariant.updateMany(
-      { product: product._id },
-      { status: 0 }
-    );
+    await ProductVariant.updateMany({ product: product._id }, { status: 0 });
+
+    await Product.updateMany({ product: product._id }, { statusCmt: 0 });
 
     res.json(updatedProduct);
   } catch (error) {
@@ -269,7 +290,9 @@ const deleteComment = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Brand not found" });
     }
     if (brand.status === 0) {
-      return res.status(400).json({ message: "Cannot modify product because the brand is suspended." });
+      return res.status(400).json({
+        message: "Cannot modify product because the brand is suspended.",
+      });
     }
 
     const category = await Category.findById(product.category);
@@ -277,9 +300,18 @@ const deleteComment = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
     if (category.status === 0) {
-      return res.status(400).json({ message: "Cannot modify product because the category is suspended." });
+      return res.status(400).json({
+        message: "Cannot modify product because the category is suspended.",
+      });
     }
 
+    if (product.status === 0) {
+      return res
+        .status(400)
+        .json({
+          message: "Cannot modify comment because the product is suspended.",
+        });
+    }
     product.statusCmt = product.statusCmt === 1 ? 0 : 1;
 
     const updatedProduct = await product.save();
@@ -298,12 +330,16 @@ const deleteCommentDetail = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const ratingIndex = product.ratings.findIndex(rating => rating._id.toString() === id);
-    if (ratingIndex === -1) {
-      return res.status(404).json({ message: "Comment not found" });
+    if (product.status === 0) {
+      return res
+        .status(400)
+        .json({
+          message: "Cannot modify comment because the product is suspended.",
+        });
     }
 
-    product.ratings[ratingIndex].isClose = product.ratings[ratingIndex].isClose === 1 ? 0 : 1;
+    product.ratings[ratingIndex].isClose =
+      product.ratings[ratingIndex].isClose === 1 ? 0 : 1;
 
     const updatedProduct = await product.save();
 
@@ -316,6 +352,11 @@ const deleteCommentDetail = asyncHandler(async (req, res) => {
 const getaProduct = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Tăng lượt xem
+    await Product.findByIdAndUpdate(id, { $inc: { views: 1 } });
+
+    // Lấy sản phẩm
     const product = await Product.findById(id)
       .populate("category")
       .populate("brand")
@@ -331,7 +372,7 @@ const getaProduct = asyncHandler(async (req, res) => {
 
     res.status(200).json(product);
   } catch (error) {
-    console.error("Error fetching product:", error); // Log lỗi
+    console.error("Error fetching product:", error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -549,7 +590,7 @@ const getAllProductComments = asyncHandler(async (req, res) => {
             : "Unknown",
           email: rating.postedby ? rating.postedby.email : "Unknown",
           date: rating.createdAt,
-          isClose: rating.isClose
+          isClose: rating.isClose,
         })),
       };
     });
@@ -659,6 +700,52 @@ const getAllProductsForUsers = asyncHandler(async (req, res) => {
   }
 });
 
+const getTopSellingProducts = asyncHandler(async (req, res) => {
+  try {
+    const products = await Product.find()
+      .sort({ sold: -1 }) // Sắp xếp lượt bán giảm dần
+      .limit(5); // Lấy 5 sản phẩm đầu tiên
+
+    res.status(200).json({
+      message: "Top 5 sản phẩm bán chạy nhất",
+      products,
+    });
+  } catch (error) {
+    console.error("Error fetching top selling products:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//Lấy danh sách sản phẩm theo lượt bán giảm dần
+const getProductsBySales = asyncHandler(async (req, res) => {
+  try {
+    const products = await Product.find().sort({ sold: -1 }); // Sắp xếp lượt bán giảm dần
+
+    res.status(200).json({
+      message: "Danh sách sản phẩm theo lượt bán giảm dần",
+      products,
+    });
+  } catch (error) {
+    console.error("Error fetching products by sales:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//Lấy danh sách sản phẩm theo lượt xem giảm dần
+const getProductsByViews = asyncHandler(async (req, res) => {
+  try {
+    const products = await Product.find().sort({ views: -1 }); // Sắp xếp lượt xem giảm dần
+
+    res.status(200).json({
+      message: "Danh sách sản phẩm theo lượt xem giảm dần",
+      products,
+    });
+  } catch (error) {
+    console.error("Error fetching products by views:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = {
   createProduct,
   getaProduct,
@@ -677,5 +764,8 @@ module.exports = {
   getProductComments,
   getAllProductComments,
   deleteComment,
-  deleteCommentDetail
+  deleteCommentDetail,
+  getTopSellingProducts,
+  getProductsBySales,
+  getProductsByViews,
 };

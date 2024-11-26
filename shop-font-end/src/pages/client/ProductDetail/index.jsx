@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { instance } from "../../../configs/instance";
 import ProductDetailMain from "./component/ProductDetailMain";
@@ -12,23 +12,42 @@ const ProductDetail = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
 
-  // Lấy chi tiết sản phẩm
+  const getQuantities = (variants) => {
+    return variants?.map((variant) => variant.quantity) || [];
+  };
+
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["PRODUCTS", id],
     queryFn: async () => {
       const { data } = await instance.get(`product/getaProduct/${id}`);
-
-      console.log("🚀 ~ queryFn: ~ data:", data);
       return data;
     },
-    staleTime: 0,
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
+    staleTime: 1000 * 60, // Giữ stale trong 1 phút
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
+  const previousQuantitiesRef = useRef([]);
+
+  const haveQuantitiesChanged = (prev, current) => {
+    if (prev.length !== current.length) return true;
+    return current.some((qty, index) => qty !== prev[index]);
+  };
+
   useEffect(() => {
-    refetch();
-  }, [refetch, data]);
+    const currentQuantities = getQuantities(data?.variants);
+
+    if (
+      currentQuantities.length > 0 &&
+      previousQuantitiesRef.current.length > 0 &&
+      haveQuantitiesChanged(previousQuantitiesRef.current, currentQuantities)
+    ) {
+      queryClient.invalidateQueries(["PRODUCTS", id]);
+      refetch();
+    }
+
+    previousQuantitiesRef.current = currentQuantities;
+  }, [data?.variants, refetch, id]);
 
   const {
     data: relatedProductsData,

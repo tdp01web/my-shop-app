@@ -10,10 +10,6 @@ import {
 import Product from "../../../../components/Product";
 
 const SimilarProducts = ({ dataProductCategory }) => {
-  console.log(
-    "🚀 ~ SimilarProducts ~ dataProductCategory:",
-    dataProductCategory
-  );
   const settings = {
     dots: true,
     infinite: true,

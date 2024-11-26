@@ -8,8 +8,6 @@ import Quantity from "../../../../components/quantity";
 import { instance } from "../../../../configs/instance";
 
 const ProductDetailMain = ({ product }) => {
-  console.log("🚀 ~ ProductDetailMain ~ product:", product);
-
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
   const [count, setCount] = useState(1);
   const [nav1, setNav1] = useState(null);
