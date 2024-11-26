@@ -109,7 +109,14 @@ const OrderDetail = () => {
               </p>
             </div>
 
-            {data.orderStatus !== "Đã Hủy" ? (
+            {data.orderStatus === "Đã Hủy" && (
+              <div className="flex items-center mb-3 gap-x-3">
+                <p className="w-1/3">Lý do huỷ:</p>
+                <p className="flex-1">{data?.cancellationReason}</p>
+              </div>
+            )}
+
+            {/* {data.orderStatus !== "Đã Hủy" ? (
               <div className="flex items-center mb-3 gap-x-3">
                 <p className="w-1/3">Thời gian nhận hàng:</p>
                 <p className="flex-1"></p>
@@ -119,7 +126,7 @@ const OrderDetail = () => {
                 <p className="w-1/3">Lý do huỷ:</p>
                 <p className="flex-1">{data?.cancellationReason}</p>
               </div>
-            )}
+            )} */}
           </div>
 
           <div className="col-span-12 md:col-span-4 pt-3 px-4 pb-4 border border-[#CFCFCF] rounded">
@@ -198,13 +205,13 @@ const OrderDetail = () => {
             </p>
           </div>
 
-          <div className="flex items-center mb-3">
+          {/* <div className="flex items-center mb-3">
             <p className="w-1/2 flex items-center gap-x-1">
               <FaCheckCircle className="text-[14px] text-[#24b400]" />
               <span>Số tiền đã thanh toán:</span>
             </p>
             <p className="w-1/2 text-right font-bold text-[#e30019]">0₫</p>
-          </div>
+          </div> */}
         </div>
 
         <div className="my-40 text-center">

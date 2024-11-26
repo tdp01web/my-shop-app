@@ -3,6 +3,7 @@ import React from "react";
 import { instance } from "../../../configs/instance";
 import { message } from "antd";
 import Product from "../../../components/Product";
+import Loader from "../../../components/Loading";
 
 const FavoritesList = () => {
   const { data } = useQuery({
@@ -26,7 +27,7 @@ const FavoritesList = () => {
     <div className="w-[80%] mx-auto ">
       {wishlist.length === 0 ? (
         <div className="text-center">
-          Không có sản phẩm yêu thích trong dữ liệu
+          <Loader />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
