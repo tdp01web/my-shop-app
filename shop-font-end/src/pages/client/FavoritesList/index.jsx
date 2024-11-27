@@ -4,9 +4,11 @@ import { instance } from "../../../configs/instance";
 import { message } from "antd";
 import Product from "../../../components/Product";
 import Loader from "../../../components/Loading";
+import Notification from "../../../components/Notification";
+import { Link } from "react-router-dom";
 
 const FavoritesList = () => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["favorites"],
     queryFn: async () => {
       const { data } = await instance.get("user/getWishlist");
@@ -23,11 +25,20 @@ const FavoritesList = () => {
 
   const wishlist = data?.wishlist || [];
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div className="w-[80%] mx-auto ">
       {wishlist.length === 0 ? (
         <div className="text-center">
-          <Loader />
+          <Link to={"/"}>
+            <Notification
+              text1={"Bạn chưa thêm sản phẩm nào vào yêu thích"}
+              text2={"Quay trở về trang chủ"}
+            />
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

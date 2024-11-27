@@ -84,47 +84,54 @@ const Product = ({
   }
 
   return (
-    <Link
-      to={`/products/${_id}`}
-      className="relative h-[100%] bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm group"
-    >
+    <div className="relative h-[100%] bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm group">
+      {/* Biểu tượng yêu thích */}
       <div
-        className={`absolute top-2 left-2 ${
+        className={`absolute z-10 top-2 left-2 ${
           isInWishlist ? "text-red-500" : "text-gray-400"
-        } opacity-0 group-hover:opacity-100 cursor-pointer`}
+        } cursor-pointer`}
         onClick={handleAddToWishlist}
       >
         <AiFillHeart size={24} />
       </div>
 
-      <div>
-        <img src={productImage} alt={title} className="w-full h-auto" />
-      </div>
-      <p className="line-clamp-2 font-600 text-[14px]">{title}</p>
-      <div className="leading-none text-gray-500 flex items-center gap-2">
-        <p className="text-red-500 font-600 text-[14px] md:text-[18px]">
-          {firstVariant?.price.toLocaleString()}đ
+      {/* Nội dung sản phẩm - dùng Link để điều hướng */}
+      <Link to={`/products/${_id}`} className="flex flex-col gap-3 h-full">
+        <div className="w-full relative">
+          <img
+            src={productImage}
+            alt={title}
+            className="w-full h-auto aspect-square"
+          />
+        </div>
+        <p className="line-clamp-2 h-[40px] font-600 text-[14px] overflow-hidden text-ellipsis">
+          {title}
         </p>
-      </div>
-      <div className="flex flex-col gap-3 bg-[#ECECEC] p-2 rounded-md">
-        {specs.map((spec, index) => (
-          <p
-            key={index}
-            className="flex items-center text-[13px] gap-1 text-[#6D6E72]"
-          >
-            {spec.icon} {spec.text}
+        <div className="leading-none text-gray-500 flex items-center gap-2">
+          <p className="text-red-500 font-600 text-[14px] md:text-[18px]">
+            {firstVariant?.price.toLocaleString()}đ
           </p>
-        ))}
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-[#FF8A00] flex items-center gap-1 text-[14px]">
-          {totalrating} <FaStar />
-        </span>
-        <span className=" text-[14px] text-[#6D6E72]">
-          ({ratings.length} đánh giá)
-        </span>
-      </div>
-    </Link>
+        </div>
+        <div className="flex flex-col gap-2 bg-[#ECECEC] p-2 rounded-md">
+          {specs.map((spec, index) => (
+            <p
+              key={index}
+              className="flex items-center h-[25px] text-[13px] gap-1 text-[#6D6E72]"
+            >
+              {spec.icon} {spec.text}
+            </p>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[#FF8A00] flex items-center gap-1 text-[14px]">
+            {totalrating} <FaStar />
+          </span>
+          <span className=" text-[14px] text-[#6D6E72]">
+            ({ratings.length} đánh giá)
+          </span>
+        </div>
+      </Link>
+    </div>
   );
 };
 

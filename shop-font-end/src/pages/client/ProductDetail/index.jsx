@@ -59,7 +59,12 @@ const ProductDetail = () => {
     );
 
   return data?.status === 0 ? (
-    <Notification />
+    <Link to={"/"}>
+      <Notification
+        text1={"Sản phẩm này không khả dụng"}
+        text2={"Vui lòng quay về trang chủ "}
+      />
+    </Link>
   ) : (
     <div className="lg:w-[80%] w-full flex flex-col mx-auto gap-5  p-5">
       {data && (

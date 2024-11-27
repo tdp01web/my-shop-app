@@ -13,7 +13,7 @@ const Endow = () => {
     queryKey: ["Data_Laptop_Sell_Well"],
     queryFn: async () => {
       try {
-        const { data } = await instance.get("product/top-selling");
+        const { data } = await instance.get("product/top-selling-user");
         return data;
       } catch (error) {
         console.log("🚀 ~ queryFn:async ~ error:", error);
