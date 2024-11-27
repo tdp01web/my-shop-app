@@ -88,43 +88,56 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
   return (
     <div className="w-full flex flex-col lg:flex-row gap-4 bg-white rounded-lg">
       <div className="slider-product w-full lg:w-1/3">
-        <Slider asNavFor={nav2} ref={(slider) => (sliderRef1 = slider)}>
-          {product.images.map((image) => (
-            <div key={image._id}>
-              <img
-                src={image.url}
-                alt="Product"
-                className="inset-0 w-full h-full object-cover object-center rounded-lg"
-              />
-            </div>
-          ))}
-        </Slider>
+        {product?.images?.length > 2 ? (
+          <>
+            <Slider asNavFor={nav2} ref={(slider) => (sliderRef1 = slider)}>
+              {product.images.map((image) => (
+                <div key={image._id}>
+                  <img
+                    src={image.url}
+                    alt="Product"
+                    className="inset-0 w-full h-full  object-cover object-center rounded-lg"
+                  />
+                </div>
+              ))}
+            </Slider>
 
-        <Slider
-          asNavFor={nav1}
-          ref={(slider) => (sliderRef2 = slider)}
-          slidesToShow={3}
-          swipeToSlide={true}
-          focusOnSelect={true}
-        >
-          {product.images.map((image) => (
-            <div key={image._id}>
-              <img
-                src={image.url}
-                alt="Product Thumbnail"
-                className="inset-0 w-full h-full p-1 object-cover cursor-pointer"
-              />
-            </div>
-          ))}
-        </Slider>
+            <Slider
+              asNavFor={nav1}
+              ref={(slider) => (sliderRef2 = slider)}
+              slidesToShow={3}
+              swipeToSlide={true}
+              focusOnSelect={true}
+            >
+              {product.images.map((image) => (
+                <div key={image._id} className="w-full h-full">
+                  <img
+                    src={image.url}
+                    alt="Product Thumbnail"
+                    className="inset-0 w-full  h-full p-1 object-cover cursor-pointer"
+                  />
+                </div>
+              ))}
+            </Slider>
+          </>
+        ) : (
+          <div className=" h-full p-5 justify-center  flex items-center">
+            <img
+              src={product?.images[0]?.url || "fallback-image.jpg"}
+              alt="Product"
+              className="inset-0 w-full rounded-lg"
+            />
+          </div>
+        )}
       </div>
+
       <div className="w-full lg:w-2/3 p-5 border-l-2 flex flex-col gap-4 border-solid">
-        <h2 className="text-[24px] font-600">{product.title}</h2>
+        <h2 className="text-[24px] font-600">{product?.title}</h2>
         <p className="text-[20px] font-500 text-red-600">
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
-          }).format(selectedVariant.price)}
+          }).format(selectedVariant?.price)}
         </p>
 
         <table className="min-w-full border border-gray-200">
@@ -132,35 +145,41 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">SSD</td>
               <td className="p-3">
-                {selectedVariant.storage?.capacity || "N/A"}
+                {selectedVariant?.storage?.capacity || "Chưa có thông tin"}
               </td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">CPU</td>
               <td className="p-3">
-                {selectedVariant.processor?.name || "N/A"}
+                {selectedVariant?.processor?.name || "Chưa có thông tin"}
               </td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">VGA</td>
-              <td className="p-3">{selectedVariant.gpu?.name || "N/A"}</td>
+              <td className="p-3">
+                {selectedVariant?.gpu?.name || "Chưa có thông tin"}
+              </td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">RAM</td>
-              <td className="p-3">{selectedVariant.ram?.size || "N/A"}</td>
+              <td className="p-3">
+                {selectedVariant?.ram?.size || "Chưa có thông tin"}
+              </td>
             </tr>
             <tr className="border-b">
               <td className="p-3 bg-gray-100 font-semibold">LCD</td>
-              <td className="p-3">{product.lcd || "N/A"} | </td>
+              <td className="p-3">{product?.lcd || "Chưa có thông tin"} | </td>
             </tr>
             <tr>
               <td className="p-3 bg-gray-100 font-semibold">Số lượng</td>
-              <td className="p-3">{selectedVariant.quantity || "N/A"}</td>
+              <td className="p-3">
+                {selectedVariant?.quantity || "Chưa có thông tin"}
+              </td>
             </tr>
           </tbody>
         </table>
 
-        {product.variants.length > 0 && (
+        {product?.variants?.length > 0 && (
           <>
             <div className="flex flex-wrap gap-2 mt-5">
               {product.variants.map((variant) => (
@@ -172,18 +191,18 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
                       ? "border-orange-400"
                       : "border-gray-300"
                   }`}
-                  disabled={variant.quantity <= 0} // Vô hiệu hóa các biến thể hết hàng
+                  disabled={variant?.quantity <= 0} // Vô hiệu hóa các biến thể hết hàng
                 >
-                  {variant.processor.name} | {variant.ram.size} |{" "}
-                  {variant.storage.capacity}
-                  {variant.quantity <= 0 && " (Hết hàng)"}
+                  {variant?.processor?.name} | {variant?.ram?.size} |{" "}
+                  {variant?.storage?.capacity}
+                  {variant?.quantity <= 0 && " (Hết hàng)"}
                 </button>
               ))}
             </div>
 
             {user ? (
               <>
-                {selectedVariant.quantity <= 0 ? (
+                {selectedVariant?.quantity <= 0 ? (
                   <Link to={"/"}>
                     <Button
                       variant="contained"
@@ -195,7 +214,7 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
                 ) : (
                   <>
                     <Quantity
-                      maxQuantity={selectedVariant.quantity}
+                      maxQuantity={selectedVariant?.quantity}
                       onChange={setCount}
                     />
                     <Button

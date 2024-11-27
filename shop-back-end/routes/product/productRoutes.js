@@ -21,6 +21,7 @@ const {
   getTopSellingProducts,
   getProductsBySales,
   getProductsByViews,
+  getTopSellingProductsUsers,
 } = require("../../controller/product/productCtrl");
 const router = express.Router();
 const {
@@ -70,6 +71,8 @@ router.post("/variant/:variantId", deleteProductVariant);
 
 // Lấy top 5 sản phẩm bán chạy
 router.get("/top-selling", getTopSellingProducts);
+//top 5 sanr phẩm user
+router.get("/top-selling-user", getTopSellingProductsUsers);
 
 // Lấy danh sách sản phẩm theo lượt bán giảm dần
 router.get("/products-by-sales", getProductsBySales);

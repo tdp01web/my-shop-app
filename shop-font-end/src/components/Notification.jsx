@@ -30,7 +30,7 @@ const TextWrapper = styled.div`
   margin-top: 1rem;
 `;
 
-const Notification = () => {
+const Notification = ({ text1, text2 }) => {
   return (
     <NotificationWrapper>
       <AnimationWrapper>
@@ -38,14 +38,9 @@ const Notification = () => {
       </AnimationWrapper>
       <TextWrapper>
         <TypeAnimation
-          sequence={[
-            "Sản phẩm này không khả dụng", // Dòng chữ đầu tiên
-            1500, // Thời gian hiển thị
-            "Vui lòng chọn sản phẩm khác", // Dòng chữ thứ hai
-            1500, // Thời gian hiển thị
-          ]}
+          sequence={[`${text1} `, 1500, `${text2} `, 1500]}
           wrapper="span"
-          speed={40} // Tốc độ gõ
+          speed={40}
           style={{
             display: "inline-block",
           }}

@@ -501,7 +501,6 @@ const rateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-
 const getProductComments = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -697,6 +696,32 @@ const getAllProductsForUsers = asyncHandler(async (req, res) => {
   }
 });
 
+//top 5 sản phẩm bán chạy user
+const getTopSellingProductsUsers = asyncHandler(async (req, res) => {
+  try {
+    const products = await Product.find({ status: 1 })
+      .sort({ sold: -1 })
+      .limit(5)
+      .populate({
+        path: "variants",
+        populate: [
+          { path: "ram", select: "size" },
+          { path: "storage", select: "name" },
+          { path: "processor", select: "name" },
+          { path: "gpu", select: "name" },
+        ],
+      });
+
+    res.status(200).json({
+      message: "Top 5 sản phẩm bán chạy nhất không bị đình chỉ",
+      products,
+    });
+  } catch (error) {
+    console.error("Error fetching top selling products:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 const getTopSellingProducts = asyncHandler(async (req, res) => {
   try {
     const products = await Product.find()
@@ -774,4 +799,5 @@ module.exports = {
   getTopSellingProducts,
   getProductsBySales,
   getProductsByViews,
+  getTopSellingProductsUsers,
 };

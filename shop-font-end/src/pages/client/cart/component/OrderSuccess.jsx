@@ -8,11 +8,14 @@ const OrderSuccess = () => {
   const [order, setOrder] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [messageStatus, setMessageStatus] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const resultCode = params.get("resultCode");
     const orderId = params.get("orderId");
+    const message = params.get("message");
+    setMessageStatus(message);
 
     if (resultCode === "0" && orderId) {
       fetchOrderDetails(orderId);
@@ -38,8 +41,7 @@ const OrderSuccess = () => {
     return <Loader />;
   }
 
-  const { shippingAddress, totalPrice, paymentMethod, _id, paymentIntent } =
-    order;
+  const { shippingAddress, totalPrice, paymentMethod, _id } = order;
 
   return (
     <div className="flex flex-col gap-4 md:w-[40%] mx-auto bg-white p-5 rounded-md">
@@ -91,7 +93,7 @@ const OrderSuccess = () => {
             <strong>Hình thức thanh toán:</strong> {paymentMethod}
           </li>
           <li className="flex gap-2 md:gap-5">
-            <strong>Trạng thái:</strong> {paymentIntent.message}
+            <strong>Trạng thái:</strong> {messageStatus}
           </li>
         </ul>
       </div>

@@ -61,6 +61,7 @@
   opacity: 1;
   visibility: visible;
 }
+
 .slider-product .slick-slider .slick-prev {
   background-color: rgb(208, 208, 208);
   left: 0px !important;
