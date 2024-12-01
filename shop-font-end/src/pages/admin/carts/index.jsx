@@ -91,10 +91,12 @@ const DetailCart = () => {
       count: (item?.products.length).toString(),
       totalPrice: (item.totalPrice).toString(),
       users: item?.shippingAddress.name,
+      mobile: item?.shippingAddress.phone,
       date: moment(item.createdAt).format("YYYY-MM-DD HH:mm"),
       comple: item?.orderStatus,
       isDone: item?.orderStatus === "Hoàn Thành",
-      isCancel: item?.orderStatus === "Đã Hủy"
+      isCancel: item?.orderStatus === "Đã Hủy",
+      salesTypes: item?.salesTypes === 0 ? "Tại Quầy" : "Online"
     }
   })
 
@@ -112,6 +114,13 @@ const DetailCart = () => {
       key: "users",
       ...getColumnSearchProps('users'),
       sorter: (a, b) => a.users.localeCompare(b.users),
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "mobile",
+      key: "mobile",
+      ...getColumnSearchProps('mobile'),
+      sorter: (a, b) => a.mobile.localeCompare(b.mobile),
     },
     {
       title: "Số lượng",
@@ -132,6 +141,13 @@ const DetailCart = () => {
       key: "date",
       ...getColumnSearchProps('date'),
       sorter: (a, b) => a.date.localeCompare(b.date),
+    },
+    {
+      title: "Phương thức",
+      dataIndex: "salesTypes",
+      key: "salesTypes",
+      ...getColumnSearchProps('salesTypes'),
+      sorter: (a, b) => a.salesTypes.localeCompare(b.salesTypes),
     },
     {
       title: "Trạng thái",
@@ -159,13 +175,8 @@ const DetailCart = () => {
     <div>
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-semibold text-2xl">Quản lý đơn hàng</h1>
-        <Button type="primary">
-          <Link to="/admin/carts">
-            <PlusCircleFilled /> Danh sánh đơn hàng đang giao
-          </Link>
-        </Button>
       </div>
-      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isCancel ? 'bg-gray-300 ' : record.isDone ? 'bg-[#66FF99]': null)} />
+      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isCancel ? 'bg-gray-300 ' : record.isDone ? 'bg-[#66FF99]' : null)} />
     </div>
   );
 };

@@ -35,6 +35,7 @@ function getItem(
 
 export const items = [
   getItem(<Link to="/admin">Dashboard</Link>, '/admin/dashboard', <HomeOutlined />),
+  getItem(<Link to="/admin/sales">Bán hàng</Link>, '/admin/sales', <MenuOutlined />),
   getItem('Danh mục', 'Danh mục', <MenuOutlined />, [
     getItem(<Link to="/admin/categories">Danh sách danh mục</Link>, '/admin/categories'),
   ]),

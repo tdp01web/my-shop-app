@@ -164,24 +164,27 @@ export const ListVouchers = () => {
       dataIndex: "action",
       width: 250,
       render: (_, voucher) => {
-        const isActive = voucher.status ==="Sử dụng"
+        const isActive = voucher.status === "Sử dụng"
         return (
-        <div className="flex space-x-3">
-          <Popconfirm
-            title="Xóa hãng"
-            onConfirm={() => mutate(voucher.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
-              {isActive ? "Đình chỉ" : "Sử dụng"}
+          <div className="flex space-x-3">
+            <Popconfirm
+              title={isActive ? "Đình chỉ vouchers?" : "Kích hoạt vouchers?"}
+              onConfirm={() => {
+                mutate(voucher.id);
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
+              </Button>
+            </Popconfirm>
+            <Button>
+              <Link to={`/admin/vouchers/${voucher.id}/edit`}>Chi tiết</Link>
             </Button>
-          </Popconfirm>
-          <Button>
-            <Link to={`/admin/vouchers/${voucher.id}/edit`}>Chi tiết</Link>
-          </Button>
-        </div>
-      )}
+          </div>
+        )
+      }
     },
   ];
   if (isLoading) return <p>Loading...</p>

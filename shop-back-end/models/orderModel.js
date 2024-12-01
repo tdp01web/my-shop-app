@@ -36,7 +36,7 @@ var orderSchema = new mongoose.Schema(
         quantity: Number,
         count: {
           type: Number,
-          required: true,
+          required: false,
         },
       },
     ],
@@ -50,24 +50,24 @@ var orderSchema = new mongoose.Schema(
     },
     shippingFee: {
       type: Number,
-      required: true,
+      required: false,
     },
     totalPrice: {
       type: Number,
       required: true,
     },
     shippingAddress: {
-      name: { type: String, required: true },
-      phone: { type: String, required: true },
-      addressLine1: { type: String, required: true },
-      city: { type: String, required: true },
-      district: { type: String, required: true },
-      ward: { type: String, required: true },
+      name: { type: String, required: false },
+      phone: { type: String, required: false },
+      addressLine1: { type: String, required: false },
+      city: { type: String, required: false },
+      district: { type: String, required: false },
+      ward: { type: String, required: false },
       postalCode: { type: String, required: false },
     },
     paymentMethod: {
       type: String,
-      enum: ["Thanh Toán Khi Nhận Hàng", "MOMO"],
+      enum: ["Thanh Toán Khi Nhận Hàng", "MOMO", "Tiền Mặt", "Chuyển Khoản"],
       required: true,
     },
     paymentStatus: {
@@ -87,7 +87,6 @@ var orderSchema = new mongoose.Schema(
       enum: [
         "Đang Xử Lý",
         "Đã Xác Nhận",
-        "Đang Đóng Gói",
         "Đang Giao Hàng",
         "Đã Giao Hàng",
         "Hoàn Thành",
@@ -100,6 +99,11 @@ var orderSchema = new mongoose.Schema(
         return this.orderStatus === "Đã Hủy";
       },
     },
+    salesTypes:{
+      type: Number,
+      enum: [0, 1],
+      default: 1, // 1 ban onl 0 ban tai quay
+    }
   },
   {
     timestamps: true,

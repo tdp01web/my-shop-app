@@ -51,6 +51,8 @@ import EditUser from "../pages/admin/user/editUser";
 import ListBlog from "../pages/admin/blog";
 import AddBlog from "../pages/admin/blog/addBlog";
 import EditBlog from "../pages/admin/blog/editBlog";
+import Sales from "../pages/admin/sales";
+import TabsProvider from "../pages/admin/sales/provider";
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
 const LayoutClient = lazy(() => import("../layouts/client"));
@@ -150,6 +152,8 @@ const Router = () => {
             }
           >
             <Route index element={<Dashboard />} />
+            {/* Sales */}
+            <Route path="sales" element={<TabsProvider><Sales /></TabsProvider>} />
             {/* Brand */}
             <Route path="brand" element={<ListBrand />} />
             <Route path="brand/add" element={<AddBrand />} />

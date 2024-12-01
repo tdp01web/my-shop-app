@@ -14,10 +14,10 @@ const Blogpostitem = ({ blogItems }) => {
     <>
       {blogItems.map((blog, index) => (
         <div key={index}>
-          <div className="grid grid-cols-12 gap-4 mb-5">
+          <div className="gap-4 grid grid-cols-12 mb-5">
             <div className="col-span-3">
               <img
-                src={blog.images[0].url || "/images/Blog/default.webp"}
+                src={blog?.images[0]?.url || "/images/Blog/default.webp"}
                 alt={blog.title}
                 className="mb-2 rounded"
               />
@@ -29,7 +29,7 @@ const Blogpostitem = ({ blogItems }) => {
               >
                 {blog.title}
               </Link>
-              <p className="pt-2 flex items-center text-gray-500">
+              <p className="flex items-center pt-2 text-gray-500">
                 <AccessTimeIcon className="mr-1" /> {blog.updatedAt || ""}
               </p>
             </div>

@@ -15,6 +15,6 @@ router.get("/getaCoupons/:id", authMiddleware, getCoupon);
 router.get("/getallCoupons", authMiddleware, getAllCouponsForUser);
 router.get("/getallCouponsAdmin", authMiddleware, getAllCouponsForAdmin);
 router.put("/updateCoupon/:id", authMiddleware, isAdmin, updateCoupon);
-router.delete("/deleteCoupon/:id", authMiddleware, isAdmin, deleteCoupon);
+router.post("/deleteCoupon/:id", authMiddleware, isAdmin, deleteCoupon);
 
 module.exports = router;

@@ -10,6 +10,8 @@ const {
   handleMomoPayment,
   callback,
   cancelMyOrder,
+  createOrderSales
+
 } = require("../../controller/order/order");
 const {
   authMiddleware,
@@ -18,7 +20,7 @@ const {
 const router = express.Router();
 
 router.post("/", authMiddleware, createOrder); // Order sản phẩm
-
+router.post("/sales", authMiddleware, createOrderSales); //sales
 // Thanh toán online
 router.post("/payment", authMiddleware, handleMomoPayment);
 router.post("/callback", callback);

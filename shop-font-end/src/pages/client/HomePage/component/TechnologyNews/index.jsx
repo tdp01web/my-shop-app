@@ -12,17 +12,17 @@ const TechnologyNews = ({ ListData, isLoadingBlog }) => {
   //     </div>
   //   );
   // }
-
+  console.log("ListData", ListData)
   return (
-    <div className="bg-white p-4 flex flex-col gap-2 rounded-sm">
+    <div className="flex flex-col gap-2 bg-white p-4 rounded-sm">
       <div className="flex justify-between">
-        <h2 className="text-[24px] font-600 ">Tin tức công nghệ</h2>
+        <h2 className="font-600 text-[24px]">Tin tức công nghệ</h2>
         <Link to={"/blog"} className="text-[#1982F9]">
           Xem tất cả
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="gap-4 grid grid-cols-2 md:grid-cols-4">
         {ListData.slice(0, 4).map((item, index) =>
           isLoadingBlog ? (
             <BlogSkeleton key={index} />
@@ -34,12 +34,12 @@ const TechnologyNews = ({ ListData, isLoadingBlog }) => {
             >
               <div className="relative pb-[56.25%] rounded-sm">
                 <img
-                  src={item.images[0].url}
+                  src={item?.images[0]?.url}
                   alt={item.title}
-                  className="absolute top-0 left-0 w-full rounded-[4px] h-full object-cover"
+                  className="top-0 left-0 absolute rounded-[4px] w-full h-full object-cover"
                 />
               </div>
-              <p className="text-[16px] font-[500] line-clamp-2">
+              <p className="line-clamp-2 font-[500] text-[16px]">
                 {item.title}
               </p>
             </Link>

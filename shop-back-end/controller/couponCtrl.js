@@ -63,8 +63,13 @@ const deleteCoupon = asyncHandle(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteCoupon = await Coupon.findByIdAndDelete(id);
-    res.json(deleteCoupon);
+    const deleteCoupon = await Coupon.findById(id);
+    if (!deleteCoupon) {
+      return res.status(404).json({ message: "Coupon not found" });
+    }
+    deleteCoupon.status = deleteCoupon.status === 1 ? 0 : 1;
+    const updateCoupon = await deleteCoupon.save();
+    res.json(updateCoupon);
   } catch (error) {
     throw new Error(error);
   }

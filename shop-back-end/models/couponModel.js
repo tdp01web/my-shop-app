@@ -36,7 +36,7 @@ const couponSchema = new mongoose.Schema({
   status: {
     type: Number,
     enum: [0, 1], // 0: Không hoạt động, 1: Hoạt động
-    default: 0,
+    default: 1,
   },
   usageCount: {
     type: Number,
@@ -59,23 +59,23 @@ couponSchema.pre("findOne", function (next) {
 couponSchema.statics.updateStatus = async function () {
   const now = new Date();
 
-  // Cập nhật mã chưa đến ngày sử dụng
-  await this.updateMany(
-    { startDate: { $gt: now }, status: 1 }, // Mã chưa bắt đầu nhưng đang được bật
-    { $set: { status: 0 } }
-  );
+  // // Cập nhật mã chưa đến ngày sử dụng
+  // await this.updateMany(
+  //   { startDate: { $gt: now }, status: 1 }, // Mã chưa bắt đầu nhưng đang được bật
+  //   { $set: { status: 0 } }
+  // );
 
-  // Cập nhật mã đến thời gian sử dụng
-  await this.updateMany(
-    { startDate: { $lte: now }, expiry: { $gt: now }, status: 0 },
-    { $set: { status: 1 } }
-  );
+  // // Cập nhật mã đến thời gian sử dụng
+  // await this.updateMany(
+  //   { startDate: { $lte: now }, expiry: { $gt: now }, status: 0 },
+  //   { $set: { status: 1 } }
+  // );
 
-  // Cập nhật mã hết hạn
-  await this.updateMany(
-    { expiry: { $lte: now }, status: 1 },
-    { $set: { status: 0 } }
-  );
+  // // Cập nhật mã hết hạn
+  // await this.updateMany(
+  //   { expiry: { $lte: now }, status: 1 },
+  //   { $set: { status: 0 } }
+  // );
 };
 
 module.exports = mongoose.model("Coupon", couponSchema);

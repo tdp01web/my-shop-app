@@ -129,7 +129,6 @@ const createOrder = asyncHandler(async (req, res) => {
       },
     }));
     console.log(updateProducts);
-
     await Product.bulkWrite(updateProducts, {});
 
     if (userCart.products.some((item) => item.variant)) {
@@ -180,6 +179,20 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 });
 
+const createOrderSales = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  validateMongoDbId(_id);
+  try {
+    const user = await User.findById(_id);
+    const newOrder = await Order.create({
+      ...req.body,
+      orderedBy: user
+    });
+    res.json(newOrder);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 // Hàm xử lý thanh toán MOMO
 const handleMomoPayment = async (amount, orderId) => {
   var accessKey = "F8BBA842ECF85";
@@ -610,4 +623,5 @@ module.exports = {
   callback,
   transactionStatus,
   cancelMyOrder,
+  createOrderSales
 };
