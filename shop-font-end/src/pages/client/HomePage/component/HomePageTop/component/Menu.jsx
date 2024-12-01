@@ -12,101 +12,84 @@ import { RiComputerLine, RiRamLine } from "react-icons/ri";
 import { SlEarphones } from "react-icons/sl";
 import { Link } from "react-router-dom";
 import { useBreakpoints } from "../../../../../../hooks/useBreakpoints";
+import useProductFilters from "../../../../../../hooks/useFilter/useProductFilters";
 
-const menuItems = [
-  {
-    title: "Laptop",
-    link: "/laptop",
-    icon: <PiLaptopLight />,
-    subItems: [
-      {
-        title: "Thương hiệu",
-        subItems: [
-          "ASUS",
-          "ACER",
-          "MSI",
-          "LENOVO",
-          "DELL",
-          "HP - Pavilion",
-          "LG - Gram",
-        ],
-      },
-      {
-        title: "Giá bán",
-        subItems: ["Dưới 15 triệu", "Từ 15 đến 20 triệu", "Trên 20 triệu"],
-      },
-      {
-        title: "CPU Intel - AMD",
-        subItems: [
-          "Intel Core i3",
-          "Intel Core i5",
-          "Intel Core i7",
-          "AMD Ryzen",
-        ],
-      },
-      {
-        title: "Nhu cầu sử dụng",
-        subItems: [
-          "Đồ họa - Studio",
-          "Học sinh - Sinh viên",
-          "Mỏng nhẹ cao cấp",
-        ],
-      },
-      {
-        title: "Linh phụ kiện Laptop",
-        subItems: ["Ram laptop", "SSD laptop", "Ổ cứng di động"],
-      },
-    ],
-  },
-  {
-    title: "Laptop Gaming",
-    link: "/laptop-gaming",
-    icon: <LiaLaptopCodeSolid />,
-  },
-  { title: "PC GVN", link: "/pc-gvn", icon: <GiPc /> },
-  { title: "Main, CPU, VGA", link: "/main-cpu-vga", icon: <GiPc /> },
-  { title: "Case, Nguồn, Tản", link: "/case-nguon-tan", icon: <GiPc /> },
-  {
-    title: "Ổ cứng, RAM, Thẻ nhớ",
-    link: "/o-cung-ram-the-nho",
-    icon: <RiRamLine />,
-  },
-  {
-    title: "Loa, Micro, Webcam",
-    link: "/loa-micro-webcam",
-    icon: <CiSpeaker />,
-  },
-  { title: "Màn hình", link: "/man-hinh", icon: <RiComputerLine /> },
-  { title: "Bàn phím", link: "/ban-phim", icon: <FaRegKeyboard /> },
-  {
-    title: "Chuột + Lót chuột",
-    link: "/chuot-lot-chuot",
-    icon: <CiDesktopMouse2 />,
-  },
-  { title: "Tai Nghe", link: "/tai-nghe", icon: <SlEarphones /> },
-  { title: "Ghế - Bàn", link: "/ghe-ban", icon: <PiOfficeChairLight /> },
-  { title: "Phần mềm, mạng", link: "/phan-mem-mang", icon: <BsPrinter /> },
-  {
-    title: "Handheld, Console",
-    link: "/handheld-console",
-    icon: <IoGameControllerOutline />,
-  },
-  {
-    title: "Phụ kiện (Hub, sạc, cáp...)",
-    link: "/phu-kien",
-    icon: <IoGameControllerOutline />,
-  },
-  {
-    title: "Thủ thuật - Giải đáp",
-    link: "/thu-thuat-giai-dap",
-    icon: <GoGift />,
-  },
-];
-
-const Menu = () => {
+/* eslint-disable react/prop-types */
+const Menu = ({ products }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
-  const hoverTimeout = useRef(null); // Ref để giữ timeout ID
+  const hoverTimeout = useRef(null); // Ref to hold timeout ID
+
+  const [selectedBrand, setSelectedBrand] = useState([]);
+
+  const { Brand, filteredProducts } = useProductFilters(
+    products,
+    [0, 10000000000],
+    [],
+    [],
+    [],
+    selectedBrand,
+    [],
+    []
+  );
+
+  const menuItems = [
+    {
+      title: "Laptop",
+      link: "/laptop",
+      icon: <PiLaptopLight />,
+      subItems: [
+        {
+          title: "Thương hiệu",
+          link: "/laptop/brand",
+          subItems: [Brand],
+        },
+      ],
+    },
+    {
+      title: "Laptop Gaming",
+      link: "/laptop-gaming",
+      icon: <LiaLaptopCodeSolid />,
+    },
+    { title: "PC GVN", link: "/pc-gvn", icon: <GiPc /> },
+    { title: "Main, CPU, VGA", link: "/main-cpu-vga", icon: <GiPc /> },
+    { title: "Case, Nguồn, Tản", link: "/case-nguon-tan", icon: <GiPc /> },
+    {
+      title: "Ổ cứng, RAM, Thẻ nhớ",
+      link: "/o-cung-ram-the-nho",
+      icon: <RiRamLine />,
+    },
+    {
+      title: "Loa, Micro, Webcam",
+      link: "/loa-micro-webcam",
+      icon: <CiSpeaker />,
+    },
+    { title: "Màn hình", link: "/man-hinh", icon: <RiComputerLine /> },
+    { title: "Bàn phím", link: "/ban-phim", icon: <FaRegKeyboard /> },
+    {
+      title: "Chuột + Lót chuột",
+      link: "/chuot-lot-chuot",
+      icon: <CiDesktopMouse2 />,
+    },
+    { title: "Tai Nghe", link: "/tai-nghe", icon: <SlEarphones /> },
+    { title: "Ghế - Bàn", link: "/ghe-ban", icon: <PiOfficeChairLight /> },
+    { title: "Phần mềm, mạng", link: "/phan-mem-mang", icon: <BsPrinter /> },
+    {
+      title: "Handheld, Console",
+      link: "/handheld-console",
+      icon: <IoGameControllerOutline />,
+    },
+    {
+      title: "Phụ kiện (Hub, sạc, cáp...)",
+      link: "/phu-kien",
+      icon: <IoGameControllerOutline />,
+    },
+    {
+      title: "Thủ thuật - Giải đáp",
+      link: "/thu-thuat-giai-dap",
+      icon: <GoGift />,
+    },
+  ];
 
   const handleMouseEnter = (index) => {
     if (hoverTimeout.current) {
@@ -120,7 +103,7 @@ const Menu = () => {
       setHoveredItem(null);
     }, 200); // Thêm độ trễ 200ms trước khi ẩn menu
   };
-
+  // console.log("Menu.jsx", products);
   return (
     <div className="flex md:w-full relative gap-4">
       <ul className="flex bg-[#E30019] hide-scrollbar w-full overflow-x-auto md:flex-col md:gap-[10px] md:bg-white md:rounded-lg p-2 md:px-5 py-3 md:py-2 md:w-full text-[14px] 2xl:text-[13px] font-500">
@@ -153,15 +136,42 @@ const Menu = () => {
           onMouseLeave={handleMouseLeave} // Thêm hành động rời chuột
         >
           {menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
-            <div key={subIndex} className="mb-2">
-              <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>
-              <ul>
-                {subItem.subItems.map((subSubItem, subSubIndex) => (
-                  <li key={subSubIndex} className="">
-                    {subSubItem}
-                  </li>
-                ))}
-              </ul>
+            <div key={subIndex} className="flex flex-row space-x-4">
+              {Brand.filter((brand) =>
+                filteredProducts.some(
+                  (product) =>
+                    product.brand &&
+                    product.brand.title === brand &&
+                    product.views > 5 
+                )
+              ).map((brand, index) => (
+                <div key={index} className="brand-section">
+                  <h2 className="font-bold text-[#E30019]">{brand}</h2>
+                  <ul>
+                    {filteredProducts
+                      .filter(
+                        (product) =>
+                          product.brand &&
+                          product.brand.title === brand &&
+                          product.views > 5 
+                      )
+                      .map((product, productIndex) => (
+                        <li
+                          key={product._id}
+                          className={`flex items-center ${
+                            productIndex !== filteredProducts.length - 1
+                              ? "border-b-2 border-gray-300"
+                              : ""
+                          }`}
+                        >
+                          <Link to={`/products/${product._id}`}>
+                            <p className="py-1">{product.title}</p>
+                          </Link>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           ))}
         </div>

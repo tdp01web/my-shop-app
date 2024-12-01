@@ -8,7 +8,7 @@ import { LinearProgress, Box, Typography } from "@mui/material";
 import SoldProgressBar from "../../../../../../components/SoldProgressBar";
 import { Link } from "react-router-dom";
 const SlideSaleProduct = ({ productList }) => {
-  console.log("🚀 ~ SlideSaleProduct ~ productList:", productList);
+  // console.log("🚀 ~ SlideSaleProduct ~ productList:", productList);
   const settings = {
     dots: true,
     infinite: true,
@@ -56,8 +56,8 @@ const SlideSaleProduct = ({ productList }) => {
       </div>
       <div className="w-full md:w-2/3 h-full">
         <Slider {...settings}>
-          {productList.map((item) => (
-            <Link to={`/products/${item._id}`} key={item.id}>
+          {productList.map((item, index) => (
+            <Link to={`/products/${item._id}`} key={index}>
               <div className="flex flex-col gap-3 bg-white shadow-lg mx-[2px] px-2 py-2 rounded-sm">
                 <div className="relative w-full">
                   <img
