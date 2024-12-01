@@ -1,5 +1,5 @@
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { Box, Button, Popover } from "@mui/material";
+import { Button, Popover } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import FilterPopover from "./FilterModule/FilterPopover";
@@ -27,11 +27,14 @@ const TotalFilter = ({
   Cpunames,
   Brand,
   LCD,
+  Category,
   SSDnames,
   Vganames,
+  selectedCategory,
   selectedSSD,
   setSelectedSSD,
   selectedIndices,
+  setSelectedCategory,
   setSelectedIndices,
   setSelectedLcd,
   selectedLcd,
@@ -85,12 +88,15 @@ const TotalFilter = ({
           setSelectedCpu={setSelectedCpu}
           selectedIndices={selectedIndices}
           setSelectedIndices={setSelectedIndices}
+          selectedCategory={selectedCategory}
           selectedSSD={selectedSSD}
           setSelectedSSD={setSelectedSSD}
           selectedLcd={selectedLcd}
           setSelectedLcd={setSelectedLcd}
           selectedVga={selectedVga}
           setSelectedVga={setSelectedVga}
+          setSelectedCategory={setSelectedCategory}
+          Category={Category}
           Brand={Brand}
           Cpunames={Cpunames}
           LCD={LCD}

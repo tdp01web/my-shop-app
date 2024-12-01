@@ -6,6 +6,7 @@ import RAMcon from "../components/RAM";
 import SSDcon from "../components/SSD";
 import Size from "../components/Size";
 import VGAcon from "../components/VGA";
+import Categorycon from "./../components/Category";
 
 /* eslint-disable react/prop-types */
 const FilterPopover = ({
@@ -16,6 +17,7 @@ const FilterPopover = ({
   selectedCpu,
   setSelectedCpu,
   selectedIndices,
+  setSelectedCategory,
   setSelectedIndices,
   selectedSSD,
   setSelectedSSD,
@@ -23,9 +25,11 @@ const FilterPopover = ({
   setSelectedLcd,
   selectedVga,
   setSelectedVga,
+  selectedCategory,
   Brand,
   Cpunames,
   ramSizes,
+  Category,
   LCD,
   SSDnames,
   Vganames,
@@ -35,6 +39,7 @@ const FilterPopover = ({
     setSelectedVga([]);
     setSelectedBrand([]);
     setSelectedIndices([]);
+    setSelectedCategory([]);
     setSelectedSSD([]);
     setSelectedLcd([]);
     setPriceRange([0, 10000000000]);
@@ -98,6 +103,16 @@ const FilterPopover = ({
       ),
     },
     {
+      label: "Nhu cầu sử dụng",
+      component: (
+        <Categorycon
+          Category={Category}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
+      ),
+    },
+    {
       label: "VGA",
       component: (
         <VGAcon
@@ -133,9 +148,6 @@ const FilterPopover = ({
       <Box mt={2} display="flex" justifyContent="space-between" width="100%">
         <Button variant="outlined" color="error" onClick={resetFilters}>
           Bỏ chọn
-        </Button>
-        <Button variant="contained" sx={{ backgroundColor: "#007bff" }}>
-          Xem kết quả
         </Button>
       </Box>
     </Box>
