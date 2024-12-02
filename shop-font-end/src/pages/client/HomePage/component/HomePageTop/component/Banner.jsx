@@ -16,21 +16,21 @@ const ImageBanner = () => {
           <img
             src="/images/homepage/artboard_7.webp"
             alt=""
-            className="w-full object-cover"
+            className="w-full h-[130px] mt-2 object-cover"
           />
         </Link>
         <Link to={"/collection"}>
           <img
             src="/images/homepage/artboard_8.webp"
             alt=""
-            className="w-full object-cover"
+            className="w-full h-[130px] mt-2 object-cover"
           />
         </Link>
         <Link to={"/collection"}>
           <img
             src="/images/homepage/artboard_9.webp"
             alt=""
-            className="w-full object-cover"
+            className="w-full h-[130px] mt-2 object-cover"
           />
         </Link>
       </div>
