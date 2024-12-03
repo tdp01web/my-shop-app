@@ -9,7 +9,7 @@ var orderSchema = new mongoose.Schema(
     },
     products: [
       {
-        prodId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" }, // Thêm ID sản phẩm
+        prodId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
         title: String,
         slug: String,
         description: String,
@@ -99,11 +99,11 @@ var orderSchema = new mongoose.Schema(
         return this.orderStatus === "Đã Hủy";
       },
     },
-    salesTypes:{
+    salesTypes: {
       type: Number,
       enum: [0, 1],
       default: 1, // 1 ban onl 0 ban tai quay
-    }
+    },
   },
   {
     timestamps: true,

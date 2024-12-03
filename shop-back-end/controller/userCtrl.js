@@ -386,8 +386,11 @@ const getWishlist = asyncHandler(async (req, res) => {
     });
 
     // Kiểm tra nếu wishlist trống
+    // Nếu user hoặc wishlist không tồn tại, trả về danh sách rỗng
     if (!user || !user.wishlist || user.wishlist.length === 0) {
-      return res.status(404).json({ message: "Wishlist is empty" });
+      return res
+        .status(200)
+        .json({ wishlist: [], message: "Wishlist is empty" });
     }
 
     // Trả về wishlist đã được populate
@@ -538,7 +541,8 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 
 const updateUserByAdmin = asyncHandler(async (req, res) => {
   const { id } = req.params; // Lấy id từ params
-  const { firstName, lastName, email, mobile, address, role, password } = req.body; // Các thông tin cần cập nhật
+  const { firstName, lastName, email, mobile, address, role, password } =
+    req.body; // Các thông tin cần cập nhật
 
   try {
     // Kiểm tra user có tồn tại không
