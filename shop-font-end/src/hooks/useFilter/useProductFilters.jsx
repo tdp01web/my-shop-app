@@ -6,6 +6,7 @@ import useBrandFilter from "./component/useBrandFilter";
 import useLcdFilter from "./component/useLcdFilter";
 import useSSDFilter from "./component/useSSDFilter";
 import useArrangeFilter from "./component/useArrangeFilter";
+import useCategoryFilter from "./component/useCategoryFilter";
 
 const useProductFilters = (
   products,
@@ -15,7 +16,8 @@ const useProductFilters = (
   selectedVga,
   selectedBrand,
   selectedLcd,
-  selectedSSD
+  selectedSSD,
+  selectedCategory
 ) => {
   const {
     priceNames,
@@ -53,7 +55,12 @@ const useProductFilters = (
     selectedSSD
   );
 
-  const { sortedProducts, sortProducts } = useArrangeFilter(filteredBySSD);
+  const { Category, filteredProducts: filteredByCategory } = useCategoryFilter(
+    filteredBySSD,
+    selectedCategory
+  );
+
+  const { sortedProducts, sortProducts } = useArrangeFilter(filteredByCategory);
 
   return {
     noProductsMessage,
@@ -63,8 +70,9 @@ const useProductFilters = (
     Brand,
     LCD,
     SSDnames,
+    Category,
     priceNames,
-    filteredProducts: filteredBySSD,
+    filteredProducts: filteredByCategory,
     sortedProducts,
     sortProducts,
   };
