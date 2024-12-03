@@ -17,10 +17,17 @@ const FormUser = ({ item }) => {
 
   const { data: dataVoucher, isLoading, isError } = useGetAllVouchers({
     onSuccess: (data) => {
-      const voucher = data?.data?.map((item) => ({
-        value: `${item?.maxDiscountAmount}-${item?._id}`,
-        label: item?.name,
-      }));
+      const currentDate = new Date();
+      const voucher = data?.data
+        ?.filter(item =>
+          item.status === 1 &&
+          new Date(item.expiry) > currentDate &&
+          item.maxUses > 0
+        )
+        .map(item => ({
+          value: `${item?.maxDiscountAmount}-${item?._id}`,
+          label: item?.name,
+        }));
       setOptionVoucher(voucher);
     },
     onError: (error) => {
@@ -30,17 +37,23 @@ const FormUser = ({ item }) => {
 
   const onChangeVoucher = (value) => {
     const selectedVoucher = optionVoucher.find(option => option.value === value);
-    form1.setFieldsValue({ discount: selectedVoucher ? (selectedVoucher.value.split('-')[0]) : 0 });
+    form1.setFieldsValue({ discount: selectedVoucher ? (Number(selectedVoucher.value.split('-')[0]).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })) : 0 });
     calculateTotalPrice();
   };
 
   const calculateTotalPrice = () => {
-    const totalProductPrice = form1.getFieldValue('totalProductPrice') || 0;
-    const discount = form1.getFieldValue('discount') || 0;
+    const totalProductPrice = form1.getFieldValue('totalProductPrice') || '0';
+    const discount = form1.getFieldValue('discount') || '0';
     const shipping = watchDelivery ? (watchShip === 1 ? 40000 : 25000) : 0;
 
-    const finalPrice = Number(totalProductPrice) + shipping - Number(discount);
-    form1.setFieldsValue({ totalPrice: finalPrice });
+    const totalProductPriceNum = Number(totalProductPrice.replace(/[₫,. ]/g, ''));
+    const discountNum = Number(discount.replace(/[₫,. ]/g, ''));
+
+    const finalPrice = totalProductPriceNum + Number(shipping) - discountNum;
+
+    form1.setFieldsValue({
+      totalPrice: isNaN(finalPrice) ? 0 : finalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+    });
   };
 
   useEffect(() => {
@@ -52,8 +65,8 @@ const FormUser = ({ item }) => {
       ship: 1,
       delivery: false,
       paymentMethod: 1,
-      discount: 0,
-      totalProductPrice: item?.product?.reduce((acc, curr) => Number(acc) + Number(curr?.totalPrice), 0),
+      discount: Number(0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }),
+      totalProductPrice: Number(item?.product?.reduce((acc, curr) => Number(acc) + Number(curr?.totalPrice), 0)).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }),
     });
     calculateTotalPrice();
   }, [item]);
@@ -81,15 +94,20 @@ const FormUser = ({ item }) => {
   })
 
   const onFinish = (values) => {
+    if (item.product.length === 0) {
+      return message.error('Vui lòng chọn sản phẩm')
+    }
     const transFormData = {
       products: item.product.map((pr) => {
         return {
           prodId: pr.keyPr,
           title: (pr.title).split('|')[0].trim(),
+          images: pr.image,
           processor: pr.cpu,
           gpu: pr.gpu,
           ram: pr.ram,
           storage: pr.ssd,
+          price: pr.price,
           count: pr.quantityPr,
           variant: pr.id
         }
@@ -100,15 +118,14 @@ const FormUser = ({ item }) => {
         addressLine1: values.address,
       },
       shippingFee: values.ship === 1 ? 40000 : 25000,
-      totalProductPrice: values.totalProductPrice,
-      totalPrice: values.totalPrice,
+      totalProductPrice:  Number(values.totalProductPrice.replace(/[₫,. ]/g, '')),
+      totalPrice:  Number(values.totalPrice.replace(/[₫,. ]/g, '')),
       paymentMethod: values.paymentMethod === 1 ? "Tiền Mặt" : "Chuyển Khoản",
       paymentStatus: "Đã Thanh Toán",
       orderStatus: "Hoàn Thành",
       salesTypes: 0
     }
     mutate(transFormData);
-    console.log(transFormData)
   };
   return (
     <>
@@ -133,29 +150,33 @@ const FormUser = ({ item }) => {
             </div>
             <div className='mt-4'>
               <Form.Item
-                label="Tên"
+                label={<span className="block min-w-[80px] text-left">Tên:</span>}
                 name="name"
                 rules={[{ required: true, message: "Tên khách hàng bắt buộc phải điền" }]}
+                colon={false}
               >
                 <Input placeholder='Nhập tên khách hàng' />
               </Form.Item>
               <Form.Item
-                label="Email"
+                label={<span className="block min-w-[80px] text-left">Email:</span>}
                 name="email"
+                colon={false}
               >
                 <Input placeholder='Nhập email khách hàng' />
               </Form.Item>
               <Form.Item
-                label="Số điện thoại"
+                label={<span className="block min-w-[80px] text-left">Số điện thoại:</span>}
                 name="mobile"
                 rules={[{ required: true, message: "Số điện thoại bắt buộc phải điền" }]}
+                colon={false}
               >
                 <Input placeholder='Nhập số điện thoại khách hàng' />
               </Form.Item>
               <Form.Item
-                label="Địa chỉ"
+                label={<span className="block min-w-[80px] text-left">Địa chỉ:</span>}
                 name="address"
                 rules={watchDelivery ? [{ required: true, message: "Địa chỉ bắt buộc phải điền" }] : []}
+                colon={false}
               >
                 <Input placeholder='Nhập địa chỉ khách hàng' />
               </Form.Item>
@@ -165,8 +186,9 @@ const FormUser = ({ item }) => {
             <h3 className='font-bold text-xl'>Thông tin thanh toán</h3>
             <div className='mt-4'>
               <Form.Item
-                label="Thanh toán"
+                label={<span className="block min-w-[100px] text-left">Thanh toán:</span>}
                 name="paymentMethod"
+                colon={false}
               >
                 <Radio.Group>
                   <Radio value={1}>Tiền Mặt</Radio>
@@ -174,8 +196,9 @@ const FormUser = ({ item }) => {
                 </Radio.Group>
               </Form.Item>
               <Form.Item
-                label="Mã giảm giá"
+                label={<span className="block min-w-[100px] text-left">Mã giảm giá:</span>}
                 name="voucher"
+                colon={false}
               >
                 <Select
                   showSearch
@@ -188,21 +211,24 @@ const FormUser = ({ item }) => {
                 />
               </Form.Item>
               <Form.Item
-                label="Tiền hàng"
+                label={<span className="block min-w-[100px] text-left">Tiền hàng:</span>}
                 name="totalProductPrice"
+                colon={false}
               >
                 <Input placeholder='Nhập tiền hàng' onChange={calculateTotalPrice} style={{ pointerEvents: 'none', border: 'none' }} />
               </Form.Item>
               <Form.Item
-                label="Giao hàng"
+                label={<span className="block min-w-[100px] text-left">Giao hàng:</span>}
                 name="delivery"
+                colon={false}
               >
                 <Switch />
               </Form.Item>
               {watchDelivery && (
                 <Form.Item
-                  label="Vận chuyển"
+                  label={<span className="block min-w-[100px] text-left">Vận chuyển:</span>}
                   name="ship"
+                  colon={false}
                 >
                   <Radio.Group>
                     <Radio value={1}>Giao hàng nhanh</Radio>
@@ -211,14 +237,16 @@ const FormUser = ({ item }) => {
                 </Form.Item>
               )}
               <Form.Item
-                label="Giảm giá"
+                label={<span className="block min-w-[100px] text-left">Giảm giá:</span>}
                 name="discount"
+                colon={false}
               >
                 <Input placeholder='Nhập giảm giá' onChange={calculateTotalPrice} style={{ pointerEvents: 'none', border: 'none' }} />
               </Form.Item>
               <Form.Item
-                label="Tổng tiền"
+                label={<span className="block min-w-[100px] text-left">Tổng tiền:</span>}
                 name="totalPrice"
+                colon={false}
               >
                 <Input placeholder='Tổng tiền' style={{ pointerEvents: 'none', border: 'none' }} />
               </Form.Item>
