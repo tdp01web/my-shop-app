@@ -19,6 +19,7 @@ const orderRouter = require("./routes/order/orderRouter");
 const historyOrderRouter = require("./routes/orderHistory");
 const enqRouter = require("./routes/enqRouter");
 const cartRouter = require("./routes/cart/cartRoutes");
+const statsRouter = require("./routes/statsRouter");
 const uploadRouter = require("./routes/uploadRouter");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -49,7 +50,8 @@ app.use("/api/coupon", couponRouter);
 app.use("/api/enquiry", enqRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/order", orderRouter);
-app.use("/api/historyOrder", historyOrderRouter)
+app.use("/api/historyOrder", historyOrderRouter);
+app.use("/api/stats", statsRouter);
 
 app.use(notFound);
 app.use(errorHandler);
