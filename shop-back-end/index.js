@@ -16,6 +16,7 @@ const ssdRouter = require("./routes/product/ssdRoutes");
 const ramRouter = require("./routes/product/ramRoutes");
 const cpuRouter = require("./routes/product/cpuRoutes");
 const orderRouter = require("./routes/order/orderRouter");
+const historyOrderRouter = require("./routes/orderHistory");
 const enqRouter = require("./routes/enqRouter");
 const cartRouter = require("./routes/cart/cartRoutes");
 const uploadRouter = require("./routes/uploadRouter");
@@ -48,6 +49,7 @@ app.use("/api/coupon", couponRouter);
 app.use("/api/enquiry", enqRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/historyOrder", historyOrderRouter)
 
 app.use(notFound);
 app.use(errorHandler);

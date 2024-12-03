@@ -1,4 +1,4 @@
-import { BackwardFilled } from "@ant-design/icons";
+import { BackwardFilled, HistoryOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Input, message, Select } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import moment from "moment/moment";
+import ModalHistoryOrder from "./modalHistoryOrder";
 const DetailCart = () => {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
@@ -14,7 +15,19 @@ const DetailCart = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [cancellationReason, setCancellationReason] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   const options = [
     { value: "Đang Xử Lý", label: "Đang Xử Lý" },
     { value: "Đã Xác Nhận", label: "Đã Xác Nhận" },
@@ -87,12 +100,18 @@ const DetailCart = () => {
       </div>
 
       <div className="px-6 py-4">
-        <p className="font-semibold text-[#FF7A00] text-[24px]">
-          Trạng thái: {order.orderStatus}
-        </p>
-        <p className="font-semibold text-[24px]">
-          Ngày đặt: {moment(order.createdAt).format("YYYY-MM-DD HH:mm")}
-        </p>
+        <div className="flex flex-row justify-between">
+          <p className="font-semibold text-[#FF7A00] text-[24px]">
+            Trạng thái: {order.orderStatus}
+          </p>
+          <p className="font-semibold text-[24px]">
+            Ngày đặt: {moment(order.createdAt).format("YYYY-MM-DD HH:mm")}
+          </p>
+        </div>
+        <Button type="primary" className="mt-4" onClick={showModal}>
+          <HistoryOutlined /> Lịch sử đơn hàng
+        </Button>
+        <ModalHistoryOrder id={id} isModalOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
         <div className="gap-4 grid grid-cols-12 mt-6">
           <div className="col-span-12 md:col-span-8 p-4 border rounded">
             <div className="flex items-center gap-x-3 mb-3">

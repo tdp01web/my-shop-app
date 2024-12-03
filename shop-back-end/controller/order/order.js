@@ -5,6 +5,7 @@ const validateMongoDbId = require("../../utils/validateMongodbId");
 const Product = require("../../models/product/productModel");
 const Cart = require("../../models/cartModel");
 const Order = require("../../models/orderModel");
+const OrderHistory = require("../../models/orderHistory");
 const productVariantModel = require("../../models/product/productVariantModel");
 const axios = require("axios");
 const crypto = require("crypto");
@@ -78,6 +79,13 @@ const createOrder = asyncHandler(async (req, res) => {
       orderStatus: "Đang Xử Lý",
     });
 
+    await OrderHistory.create({
+      orderId: newOrder._id,
+      name: `${user.lastName} ${user.firstName}`,
+      status: newOrder.orderStatus,
+      user: user._id,
+      time: new Date(),
+    });
     const savedOrder = await newOrder.save();
 
     let paymentIntent;
@@ -188,6 +196,14 @@ const createOrderSales = asyncHandler(async (req, res) => {
       ...req.body,
       orderedBy: user
     });
+    await OrderHistory.create({
+      orderId: newOrder._id,
+      name: `${user.lastName} ${user.firstName}`,
+      status: req.body.orderStatus,
+      user: user._id,
+      time: new Date(),
+    });
+
     res.json(newOrder);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -381,7 +397,6 @@ const getOrderById = asyncHandler(async (req, res) => {
 const getAllOrdersForAdmin = asyncHandler(async (req, res) => {
   try {
     const orders = await Order.find({}).sort({ createdAt: -1 });
-
     if (!orders || orders.length === 0) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng nào." });
     }
@@ -408,7 +423,7 @@ const cancelOrderForUser = asyncHandler(async (req, res) => {
 
   try {
     const order = await Order.findOne({ _id: orderId, orderedBy: _id });
-
+    const user = await User.findById(_id);
     if (!order) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
     }
@@ -444,10 +459,18 @@ const cancelOrderForUser = asyncHandler(async (req, res) => {
       }));
 
     await productVariantModel.bulkWrite(revertVariants, {});
-
     // Cập nhật trạng thái đơn hàng thành 'Đã Hủy' và lưu lý do
     order.orderStatus = "Đã Hủy";
     order.cancellationReason = cancellationReason; // Lưu lý do hủy
+
+    await OrderHistory.create({
+      orderId: orderId,
+      name: `${user.lastName} ${user.firstName}`,
+      status: "Đã Hủy",
+      user: user._id,
+      time: new Date(),
+    });
+
     await order.save();
 
     res.json({ message: "Đơn hàng đã được hủy thành công.", order });
@@ -524,7 +547,9 @@ const statusOrderFlow = [
 const updateStatus = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
   const { orderStatus, cancellationReason } = req.body;
+  const { _id } = req.user;
 
+  const user = await User.findById(_id);
   const order = await Order.findById(orderId);
 
   if (!order) {
@@ -561,6 +586,14 @@ const updateStatus = asyncHandler(async (req, res) => {
     order.cancellationReason = cancellationReason;
   }
 
+  await OrderHistory.create({
+    orderId: orderId,
+    name: `${user.lastName} ${user.firstName}`,
+    status: orderStatus,
+    user: user._id,
+    time: new Date(),
+  });
+
   await order.save();
 
   return res.status(200).json({
@@ -579,6 +612,7 @@ const cancelMyOrder = asyncHandler(async (req, res) => {
     _id: orderId,
     orderedBy: _id,
   });
+  const user = await User.findById(_id);
 
   if (!order) {
     return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
@@ -602,6 +636,13 @@ const cancelMyOrder = asyncHandler(async (req, res) => {
   order.orderStatus = "Đã Hủy";
   order.cancellationReason = cancelReason;
 
+  await OrderHistory.create({
+    orderId: orderId,
+    name: `${user.lastName} ${user.firstName}`,
+    status: order.orderStatus,
+    user: user._id,
+    time: new Date(),
+  });
   await order.save();
 
   return res.status(200).json({
