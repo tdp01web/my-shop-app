@@ -113,8 +113,9 @@ const ModalProduct = React.forwardRef((_, ref) => {
         text
       ),
   });
-  const dataSource =
-    product?.data.map((item) => {
+  const dataSource = product?.data
+    .filter(item => item.status === 1)
+    .map(item => {
       const prices = item?.variants.map(variant => variant.price) || [];
       const minPrice = prices.length > 0 ? Math.min(...prices) : null;
       return {
@@ -227,12 +228,12 @@ const ModalProduct = React.forwardRef((_, ref) => {
       render: (_, record) => {
         return (
           <div className="flex space-x-3">
-            <Button type='primary' onClick={() => {
+            {record.quantity !== "0" ? <Button type='primary' onClick={() => {
               handleAddProduct(key, record)
               handleOk()
             }}>
               Chọn
-            </Button>
+            </Button> : "Hết hàng"}
           </div>
         );
       },

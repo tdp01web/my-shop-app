@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
 import { Button, Form, Input, InputNumber, Popconfirm, Popover, Radio, Select, Space, Switch, Table, Tabs, message } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
+import { PlusCircleFilled, SearchOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTabsContext } from './contextTab';
 import ModalProduct from './modalProduct';
@@ -94,7 +94,7 @@ const Sales = () => {
         return (
           <div className='flex flex-col'>
             <span>{record.title}</span>
-            <span className='text-[1.4rem] text-red-500'>{record.price}</span>
+            <span className='text-[1.4rem] text-red-500'>{Number(record.price).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
           </div>
         )
       }
@@ -134,7 +134,7 @@ const Sales = () => {
       title: "Tổng tiền",
       sorter: (a, b) => a.price.localeCompare(b.price),
       render: (_, record) => {
-        return <span className='text-[1.4rem] text-red-500'>{record.totalPrice}</span>;
+        return <span className='text-[1.4rem] text-red-500'>{Number(record.totalPrice).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>;
       }
     },
     {
@@ -144,7 +144,7 @@ const Sales = () => {
       render: (_, record) => {
         return (
           <div className="flex space-x-3">
-            <Button type="primary" onClick={() => handleRemoveProduct(activeKey, record.keyPr)}>
+            <Button type="primary" danger onClick={() => handleRemoveProduct(activeKey, record.keyPr)}>
               Xóa
             </Button>
           </div>
@@ -184,7 +184,7 @@ const Sales = () => {
                 <Button type="primary" onClick={() => {
                   modalProductRef.current.open(i.key)
                 }}>
-                  Thêm sản phẩm
+                  <PlusCircleFilled /> Thêm sản phẩm
                 </Button>
               </div>
               <Table

@@ -13,7 +13,9 @@ import {
   InsuranceOutlined,
   ProductOutlined,
   MenuOutlined,
-  FolderOpenOutlined
+  FolderOpenOutlined,
+  ShopOutlined,
+  NotificationOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -35,7 +37,7 @@ function getItem(
 
 export const items = [
   getItem(<Link to="/admin">Dashboard</Link>, '/admin/dashboard', <HomeOutlined />),
-  getItem(<Link to="/admin/sales">Bán hàng</Link>, '/admin/sales', <MenuOutlined />),
+  getItem(<Link to="/admin/sales">Bán hàng</Link>, '/admin/sales', <ShopOutlined />),
   getItem('Danh mục', 'Danh mục', <MenuOutlined />, [
     getItem(<Link to="/admin/categories">Danh sách danh mục</Link>, '/admin/categories'),
   ]),
@@ -58,7 +60,6 @@ export const items = [
   ]),
   getItem('Sản phẩm', 'Sản phẩm', <LaptopOutlined />, [
     getItem(<Link to="/admin/products">Danh sách sản phẩm</Link>, '/admin/products'),
-    getItem(<Link to="/admin/products/add">Thêm mới sản phẩm</Link>, '/admin/products/add'),
   ]),
   getItem('Tài khoản', 'Tài khoản', <UserOutlined />, [
     getItem(<Link to="/admin/users">Danh sách tài khoản</Link>, '/admin/users'),
@@ -72,8 +73,7 @@ export const items = [
   getItem('Vouchers', 'Vouchers', <TagsOutlined />, [
     getItem(<Link to="/admin/vouchers">Danh sách Vouchers</Link>, '/admin/vouchers'),
   ]),
-  getItem('Tin tức', 'Tin tức', <TagsOutlined />, [
+  getItem('Tin tức', 'Tin tức', <NotificationOutlined />, [
     getItem(<Link to="/admin/blog">Danh sách Tin tức</Link>, '/admin/blog'),
   ]),
-  getItem(<Link to="/">Trở lại trang chủ</Link>, "home", <HomeOutlined />),
 ];

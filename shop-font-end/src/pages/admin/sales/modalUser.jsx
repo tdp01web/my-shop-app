@@ -112,17 +112,19 @@ const ModalUser = React.forwardRef((_, ref) => {
       console.log(error);
     }
   })
-  const dataSource = data?.data.map((item) => {
-    return {
-      key: item._id,
-      id: item._id,
-      name: `${item.lastName} ${item.firstName}`,
-      email: item.email,
-      mobile: item.mobile,
-      role: item.role,
-      address: item.address ? item.address : "Chưa cập nhật địa chỉ",
-    };
-  });
+  const dataSource = data?.data
+    .filter(item => item.status === 1 && item.role === "User")
+    .map(item => {
+      return {
+        key: item._id,
+        id: item._id,
+        name: `${item.lastName} ${item.firstName}`,
+        email: item.email,
+        mobile: item.mobile,
+        role: item.role,
+        address: item.address ? item.address : "Chưa cập nhật địa chỉ",
+      };
+    });
   const columns = [
     {
       title: "Mã tài khoản",

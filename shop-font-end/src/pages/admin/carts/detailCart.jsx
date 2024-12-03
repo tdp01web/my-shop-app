@@ -102,9 +102,8 @@ const DetailCart = () => {
             <p>Người nhận: {order.shippingAddress.name}</p>
             <p>Số điện thoại: {order.shippingAddress.phone}</p>
             <p>
-              Địa chỉ: {order.shippingAddress.addressLine1},{" "}
-              {order.shippingAddress.ward}, {order.shippingAddress.district},{" "}
-              {order.shippingAddress.city}
+              Địa chỉ:
+              {` ${order.shippingAddress.addressLine1} ${order.shippingAddress.ward ? `, ${order.shippingAddress.ward}` : ""} ${order.shippingAddress.district ? `, ${order.shippingAddress.district}` : ""} ${order.shippingAddress.city ? `, ${order.shippingAddress.city}` : ""}`}
             </p>
             {order.orderStatus === "Đã Hủy" && (
               <p>Lý do hủy: {order.cancellationReason}</p>
@@ -171,16 +170,6 @@ const DetailCart = () => {
               {order.totalPrice.toLocaleString()}đ
             </p>
           </div>
-
-          {/* <div className="flex items-center mb-3">
-            <p className="flex items-center gap-x-1 w-1/2">
-              <FaCheckCircle className="text-[#24b400] text-[14px]" />
-              <span>Số tiền đã thanh toán:</span>
-            </p>
-            <p className="text-right w-1/2 font-bold text-[#e30019]">
-              {order.paidAmount?.toLocaleString() || "0"}đ
-            </p>
-          </div> */}
         </div>
         <div className="mt-6 p-4 border rounded">
           <Form
