@@ -78,7 +78,7 @@ export default function CouponDropdown({ data, onApplyCouponSuccess }) {
     <div className="md:p-4 w-full">
       <div className="relative">
         <button
-          className="flex items-center border border-gray-300 text-[#E30019] px-4 py-2 rounded-md"
+          className="flex items-center border-gray-300 px-4 py-2 border rounded-md text-[#E30019]"
           onClick={() => setDropdownOpen(!isDropdownOpen)}
         >
           <CiDiscount1 className="mr-2 text-[25px]" />
@@ -94,14 +94,14 @@ export default function CouponDropdown({ data, onApplyCouponSuccess }) {
           {data?.length === 0 ? (
             <p className="mt-4 text-red-600">Không có voucher nào khả dụng</p>
           ) : (
-            <div className="h-full mt-2 space-y-2">
+            <div className="space-y-2 mt-2 h-full">
               {data?.map((coupon) => (
                 <div
                   key={coupon._id}
-                  className="flex items-center justify-between border border-gray-500 p-2 rounded-md"
+                  className="flex justify-between items-center border-gray-500 p-2 border rounded-md"
                 >
                   <div className="flex items-center">
-                    <div className="text-white w-[15%]">
+                    <div className="w-[15%] text-white">
                       <img
                         src="/images/danhmucsp/ma-giam-gia.webp"
                         alt=""
@@ -109,11 +109,11 @@ export default function CouponDropdown({ data, onApplyCouponSuccess }) {
                       />
                     </div>
                     <div className="ml-4">
-                      <p className="text-[15px] font-semibold">
-                        Giảm {coupon.discount}%
+                      <p className="font-semibold text-[15px]">
+                        Tên mã {coupon.name}
                       </p>
-                      <p className="text-[14px] font-semibold">
-                        Mã {coupon.name}
+                      <p className="font-semibold text-[14px]">
+                        Giảm {coupon.maxDiscountAmount}
                       </p>
                       <p className="text-[13px]">
                         HSD: {formatDate(coupon.expiry)}
@@ -137,12 +137,12 @@ export default function CouponDropdown({ data, onApplyCouponSuccess }) {
       </div>
 
       {selectedCoupon && (
-        <div className="mt-4 p-4 bg-green-100 border border-green-400 rounded-md flex justify-between items-center">
+        <div className="flex justify-between items-center border-green-400 bg-green-100 mt-4 p-4 border rounded-md">
           <p>
             Mã giảm giá đã áp dụng: <strong>{selectedCoupon.name}</strong>
           </p>
           <button
-            className="bg-red-500 text-white px-4 py-1 rounded-md flex items-center"
+            className="flex items-center bg-red-500 px-4 py-1 rounded-md text-white"
             onClick={handleCouponCancel}
           >
             <CancelIcon className="mr-1" /> Hủy

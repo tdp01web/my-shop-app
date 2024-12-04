@@ -74,9 +74,7 @@ const AddVouchers = () => {
             <Input />
           </Form.Item>
 
-
-
-          <Form.Item
+          {/* <Form.Item
             label="Số tiền giảm"
             name="discount"
             rules={[
@@ -85,7 +83,8 @@ const AddVouchers = () => {
             ]}
           >
             <InputNumber />
-          </Form.Item>
+          </Form.Item> */}
+
           <Form.Item
             label="Số tiền giảm tối đa"
             name="maxDiscountAmount"

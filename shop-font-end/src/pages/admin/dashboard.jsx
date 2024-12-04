@@ -95,7 +95,7 @@ const Dashboard = () => {
       stt: index + 1,
       key: product._id,
       name: product.title,
-      image: product.images[0].url,
+      image: product?.images[0]?.url,
       quantity: product.sold,
     })) || [];
 
@@ -227,25 +227,25 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-5 justify-center">
+    <div className="flex flex-col justify-center gap-5">
       {/* <h1 className="text-center text-xl">Thống kê</h1> */}
       <div className="flex gap-5">
-        <div className="flex flex-col bg-gray-200 rounded-md p-4 gap-1 w-1/3">
+        <div className="flex flex-col gap-1 bg-gray-200 p-4 rounded-md w-1/3">
           <SalesFilter />
         </div>
 
-        <div className="flex flex-col bg-gray-200 rounded-md p-4 gap-1 ">
+        <div className="flex flex-col gap-1 bg-gray-200 p-4 rounded-md">
           <ProductSalesFilter />
         </div>
       </div>
 
-      <div className="bg-gray-200 rounded-md p-4">
+      <div className="bg-gray-200 p-4 rounded-md">
         <OrderAndProductStats />
       </div>
-      <div className="flex w-full gap-3">
+      <div className="flex gap-3 w-full">
         <div className="flex flex-col gap-4 w-3/5">
-          <div className="bg-gray-200 rounded-md p-4 ">
-            <h2 className="text-[20px] font-bold text-center mb-2">
+          <div className="bg-gray-200 p-4 rounded-md">
+            <h2 className="mb-2 font-bold text-[20px] text-center">
               Top các sản phẩm bán chạy
             </h2>
             <Table
@@ -257,8 +257,8 @@ const Dashboard = () => {
               }}
             />
           </div>
-          <div className="bg-gray-200 rounded-md p-4">
-            <h2 className="text-[20px] font-bold text-center mb-2">
+          <div className="bg-gray-200 p-4 rounded-md">
+            <h2 className="mb-2 font-bold text-[20px] text-center">
               Các sản phẩm sắp hết hàng
             </h2>
             <Table
@@ -307,12 +307,12 @@ const Dashboard = () => {
             />
           </div>
         </div>
-        <div className="w-2/5 flex flex-col gap-4">
-          <div className="bg-gray-200 rounded-md p-4 ">
+        <div className="flex flex-col gap-4 w-2/5">
+          <div className="bg-gray-200 p-4 rounded-md">
             <OrderStatusStats />
           </div>
-          <div className="bg-gray-200 rounded-md p-4 ">
-            <h2 className="text-[20px] font-bold text-center mb-2">
+          <div className="bg-gray-200 p-4 rounded-md">
+            <h2 className="mb-2 font-bold text-[20px] text-center">
               Biểu đồ thống kê hóa đơn và sản phẩm
             </h2>
             <Table
@@ -321,8 +321,8 @@ const Dashboard = () => {
               pagination={false}
             />
           </div>
-          <div className="bg-gray-200 rounded-md p-4">
-            <h2 className="text-[20px] font-bold text-center mb-2">
+          <div className="bg-gray-200 p-4 rounded-md">
+            <h2 className="mb-2 font-bold text-[20px] text-center">
               Top khách hàng thân thiết
             </h2>
             <LoyalCustomers />

@@ -156,10 +156,11 @@ cartSchema.statics.findCartAndUpdatePrices = async function (cartId) {
 };
 
 cartSchema.methods.applyCoupon = async function (coupon) {
-  const discountAmount = Math.min(
-    (this.cartTotal * coupon.discount) / 100,
-    coupon.maxDiscountAmount
-  );
+  // const discountAmount = Math.min(
+  //   (this.cartTotal * coupon.discount) / 100,
+  //   coupon.maxDiscountAmount
+  // );
+  const discountAmount = coupon.maxDiscountAmount
 
   this.totalAfterDiscount = this.cartTotal - discountAmount; // Trừ trực tiếp vào giỏ hàng
   this.appliedCoupon = coupon._id; // Lưu mã giảm giá đã áp dụng
