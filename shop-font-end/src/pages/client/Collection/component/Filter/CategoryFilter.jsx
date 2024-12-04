@@ -20,7 +20,7 @@ const theme = createTheme({
 /* eslint-disable react/prop-types */
 const CategoryFilter = ({
   Category,
-  selectedCategory,
+  selectedCategory = [],
   setSelectedCategory,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);

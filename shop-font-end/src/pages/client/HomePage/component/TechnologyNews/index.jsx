@@ -12,7 +12,7 @@ const TechnologyNews = ({ ListData, isLoadingBlog }) => {
   //     </div>
   //   );
   // }
-  console.log("ListData", ListData)
+  // console.log("ListData", ListData)
   return (
     <div className="flex flex-col gap-2 bg-white p-4 rounded-sm">
       <div className="flex justify-between">
