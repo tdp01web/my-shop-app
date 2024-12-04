@@ -10,7 +10,7 @@ import { LiaLaptopCodeSolid } from "react-icons/lia";
 import { PiLaptopLight, PiOfficeChairLight } from "react-icons/pi";
 import { RiComputerLine, RiRamLine } from "react-icons/ri";
 import { SlEarphones } from "react-icons/sl";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useBreakpoints } from "../../../../../../hooks/useBreakpoints";
 import useProductFilters from "../../../../../../hooks/useFilter/useProductFilters";
 
@@ -21,10 +21,20 @@ const Menu = ({ products }) => {
   const hoverTimeout = useRef(null); // Ref to hold timeout ID
 
   const [selectedBrand, setSelectedBrand] = useState([]);
+  const navigate = useNavigate();
 
-  const { Brand, filteredProducts } = useProductFilters(
+  const {
+    Brand,
+    Cpunames,
+    ramSizes,
+    SSDnames,
+    Category,
+    Vganames,
+    filteredProducts,
+  } = useProductFilters(
     products,
     [0, 10000000000],
+    [],
     [],
     [],
     [],
@@ -32,6 +42,16 @@ const Menu = ({ products }) => {
     [],
     []
   );
+
+  const normanData = (value) => {
+    if (typeof value === "string") {
+      return value.trim().toLowerCase().replace(/\s+/g, ""); // Xóa khoảng trắng dư thừa và chuẩn hóa chữ thường
+    }
+    return value;
+  };
+
+  const GBSize = (size) =>
+    parseInt(size.toLowerCase().replace("gb", "").trim(), 10);
 
   const menuItems = [
     {
@@ -42,7 +62,62 @@ const Menu = ({ products }) => {
         {
           title: "Thương hiệu",
           link: "/laptop/brand",
-          subItems: [Brand],
+          subItems: Brand.sort((a, b) =>
+            normanData(a).localeCompare(normanData(b))
+          ).map((brand) => ({
+            title: brand,
+            action: () => navigate(`/collection?brand=${brand}`),
+          })),
+        },
+        {
+          title: "CPU",
+          link: "/laptop/brand",
+          subItems: Cpunames.sort((a, b) =>
+            normanData(a).localeCompare(normanData(b))
+          ).map((cpu) => ({
+            title: cpu,
+            action: () => navigate(`/collection?cpu=${cpu}`),
+          })),
+        },
+        {
+          title: "RAM",
+          link: "/laptop/brand",
+          subItems: ramSizes
+            .sort((a, b) => GBSize(a) - GBSize(b))
+            .map((ram) => ({
+              title: ram,
+              action: () => navigate(`/collection?ram=${ram}`),
+            })),
+        },
+        {
+          title: "SSD",
+          link: "/laptop/brand",
+          subItems: SSDnames.sort((a, b) => GBSize(a) - GBSize(b)).map(
+            (ssd) => ({
+              title: ssd,
+              action: () => navigate(`/collection?ssd=${ssd}`),
+            })
+          ),
+        },
+        {
+          title: "VGA",
+          link: "/laptop/brand",
+          subItems: Vganames.sort((a, b) =>
+            normanData(a).localeCompare(normanData(b))
+          ).map((vga) => ({
+            title: vga,
+            action: () => navigate(`/collection?vga=${vga}`),
+          })),
+        },
+        {
+          title: "Danh mục",
+          link: "/laptop/brand",
+          subItems: Category.sort((a, b) =>
+            normanData(a).localeCompare(normanData(b))
+          ).map((ctg) => ({
+            title: ctg,
+            action: () => navigate(`/collection?category=${ctg}`),
+          })),
         },
       ],
     },
@@ -122,7 +197,7 @@ const Menu = ({ products }) => {
                 {(laptop || desktop) && (
                   <p className="text-[20px]">{item.icon}</p>
                 )}
-                <p className="">{item.title}</p>
+                <p>{item.title}</p>
               </div>
               {(laptop || desktop) && <IoIosArrowForward />}
             </Link>
@@ -136,42 +211,39 @@ const Menu = ({ products }) => {
           onMouseLeave={handleMouseLeave} // Thêm hành động rời chuột
         >
           {menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
-            <div key={subIndex} className="flex flex-row space-x-4">
-              {Brand.filter((brand) =>
-                filteredProducts.some(
-                  (product) =>
-                    product.brand &&
-                    product.brand.title === brand &&
-                    product.views > 5 
-                )
-              ).map((brand, index) => (
-                <div key={index} className="brand-section">
-                  <h2 className="font-bold text-[#E30019]">{brand}</h2>
-                  <ul>
-                    {filteredProducts
-                      .filter(
-                        (product) =>
-                          product.brand &&
-                          product.brand.title === brand &&
-                          product.views > 5 
-                      )
-                      .map((product, productIndex) => (
-                        <li
-                          key={product._id}
-                          className={`flex items-center ${
-                            productIndex !== filteredProducts.length - 1
-                              ? "border-b-2 border-gray-300"
-                              : ""
-                          }`}
-                        >
-                          <Link to={`/products/${product._id}`}>
-                            <p className="py-1">{product.title}</p>
-                          </Link>
-                        </li>
-                      ))}
-                  </ul>
+            <div key={subIndex}>
+              <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>
+              {Array.isArray(subItem.subItems) ? (
+                <div className="flex flex-col gap-2">
+                  {subItem.subItems.map((item, index) => (
+                    <div key={index}>
+                      <Link
+                        to={item.link || "#"}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (item.action) {
+                            item.action();
+                          }
+                        }}
+                      >
+                        <div className="pt-1">{item.title}</div>
+                      </Link>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <Link
+                  to={subItem.link || "#"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (subItem.action) {
+                      subItem.action();
+                    }
+                  }}
+                >
+                  {subItem.title}
+                </Link>
+              )}
             </div>
           ))}
         </div>
