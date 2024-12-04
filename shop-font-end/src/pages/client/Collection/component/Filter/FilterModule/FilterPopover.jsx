@@ -1,10 +1,9 @@
 import { Box, Button, Grid, Paper } from "@mui/material";
-import Price from "../components/Price";
 import Brandcon from "../components/Brand";
 import CPUcon from "../components/CPU";
+import Price from "../components/Price";
 import RAMcon from "../components/RAM";
 import SSDcon from "../components/SSD";
-import Size from "../components/Size";
 import VGAcon from "../components/VGA";
 import Categorycon from "./../components/Category";
 
@@ -21,8 +20,6 @@ const FilterPopover = ({
   setSelectedIndices,
   selectedSSD,
   setSelectedSSD,
-  selectedLcd,
-  setSelectedLcd,
   selectedVga,
   setSelectedVga,
   selectedCategory,
@@ -30,7 +27,6 @@ const FilterPopover = ({
   Cpunames,
   ramSizes,
   Category,
-  LCD,
   SSDnames,
   Vganames,
 }) => {
@@ -41,7 +37,6 @@ const FilterPopover = ({
     setSelectedIndices([]);
     setSelectedCategory([]);
     setSelectedSSD([]);
-    setSelectedLcd([]);
     setPriceRange([0, 10000000000]);
   };
 
@@ -89,16 +84,6 @@ const FilterPopover = ({
           SSDnames={SSDnames}
           selectedSSD={selectedSSD}
           setSelectedSSD={setSelectedSSD}
-        />
-      ),
-    },
-    {
-      label: "Kích thước màn hình",
-      component: (
-        <Size
-          LCD={LCD}
-          selectedLcd={selectedLcd}
-          setSelectedLcd={setSelectedLcd}
         />
       ),
     },

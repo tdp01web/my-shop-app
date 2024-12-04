@@ -1,10 +1,6 @@
 import { Box, Button } from "@mui/material";
 /* eslint-disable react/prop-types */
-const Brandcon = ({
-  Brand = [],
-  selectedBrand = [],
-  setSelectedBrand,
-}) => {
+const Brandcon = ({ Brand = [], selectedBrand = [], setSelectedBrand }) => {
   const handleSelect = (index) => {
     setSelectedBrand((prev) => {
       const newSelectedBrand = prev.includes(index)

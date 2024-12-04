@@ -1,12 +1,11 @@
-import TotalFilter from "../TotalFilter";
-import PriceFilter from "../PriceFilter";
 import BrandFilter from "../BrandFilter";
-import RAMFilter from "../RAMFilter";
 import CPUFilter from "../CPUFilter";
-import SSDFilter from "../SSDFilter";
-import SizeFilter from "../SizeFilter";
-import VGAFilter from "../VGAFilter";
 import CategoryFilter from "../CategoryFilter";
+import PriceFilter from "../PriceFilter";
+import RAMFilter from "../RAMFilter";
+import SSDFilter from "../SSDFilter";
+import TotalFilter from "../TotalFilter";
+import VGAFilter from "../VGAFilter";
 
 /* eslint-disable react/prop-types */
 const Filters = ({
@@ -14,7 +13,6 @@ const Filters = ({
   Cpunames,
   Category,
   Brand,
-  LCD,
   SSDnames,
   Vganames,
   priceNames,
@@ -25,10 +23,8 @@ const Filters = ({
   selectedSSD,
   selectedCategory,
   selectedIndices,
-  selectedLcd,
   setSelectedIndices,
   setSelectedCategory,
-  setSelectedLcd,
   setSelectedCpu,
   setSelectedVga,
   setSelectedBrand,
@@ -46,7 +42,6 @@ const Filters = ({
         Category={Category}
         Cpunames={Cpunames}
         Brand={Brand}
-        LCD={LCD}
         SSDnames={SSDnames}
         Vganames={Vganames}
         priceNames={priceNames}
@@ -54,9 +49,7 @@ const Filters = ({
         selectedCategory={selectedCategory}
         selectedIndices={selectedIndices}
         setSelectedIndices={setSelectedIndices}
-        selectedLcd={selectedLcd}
         setSelectedCategory={setSelectedCategory}
-        setSelectedLcd={setSelectedLcd}
         setSelectedCpu={setSelectedCpu}
         setSelectedVga={setSelectedVga}
         setSelectedBrand={setSelectedBrand}
@@ -88,11 +81,6 @@ const Filters = ({
         SSDnames={SSDnames}
         selectedSSD={selectedSSD}
         setSelectedSSD={setSelectedSSD}
-      />
-      <SizeFilter
-        LCD={LCD}
-        selectedLcd={selectedLcd}
-        setSelectedLcd={setSelectedLcd}
       />
       <CategoryFilter
         Category={Category}

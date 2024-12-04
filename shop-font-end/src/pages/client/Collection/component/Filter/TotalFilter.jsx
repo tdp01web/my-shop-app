@@ -26,7 +26,6 @@ const TotalFilter = ({
   ramSizes,
   Cpunames,
   Brand,
-  LCD,
   Category,
   SSDnames,
   Vganames,
@@ -36,8 +35,6 @@ const TotalFilter = ({
   selectedIndices,
   setSelectedCategory,
   setSelectedIndices,
-  setSelectedLcd,
-  selectedLcd,
   setSelectedCpu,
   setSelectedVga,
   setSelectedBrand,
@@ -91,15 +88,12 @@ const TotalFilter = ({
           selectedCategory={selectedCategory}
           selectedSSD={selectedSSD}
           setSelectedSSD={setSelectedSSD}
-          selectedLcd={selectedLcd}
-          setSelectedLcd={setSelectedLcd}
           selectedVga={selectedVga}
           setSelectedVga={setSelectedVga}
           setSelectedCategory={setSelectedCategory}
           Category={Category}
           Brand={Brand}
           Cpunames={Cpunames}
-          LCD={LCD}
           ramSizes={ramSizes}
           SSDnames={SSDnames}
           Vganames={Vganames}

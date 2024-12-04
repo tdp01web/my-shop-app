@@ -15,6 +15,7 @@ const ProductListSearch = () => {
       setNoResultsMessage("");
     }
   }, [results]);
+  console.log(results);
 
   return (
     <div className="w-full bg-cover flex bg-white rounded-sm flex-col bg-center gap-3 h-auto p-4">

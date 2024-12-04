@@ -1,12 +1,11 @@
-import useRamFilter from "./component/useRamFilter";
-import usePriceFilter from "./component/usePriceFilter";
-import useCpuFilter from "./component/useCpuFilter";
-import useVgaFilter from "./component/useVgaFilter";
-import useBrandFilter from "./component/useBrandFilter";
-import useLcdFilter from "./component/useLcdFilter";
-import useSSDFilter from "./component/useSSDFilter";
 import useArrangeFilter from "./component/useArrangeFilter";
+import useBrandFilter from "./component/useBrandFilter";
 import useCategoryFilter from "./component/useCategoryFilter";
+import useCpuFilter from "./component/useCpuFilter";
+import usePriceFilter from "./component/usePriceFilter";
+import useRamFilter from "./component/useRamFilter";
+import useSSDFilter from "./component/useSSDFilter";
+import useVgaFilter from "./component/useVgaFilter";
 
 const useProductFilters = (
   products,
@@ -15,7 +14,6 @@ const useProductFilters = (
   selectedCpu,
   selectedVga,
   selectedBrand,
-  selectedLcd,
   selectedSSD,
   selectedCategory
 ) => {
@@ -45,13 +43,8 @@ const useProductFilters = (
     selectedBrand
   );
 
-  const { LCD, filteredProducts: filteredByLcd } = useLcdFilter(
-    filteredByBrand,
-    selectedLcd
-  );
-
   const { SSDnames, filteredProducts: filteredBySSD } = useSSDFilter(
-    filteredByLcd,
+    filteredByBrand,
     selectedSSD
   );
 
@@ -68,7 +61,6 @@ const useProductFilters = (
     Cpunames,
     Vganames,
     Brand,
-    LCD,
     SSDnames,
     Category,
     priceNames,
