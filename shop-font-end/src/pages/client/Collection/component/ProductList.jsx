@@ -1,4 +1,4 @@
-// src/components/ProductList/ProductList.js
+
 import { Box } from "@mui/material";
 import { useState } from "react";
 import Product from "../../../../components/Product";
@@ -14,9 +14,11 @@ const ProductList = ({ products }) => {
   const [selectedBrand, setSelectedBrand] = useState([]);
   const [selectedLcd, setSelectedLcd] = useState([]);
   const [selectedSSD, setSelectedSSD] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000000000]);
 
   const {
+    Category, 
     ramSizes,
     Cpunames,
     Brand,
@@ -34,7 +36,8 @@ const ProductList = ({ products }) => {
     selectedVga,
     selectedBrand,
     selectedLcd,
-    selectedSSD
+    selectedSSD,
+    selectedCategory 
   );
 
   return (
@@ -56,6 +59,7 @@ const ProductList = ({ products }) => {
             Cpunames={Cpunames}
             Brand={Brand}
             LCD={LCD}
+            Category={Category} 
             SSDnames={SSDnames}
             Vganames={Vganames}
             priceNames={priceNames}
@@ -66,6 +70,8 @@ const ProductList = ({ products }) => {
             selectedSSD={selectedSSD}
             selectedIndices={selectedIndices}
             selectedLcd={selectedLcd}
+            selectedCategory={selectedCategory} 
+            setSelectedCategory={setSelectedCategory}
             setSelectedIndices={setSelectedIndices}
             setSelectedLcd={setSelectedLcd}
             setSelectedCpu={setSelectedCpu}

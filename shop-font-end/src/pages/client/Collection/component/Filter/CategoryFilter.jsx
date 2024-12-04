@@ -1,8 +1,8 @@
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Box, Button, Popover } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
-import { Button, Popover, Box } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Brandcon from "./components/Brand";
+import Categorycon from "./components/Category";
 
 const theme = createTheme({
   components: {
@@ -18,7 +18,11 @@ const theme = createTheme({
 });
 
 /* eslint-disable react/prop-types */
-const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
+const CategoryFilter = ({
+  Category,
+  selectedCategory,
+  setSelectedCategory,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -38,12 +42,12 @@ const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
         variant="outlined"
         onClick={handleClick}
         sx={{
-          borderColor: selectedBrand.length > 0 ? "#007bff" : "grey.500",
-          color: selectedBrand.length > 0 ? "#007bff" : "black",
-          fontWeight: selectedBrand.length > 0 ? 450 : 400,
+          borderColor: selectedCategory.length > 0 ? "#007bff" : "grey.500",
+          color: selectedCategory.length > 0 ? "#007bff" : "black",
+          fontWeight: selectedCategory.length > 0 ? 450 : 400,
         }}
       >
-        Hãng <ArrowDropDownIcon />
+        Nhu cầu xử dụng <ArrowDropDownIcon />
       </Button>
       <Popover
         id={id}
@@ -56,10 +60,10 @@ const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
         }}
       >
         <Box p={2}>
-          <Brandcon
-            Brand={Brand}
-            selectedBrand={selectedBrand}
-            setSelectedBrand={setSelectedBrand}
+          <Categorycon
+            Category={Category}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
           />
           <Box
             mt={2}
@@ -70,7 +74,7 @@ const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
             <Button
               variant="outlined"
               color="error"
-              onClick={() => setSelectedBrand([])}
+              onClick={() => setSelectedCategory([])}
             >
               Bỏ chọn
             </Button>
@@ -82,4 +86,4 @@ const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
   );
 };
 
-export default BrandFilter;
+export default CategoryFilter;
