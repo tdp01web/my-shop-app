@@ -1,11 +1,12 @@
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Product from "../../../../components/Product";
 import useProductFilters from "../../../../hooks/useFilter/useProductFilters";
 import TotalFilter from "./Filter/TotalFilter";
 import ArrangeFilter from "./Filter/ArrangeFilter";
 import Filters from "./Filter/FilterModule/Filters";
-/* eslint-disable react/prop-types */
+
 const ProductList = ({ products }) => {
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [selectedCpu, setSelectedCpu] = useState([]);
@@ -14,6 +15,8 @@ const ProductList = ({ products }) => {
   const [selectedSSD, setSelectedSSD] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000000000]);
+
+  const location = useLocation();
 
   const {
     Category,
@@ -36,24 +39,91 @@ const ProductList = ({ products }) => {
     selectedCategory
   );
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+
+    // hãng
+    const brandFilter = searchParams.get("brand");
+    if (brandFilter && Brand && Brand.length > 0) {
+      const brand = Brand.findIndex((brand) => brand === brandFilter);
+      if (brand !== -1) {
+        setSelectedBrand([brand]);
+      }
+    }
+
+    // Cpu
+    const cpuFilter = searchParams.get("cpu");
+    if (cpuFilter && Cpunames && Cpunames.length > 0) {
+      const cpu = Cpunames.findIndex((cpu) => cpu === cpuFilter);
+      if (cpu !== -1) {
+        setSelectedCpu([cpu]);
+      }
+    }
+
+    // Ram
+    const ramFilter = searchParams.get("ram");
+    if (ramFilter && ramSizes && ramSizes.length > 0) {
+      const ram = ramSizes.findIndex((ram) => ram === ramFilter);
+      if (ram !== -1) {
+        setSelectedIndices([ram]);
+      }
+    }
+
+    // ssd
+    const ssdFilter = searchParams.get("ssd");
+    if (ssdFilter && SSDnames && SSDnames.length > 0) {
+      const ssd = SSDnames.findIndex((ssd) => ssd === ssdFilter);
+      if (ssd !== -1) {
+        setSelectedSSD([ssd]);
+      }
+    }
+
+    // vga
+    const vgaFilter = searchParams.get("vga");
+    if (vgaFilter && Vganames && Vganames.length > 0) {
+      const vga = Vganames.findIndex((vga) => vga === vgaFilter);
+      if (vga !== -1) {
+        setSelectedVga([vga]);
+      }
+    }
+
+    // danh mục
+    const categoryFilter = searchParams.get("category");
+    if (categoryFilter && Category && Category.length > 0) {
+      const category = Category.findIndex((cat) => cat === categoryFilter);
+      if (category !== -1) {
+        setSelectedCategory([category]);
+      }
+    }
+  }, [
+    location.search,
+    Brand,
+    Cpunames,
+    ramSizes,
+    SSDnames,
+    Vganames,
+    Category,
+  ]);
+
   return (
-    <div className="w-full bg-cover flex bg-white rounded-sm flex-col bg-center gap-3 h-auto p-4">
+    <div className="flex flex-col gap-3 bg-white bg-cover bg-center p-4 rounded-sm w-full h-auto">
       <Box
         display="flex"
         alignItems="center"
-        className="w-full mb-4"
+        className="mb-4 w-full"
         justifyContent="space-between"
         flexWrap="wrap"
       >
-        <div className=" md:hidden w-full flex justify-between">
+        <div className="flex justify-between md:hidden w-full">
           <TotalFilter />
           <ArrangeFilter onSortChange={sortProducts} />
         </div>
-        <div className="hidden md:flex gap-2 flex-wrap">
+        <div className="md:flex flex-wrap gap-2 hidden">
           <Filters
             ramSizes={ramSizes}
             Cpunames={Cpunames}
             Brand={Brand}
+            LCD={LCD}
             Category={Category}
             SSDnames={SSDnames}
             Vganames={Vganames}
@@ -64,6 +134,7 @@ const ProductList = ({ products }) => {
             priceRange={priceRange}
             selectedSSD={selectedSSD}
             selectedIndices={selectedIndices}
+            selectedLcd={selectedLcd}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             setSelectedIndices={setSelectedIndices}
@@ -77,7 +148,7 @@ const ProductList = ({ products }) => {
         </div>
       </Box>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-5">
+      <div className="gap-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5">
         {sortedProducts.length > 0 ? (
           sortedProducts.map((product, index) => (
             <Product key={product.id || index} {...product} />
