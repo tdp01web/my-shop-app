@@ -123,7 +123,6 @@ const ProductList = ({ products }) => {
             ramSizes={ramSizes}
             Cpunames={Cpunames}
             Brand={Brand}
-            LCD={LCD}
             Category={Category}
             SSDnames={SSDnames}
             Vganames={Vganames}
@@ -134,7 +133,6 @@ const ProductList = ({ products }) => {
             priceRange={priceRange}
             selectedSSD={selectedSSD}
             selectedIndices={selectedIndices}
-            selectedLcd={selectedLcd}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             setSelectedIndices={setSelectedIndices}
