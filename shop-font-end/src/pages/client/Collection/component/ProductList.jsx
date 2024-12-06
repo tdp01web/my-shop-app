@@ -46,7 +46,7 @@ const ProductList = ({ products }) => {
     const brandFilter = searchParams.get("brand");
     if (brandFilter && Brand && Brand.length > 0) {
       const brand = Brand.findIndex((brand) => brand === brandFilter);
-      if (brand !== -1) {
+      if (brand !== -1 && !selectedBrand.includes(brand)) {
         setSelectedBrand([brand]);
       }
     }
@@ -55,7 +55,7 @@ const ProductList = ({ products }) => {
     const cpuFilter = searchParams.get("cpu");
     if (cpuFilter && Cpunames && Cpunames.length > 0) {
       const cpu = Cpunames.findIndex((cpu) => cpu === cpuFilter);
-      if (cpu !== -1) {
+      if (cpu !== -1 && !selectedCpu.includes(cpu)) {
         setSelectedCpu([cpu]);
       }
     }
@@ -64,7 +64,7 @@ const ProductList = ({ products }) => {
     const ramFilter = searchParams.get("ram");
     if (ramFilter && ramSizes && ramSizes.length > 0) {
       const ram = ramSizes.findIndex((ram) => ram === ramFilter);
-      if (ram !== -1) {
+      if (ram !== -1 && !selectedIndices.includes(ram)) {
         setSelectedIndices([ram]);
       }
     }
@@ -73,7 +73,7 @@ const ProductList = ({ products }) => {
     const ssdFilter = searchParams.get("ssd");
     if (ssdFilter && SSDnames && SSDnames.length > 0) {
       const ssd = SSDnames.findIndex((ssd) => ssd === ssdFilter);
-      if (ssd !== -1) {
+      if (ssd !== -1 && !selectedSSD.includes(ssd)) {
         setSelectedSSD([ssd]);
       }
     }
@@ -82,7 +82,7 @@ const ProductList = ({ products }) => {
     const vgaFilter = searchParams.get("vga");
     if (vgaFilter && Vganames && Vganames.length > 0) {
       const vga = Vganames.findIndex((vga) => vga === vgaFilter);
-      if (vga !== -1) {
+      if (vga !== -1 && !selectedVga.includes(vga)) {
         setSelectedVga([vga]);
       }
     }
@@ -91,7 +91,7 @@ const ProductList = ({ products }) => {
     const categoryFilter = searchParams.get("category");
     if (categoryFilter && Category && Category.length > 0) {
       const category = Category.findIndex((cat) => cat === categoryFilter);
-      if (category !== -1) {
+      if (category !== -1 && !selectedCategory.includes(category)) {
         setSelectedCategory([category]);
       }
     }
@@ -103,6 +103,12 @@ const ProductList = ({ products }) => {
     SSDnames,
     Vganames,
     Category,
+    selectedBrand,
+    selectedCpu,
+    selectedIndices,
+    selectedSSD,
+    selectedVga,
+    selectedCategory,
   ]);
 
   return (

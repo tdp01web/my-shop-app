@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { BsPrinter } from "react-icons/bs";
 import { CiDesktopMouse2, CiSpeaker } from "react-icons/ci";
 import { FaRegKeyboard } from "react-icons/fa6";
@@ -23,6 +23,10 @@ const Menu = ({ products }) => {
   const [selectedBrand, setSelectedBrand] = useState([]);
   const navigate = useNavigate();
 
+  // Memoize các giá trị để đảm bảo chúng không thay đổi qua mỗi render
+  const priceRange = useMemo(() => [0, 10000000000], []);
+  const emptyArray = useMemo(() => [], []);
+
   const {
     Brand,
     Cpunames,
@@ -33,14 +37,14 @@ const Menu = ({ products }) => {
     filteredProducts,
   } = useProductFilters(
     products,
-    [0, 10000000000],
-    [],
-    [],
-    [],
-    [],
+    priceRange,
+    emptyArray,
+    emptyArray,
+    emptyArray,
+    emptyArray,
     selectedBrand,
-    [],
-    []
+    emptyArray,
+    emptyArray
   );
 
   const normanData = (value) => {
