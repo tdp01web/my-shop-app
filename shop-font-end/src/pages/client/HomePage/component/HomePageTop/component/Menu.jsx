@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsPrinter } from "react-icons/bs";
 import { CiDesktopMouse2, CiSpeaker } from "react-icons/ci";
 import { FaRegKeyboard } from "react-icons/fa6";
@@ -19,9 +19,15 @@ const Menu = ({ products }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const hoverTimeout = useRef(null); // Ref to hold timeout ID
-
+  const [Loading, setLoading] = useState(true);
   const [selectedBrand, setSelectedBrand] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
 
   const {
     Brand,
@@ -56,12 +62,11 @@ const Menu = ({ products }) => {
   const menuItems = [
     {
       title: "Laptop",
-      link: "/laptop",
+      link: "/collection",
       icon: <PiLaptopLight />,
       subItems: [
         {
           title: "Thương hiệu",
-          link: "/laptop/brand",
           subItems: Brand.sort((a, b) =>
             normanData(a).localeCompare(normanData(b))
           ).map((brand) => ({
@@ -71,7 +76,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "CPU",
-          link: "/laptop/brand",
           subItems: Cpunames.sort((a, b) =>
             normanData(a).localeCompare(normanData(b))
           ).map((cpu) => ({
@@ -81,7 +85,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "RAM",
-          link: "/laptop/brand",
           subItems: ramSizes
             .sort((a, b) => GBSize(a) - GBSize(b))
             .map((ram) => ({
@@ -91,7 +94,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "SSD",
-          link: "/laptop/brand",
           subItems: SSDnames.sort((a, b) => GBSize(a) - GBSize(b)).map(
             (ssd) => ({
               title: ssd,
@@ -101,7 +103,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "VGA",
-          link: "/laptop/brand",
           subItems: Vganames.sort((a, b) =>
             normanData(a).localeCompare(normanData(b))
           ).map((vga) => ({
@@ -111,7 +112,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "Danh mục",
-          link: "/laptop/brand",
           subItems: Category.sort((a, b) =>
             normanData(a).localeCompare(normanData(b))
           ).map((ctg) => ({
@@ -210,42 +210,48 @@ const Menu = ({ products }) => {
           onMouseEnter={() => handleMouseEnter(hoveredItem)} // Khi hover vào submenu, giữ lại
           onMouseLeave={handleMouseLeave} // Thêm hành động rời chuột
         >
-          {menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
-            <div key={subIndex}>
-              <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>
-              {Array.isArray(subItem.subItems) ? (
-                <div className="flex flex-col gap-2">
-                  {subItem.subItems.map((item, index) => (
-                    <div key={index}>
-                      <Link
-                        to={item.link || "#"}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (item.action) {
-                            item.action();
-                          }
-                        }}
-                      >
-                        <div className="pt-1">{item.title}</div>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <Link
-                  to={subItem.link || "#"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (subItem.action) {
-                      subItem.action();
-                    }
-                  }}
-                >
-                  {subItem.title}
-                </Link>
-              )}
+          {Loading ? (
+            <div className="flex justify-center items-center w-full h-full text-gray-500 text-lg">
+              Đang tải danh mục...
             </div>
-          ))}
+          ) : (
+            menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
+              <div key={subIndex}>
+                <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>
+                {Array.isArray(subItem.subItems) ? (
+                  <div className="flex flex-col gap-2">
+                    {subItem.subItems.map((item, index) => (
+                      <div key={index}>
+                        <Link
+                          to={item.link || "#"}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (item.action) {
+                              item.action();
+                            }
+                          }}
+                        >
+                          <div className="pt-1">{item.title}</div>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <Link
+                    to={subItem.link || "#"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (subItem.action) {
+                        subItem.action();
+                      }
+                    }}
+                  >
+                    {subItem.title}
+                  </Link>
+                )}
+              </div>
+            ))
+          )}
         </div>
       )}
     </div>
