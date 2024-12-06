@@ -152,7 +152,7 @@ const ProductList = ({ products }) => {
             <Product key={product.id || index} {...product} />
           ))
         ) : (
-          <div>Không có sản phẩm nào trong tầm giá này.</div>
+          <div>Không có sản phẩm nào</div>
         )}
       </div>
     </div>

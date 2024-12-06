@@ -20,6 +20,12 @@ const searchProducts = async (req, res) => {
       title: { $regex: query, $options: "i" },
     })
       .populate({
+        path: "category",
+      })
+      .populate({
+        path: "brand",
+      })
+      .populate({
         path: "variants",
         populate: [
           { path: "ram" },
@@ -290,7 +296,9 @@ const deleteComment = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Brand not found" });
     }
     if (brand.status === 0) {
-      return res.status(400).json({ message: "Cannot modify product because the brand is suspended." });
+      return res.status(400).json({
+        message: "Cannot modify product because the brand is suspended.",
+      });
     }
 
     const category = await Category.findById(product.category);
@@ -298,7 +306,9 @@ const deleteComment = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
     if (category.status === 0) {
-      return res.status(400).json({ message: "Cannot modify product because the category is suspended." });
+      return res.status(400).json({
+        message: "Cannot modify product because the category is suspended.",
+      });
     }
 
     product.statusCmt = product.statusCmt === 1 ? 0 : 1;
@@ -319,12 +329,15 @@ const deleteCommentDetail = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const ratingIndex = product.ratings.findIndex(rating => rating._id.toString() === id);
+    const ratingIndex = product.ratings.findIndex(
+      (rating) => rating._id.toString() === id
+    );
     if (ratingIndex === -1) {
       return res.status(404).json({ message: "Comment not found" });
     }
 
-    product.ratings[ratingIndex].isClose = product.ratings[ratingIndex].isClose === 1 ? 0 : 1;
+    product.ratings[ratingIndex].isClose =
+      product.ratings[ratingIndex].isClose === 1 ? 0 : 1;
 
     const updatedProduct = await product.save();
 
