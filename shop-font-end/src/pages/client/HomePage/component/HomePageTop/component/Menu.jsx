@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BsPrinter } from "react-icons/bs";
 import { CiDesktopMouse2, CiSpeaker } from "react-icons/ci";
 import { FaRegKeyboard } from "react-icons/fa6";
@@ -19,15 +19,11 @@ const Menu = ({ products }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const hoverTimeout = useRef(null); // Ref to hold timeout ID
-  const [Loading, setLoading] = useState(true);
   const [selectedBrand, setSelectedBrand] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
+  const priceRange = useMemo(() => [0, 10000000000], []);
+  const emptyArray = useMemo(() => [], []);
 
   const {
     Brand,
@@ -39,14 +35,14 @@ const Menu = ({ products }) => {
     filteredProducts,
   } = useProductFilters(
     products,
-    [0, 10000000000],
-    [],
-    [],
-    [],
-    [],
+    priceRange,
+    emptyArray,
+    emptyArray,
+    emptyArray,
+    emptyArray,
     selectedBrand,
-    [],
-    []
+    emptyArray,
+    emptyArray
   );
 
   const normanData = (value) => {
@@ -179,6 +175,9 @@ const Menu = ({ products }) => {
     }, 200); // Thêm độ trễ 200ms trước khi ẩn menu
   };
   // console.log("Menu.jsx", products);
+
+  const Loading = !products || products.length === 0;
+
   return (
     <div className="flex md:w-full relative gap-4">
       <ul className="flex bg-[#E30019] hide-scrollbar w-full overflow-x-auto md:flex-col md:gap-[10px] md:bg-white md:rounded-lg p-2 md:px-5 py-3 md:py-2 md:w-full text-[14px] 2xl:text-[13px] font-500">
