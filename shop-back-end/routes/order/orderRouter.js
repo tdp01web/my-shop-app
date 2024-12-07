@@ -10,8 +10,8 @@ const {
   handleMomoPayment,
   callback,
   cancelMyOrder,
-  createOrderSales
-
+  createOrderSales,
+  deliveredOrder,
 } = require("../../controller/order/order");
 const {
   authMiddleware,
@@ -40,7 +40,10 @@ router.get("/:orderId", authMiddleware, getOrderById);
 router.put("/update-status/:orderId", authMiddleware, isAdmin, updateStatus);
 
 // người dùng huỷ đơn của mình
-router.put('/my-orders/cancel/:orderId', authMiddleware, cancelMyOrder)
+router.put("/my-orders/cancel/:orderId", authMiddleware, cancelMyOrder);
+
+// cập nhật trạng thái đã hoàn thành
+router.put("/my-orders/delivered/:orderId", authMiddleware, deliveredOrder);
 
 // hủy đơn hàng cho admin
 router.put(

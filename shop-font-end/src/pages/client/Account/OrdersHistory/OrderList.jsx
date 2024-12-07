@@ -1,12 +1,23 @@
-import { Button } from "antd";
+import { useMutation } from "@tanstack/react-query";
+import { Button, Popconfirm } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { instance } from "../../../../configs/instance";
+import { queryClient } from "../../../../main";
 
 const MAX_SHOW = 2;
 
-const OrderCard = ({ data }) => {
+const OrderCard = ({ data, onChangeTab }) => {
   const [limitShow, setLimitShow] = useState(MAX_SHOW);
+
+  const { mutate: onUpdateStatus, isPending } = useMutation({
+    mutationFn: () => instance.put(`/order/my-orders/delivered/${data._id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["USER_ORDERS_HISTORY"]);
+      onChangeTab("Hoàn Thành");
+    },
+  });
 
   const onToggleShow = () => {
     setLimitShow(
@@ -55,7 +66,6 @@ const OrderCard = ({ data }) => {
 
             <div className="w-1/4 text-[#111] text-right">
               <p>{(product.count * product.price).toLocaleString()}đ</p>
-              {/* <p className="line-through text-[14px]">38.990.000₫</p> */}
             </div>
           </div>
         ))}
@@ -79,12 +89,30 @@ const OrderCard = ({ data }) => {
             </span>
           </p>
 
-          <Link
-            to={`/account/orders/${data._id}`}
-            className="border border-[#1982f9] rounded px-3 h-9 text-[14px] text-[#1982f9] inline-flex items-center mt-2"
-          >
-            Xem chi tiết
-          </Link>
+          <div className="flex gap-x-2 mt-2 justify-end">
+            <Link
+              to={`/account/orders/${data._id}`}
+              className="border border-[#1982f9] rounded px-3 h-9 text-[14px] text-[#1982f9] flex items-center"
+            >
+              Xem chi tiết
+            </Link>
+
+            {data.orderStatus === "Đã Giao Hàng" && (
+              <Popconfirm
+                title="Đã nhận hàng"
+                description="Xác nhận đã nhận hàng"
+                placement="right"
+                onConfirm={onUpdateStatus}
+                okButtonProps={{
+                  loading: isPending,
+                }}
+              >
+                <Button className="border border-[#1982f9] rounded px-3 h-9 text-[14px] text-white bg-[#1982f9] inline-flex items-center">
+                  Đã nhận hàng
+                </Button>
+              </Popconfirm>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -95,11 +123,11 @@ OrderCard.propTypes = {
   data: {},
 };
 
-const OrderList = ({ data = [] }) => {
+const OrderList = ({ data = [], onChangeTab }) => {
   return (
     <div className="bg-[#ececec]">
       {data.map((it) => (
-        <OrderCard key={it._id} data={it} />
+        <OrderCard key={it._id} data={it} onChangeTab={onChangeTab} />
       ))}
     </div>
   );

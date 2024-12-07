@@ -148,7 +148,9 @@ const OrdersHistory = () => {
         </div>
       )}
 
-      {selectedOrders?.length > 0 && <OrderList data={selectedOrders} />}
+      {selectedOrders?.length > 0 && (
+        <OrderList data={selectedOrders} onChangeTab={setActiveTab} />
+      )}
     </>
   );
 };
