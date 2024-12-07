@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BsPrinter } from "react-icons/bs";
 import { CiDesktopMouse2, CiSpeaker } from "react-icons/ci";
 import { FaRegKeyboard } from "react-icons/fa6";
@@ -19,11 +19,9 @@ const Menu = ({ products }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const hoverTimeout = useRef(null); // Ref to hold timeout ID
-
   const [selectedBrand, setSelectedBrand] = useState([]);
   const navigate = useNavigate();
 
-  // Memoize các giá trị để đảm bảo chúng không thay đổi qua mỗi render
   const priceRange = useMemo(() => [0, 10000000000], []);
   const emptyArray = useMemo(() => [], []);
 
@@ -60,12 +58,11 @@ const Menu = ({ products }) => {
   const menuItems = [
     {
       title: "Laptop",
-      link: "/laptop",
+      link: "/collection",
       icon: <PiLaptopLight />,
       subItems: [
         {
           title: "Thương hiệu",
-          link: "/laptop/brand",
           subItems: Brand.sort((a, b) =>
             normanData(a).localeCompare(normanData(b))
           ).map((brand) => ({
@@ -75,7 +72,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "CPU",
-          link: "/laptop/brand",
           subItems: Cpunames.sort((a, b) =>
             normanData(a).localeCompare(normanData(b))
           ).map((cpu) => ({
@@ -85,7 +81,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "RAM",
-          link: "/laptop/brand",
           subItems: ramSizes
             .sort((a, b) => GBSize(a) - GBSize(b))
             .map((ram) => ({
@@ -95,7 +90,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "SSD",
-          link: "/laptop/brand",
           subItems: SSDnames.sort((a, b) => GBSize(a) - GBSize(b)).map(
             (ssd) => ({
               title: ssd,
@@ -105,7 +99,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "VGA",
-          link: "/laptop/brand",
           subItems: Vganames.sort((a, b) =>
             normanData(a).localeCompare(normanData(b))
           ).map((vga) => ({
@@ -115,7 +108,6 @@ const Menu = ({ products }) => {
         },
         {
           title: "Danh mục",
-          link: "/laptop/brand",
           subItems: Category.sort((a, b) =>
             normanData(a).localeCompare(normanData(b))
           ).map((ctg) => ({
@@ -183,6 +175,9 @@ const Menu = ({ products }) => {
     }, 200); // Thêm độ trễ 200ms trước khi ẩn menu
   };
   // console.log("Menu.jsx", products);
+
+  const Loading = !products || products.length === 0;
+
   return (
     <div className="flex md:w-full relative gap-4">
       <ul className="flex bg-[#E30019] hide-scrollbar w-full overflow-x-auto md:flex-col md:gap-[10px] md:bg-white md:rounded-lg p-2 md:px-5 py-3 md:py-2 md:w-full text-[14px] 2xl:text-[13px] font-500">
@@ -214,42 +209,48 @@ const Menu = ({ products }) => {
           onMouseEnter={() => handleMouseEnter(hoveredItem)} // Khi hover vào submenu, giữ lại
           onMouseLeave={handleMouseLeave} // Thêm hành động rời chuột
         >
-          {menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
-            <div key={subIndex}>
-              <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>
-              {Array.isArray(subItem.subItems) ? (
-                <div className="flex flex-col gap-2">
-                  {subItem.subItems.map((item, index) => (
-                    <div key={index}>
-                      <Link
-                        to={item.link || "#"}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (item.action) {
-                            item.action();
-                          }
-                        }}
-                      >
-                        <div className="pt-1">{item.title}</div>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <Link
-                  to={subItem.link || "#"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (subItem.action) {
-                      subItem.action();
-                    }
-                  }}
-                >
-                  {subItem.title}
-                </Link>
-              )}
+          {Loading ? (
+            <div className="flex justify-center items-center w-full h-full text-gray-500 text-lg">
+              Đang tải danh mục...
             </div>
-          ))}
+          ) : (
+            menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
+              <div key={subIndex}>
+                <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>
+                {Array.isArray(subItem.subItems) ? (
+                  <div className="flex flex-col gap-2">
+                    {subItem.subItems.map((item, index) => (
+                      <div key={index}>
+                        <Link
+                          to={item.link || "#"}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (item.action) {
+                              item.action();
+                            }
+                          }}
+                        >
+                          <div className="pt-1">{item.title}</div>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <Link
+                    to={subItem.link || "#"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (subItem.action) {
+                        subItem.action();
+                      }
+                    }}
+                  >
+                    {subItem.title}
+                  </Link>
+                )}
+              </div>
+            ))
+          )}
         </div>
       )}
     </div>
