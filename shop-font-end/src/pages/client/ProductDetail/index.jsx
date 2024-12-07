@@ -54,7 +54,10 @@ const ProductDetail = () => {
   if (error)
     return (
       <Link to={"/"}>
-        Lỗi khi tải dữ liệu sản phẩm vui lòng quay trở về trang chủ.
+        <Notification
+          text1={"Đã có lỗi xảy ra"}
+          text2={"Vui lòng quay về trang chủ "}
+        />
       </Link>
     );
 

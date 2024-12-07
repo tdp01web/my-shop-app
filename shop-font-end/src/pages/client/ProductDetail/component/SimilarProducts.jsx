@@ -44,7 +44,6 @@ const SimilarProducts = ({ dataProductCategory }) => {
       },
     ],
   };
-  console.log(dataProductCategory);
   return (
     <div className="w-full lg:w-[40%] bg-cover rounded-md flex bg-white  flex-col bg-center gap-3 h-auto p-4">
       <h2 className="text-[24px] font-600">Các sản phẩm tương tự </h2>

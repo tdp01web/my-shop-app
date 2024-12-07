@@ -1,18 +1,28 @@
 import React, { useState } from "react";
-import { Table, Button, Space } from "antd";
+import { Table, Button, Space, DatePicker } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { instance } from "../../../configs/instance";
+
+const { RangePicker } = DatePicker;
 
 const LoyalCustomers = () => {
   const [pageSize, setPageSize] = useState(10);
+  const [dateRange, setDateRange] = useState([]);
 
   // Fetch dữ liệu khách hàng thân thiết
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["loyalCustomers"],
+    queryKey: ["loyalCustomers", dateRange],
     queryFn: async () => {
-      const response = await instance.get("/stats/getLoyalCustomers");
-      return response.data.customers || []; // Đảm bảo trả về mảng
+      const params = {};
+      if (dateRange.length === 2) {
+        params.startDate = dateRange[0].format("YYYY-MM-DD");
+        params.endDate = dateRange[1].format("YYYY-MM-DD");
+      }
+
+      const response = await instance.get("/stats/getLoyalCustomers", {
+        params,
+      });
+      return response.data.customers || [];
     },
   });
 
@@ -38,6 +48,12 @@ const LoyalCustomers = () => {
 
   return (
     <div>
+      <Space style={{ marginBottom: 16 }}>
+        <RangePicker onChange={(values) => setDateRange(values)} />
+        <Button type="primary" onClick={refetch}>
+          Lọc
+        </Button>
+      </Space>
       {isLoading ? (
         <div>Đang tải dữ liệu...</div>
       ) : error ? (

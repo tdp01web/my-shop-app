@@ -796,6 +796,25 @@ const rateProduct = asyncHandler(async (req, res) => {
   }
 });
 
+const getLatestProducts = asyncHandler(async (req, res) => {
+  try {
+    const latestProducts = await Product.find()
+      .populate("category")
+      .populate("brand")
+      .populate("lcd")
+      .populate({
+        path: "variants",
+        populate: ["ram", "storage", "processor", "gpu"],
+      })
+      .sort({ createdAt: -1 }) // Sắp xếp theo trường createdAt, giảm dần (mới nhất trước)
+      .limit(6); // Lấy tối đa 6 sản phẩm
+
+    res.status(200).json(latestProducts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = {
   createProduct,
   getaProduct,
@@ -820,4 +839,5 @@ module.exports = {
   getProductsByViews,
   getTopSellingProductsUsers,
   getReviewsUser,
+  getLatestProducts
 };
