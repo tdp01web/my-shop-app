@@ -63,17 +63,46 @@ const CartItems = ({
             onApplyCouponSuccess={onApplyCouponSuccess}
           />
           <hr className="border border-gray-300" />
-          <div className="flex justify-between items-center">
-            <p className="text-[#535353] text-[20px] font-medium">
-              Tổng thanh toán
-            </p>
-            <p className="text-[#E30019] font-bold text-[25px] ">
-              {new Intl.NumberFormat("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              }).format(totalAfterDiscount)}
-            </p>
+          <div>
+            <div className="flex justify-between items-center">
+              <p className="text-[#535353] text-[15px] font-medium">
+                Giá tạm tính
+              </p>
+              <p className="text-[#E30019] font-bold text-[20px] ">
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(cartItems.cartTotal)}
+              </p>
+            </div>
+            {totalAfterDiscount && totalAfterDiscount < cartItems.cartTotal && (
+              <>
+                <div className="flex justify-between items-center">
+                  <p className="text-[#535353] text-[15px] font-medium">
+                    Giảm giá
+                  </p>
+                  <p className="text-[#E30019] font-bold text-[20px] ">
+                    -{" "}
+                    {new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(cartItems.cartTotal - totalAfterDiscount)}
+                  </p>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <p className="text-[#535353] text-[15px] font-medium">Tổng</p>
+                  <p className="text-[#E30019] font-bold text-[20px] ">
+                    {new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(totalAfterDiscount)}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
+
           {cartItems.products.some((item) => item.unavailable) ? (
             <Button
               type="primary"

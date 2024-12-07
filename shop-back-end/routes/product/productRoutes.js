@@ -22,6 +22,7 @@ const {
   getProductsBySales,
   getProductsByViews,
   getTopSellingProductsUsers,
+  getReviewsUser,
 } = require("../../controller/product/productCtrl");
 const router = express.Router();
 const {
@@ -51,6 +52,7 @@ router.get("/getRelatedProducts/:categoryId/:excludeId", getRelatedProducts);
 router.put("/wishlist", authMiddleware, addToWishlist);
 router.post("/rate", authMiddleware, rateProduct);
 router.get("/getReviews/:id", getProductComments);
+router.get("/getReviewsUser/:id", getReviewsUser);
 router.get("/get-all-comments", getAllProductComments);
 //! Update product
 router.put("/updateProduct/:id", authMiddleware, isAdmin, updateProduct);
