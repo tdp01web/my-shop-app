@@ -38,8 +38,8 @@ const OrderCard = ({ data, onChangeTab }) => {
       </div>
 
       <div className="py-4 border-b border-[#CFCFCF] mb-3">
-        {data.products.slice(0, limitShow).map((product) => (
-          <div className="flex items-center" key={product.id}>
+        {data.products.slice(0, limitShow).map((product, index) => (
+          <div className="flex items-center" key={index}>
             <div className="p-2 w-3/4 flex items-center gap-x-2">
               <div className="w-[90px] h-[90px] border border-[#eee] rounded overflow-hidden relative">
                 <img

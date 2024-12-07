@@ -1,5 +1,5 @@
 import { Box, Button, Drawer } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SearchProduct from "./Search";
 import { IoIosMenu } from "react-icons/io";
 import { RiCustomerServiceLine } from "react-icons/ri";
@@ -25,6 +25,7 @@ function MainHeader() {
   const { data } = useGetProfile();
   const [cartItemCount, setCartItemCount] = useState(0);
   const [cartUpdated, setCartUpdated] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -49,6 +50,7 @@ function MainHeader() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    navigate("/");
     window.location.reload();
   };
 

@@ -55,6 +55,7 @@ var productSchema = new mongoose.Schema(
         },
         star: Number,
         comment: String,
+        orderId: { type: mongoose.Schema.Types.ObjectId, ref: "Order" },
         postedby: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         createdAt: { type: Date, default: Date.now },
         isClose: {

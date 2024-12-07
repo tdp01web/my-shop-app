@@ -16,7 +16,10 @@ const ProductComments = ({ data }) => {
   const { data: reviews, isLoading } = useQuery({
     queryKey: ["REVIEWS", productId],
     queryFn: async () => {
-      const { data } = await instance.get(`/product/getReviews/${productId}`);
+      const { data } = await instance.get(
+        `/product/getReviewsUser/${productId}`
+      );
+      console.log(data);
       return data;
     },
     enabled: !!productId,
@@ -138,8 +141,8 @@ const ProductComments = ({ data }) => {
             <Spin />
           ) : (
             <div className="flex flex-col gap-6">
-              {reviews?.ratings?.length > 0 ? (
-                reviews.ratings.map((review) => (
+              {reviews?.closedComments?.length > 0 ? (
+                reviews?.closedComments.map((review) => (
                   <div key={review._id} className="p-4 border-b">
                     <Rate disabled value={review.star} />
                     <p className="mt-2">{review.comment}</p>

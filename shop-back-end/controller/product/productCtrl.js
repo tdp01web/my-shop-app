@@ -290,7 +290,9 @@ const deleteComment = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Brand not found" });
     }
     if (brand.status === 0) {
-      return res.status(400).json({ message: "Cannot modify product because the brand is suspended." });
+      return res.status(400).json({
+        message: "Cannot modify product because the brand is suspended.",
+      });
     }
 
     const category = await Category.findById(product.category);
@@ -298,7 +300,9 @@ const deleteComment = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
     if (category.status === 0) {
-      return res.status(400).json({ message: "Cannot modify product because the category is suspended." });
+      return res.status(400).json({
+        message: "Cannot modify product because the category is suspended.",
+      });
     }
 
     product.statusCmt = product.statusCmt === 1 ? 0 : 1;
@@ -319,12 +323,15 @@ const deleteCommentDetail = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const ratingIndex = product.ratings.findIndex(rating => rating._id.toString() === id);
+    const ratingIndex = product.ratings.findIndex(
+      (rating) => rating._id.toString() === id
+    );
     if (ratingIndex === -1) {
       return res.status(404).json({ message: "Comment not found" });
     }
 
-    product.ratings[ratingIndex].isClose = product.ratings[ratingIndex].isClose === 1 ? 0 : 1;
+    product.ratings[ratingIndex].isClose =
+      product.ratings[ratingIndex].isClose === 1 ? 0 : 1;
 
     const updatedProduct = await product.save();
 
@@ -371,6 +378,7 @@ const getRelatedProducts = asyncHandler(async (req, res) => {
     const relatedProducts = await Product.find({
       category: categoryId,
       _id: { $ne: excludeId }, // Loại trừ sản phẩm hiện tại
+      status: 1,
     })
       .limit(5)
       .populate("brand")
@@ -437,55 +445,29 @@ const addToWishlist = asyncHandler(async (req, res) => {
   }
 });
 
-//! Đánh giá cho sản phẩm
-const rateProduct = asyncHandler(async (req, res) => {
-  const { prodId, star, comment } = req.body;
-  const { _id: userId } = req.user;
+const getReviewsUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
 
   try {
-    // Kiểm tra sản phẩm tồn tại
-    const product = await Product.findById(prodId);
+    // Tìm sản phẩm theo id
+    const product = await Product.findById(id).populate({
+      path: "ratings.postedby",
+      select: "firstName lastName email",
+    });
+
     if (!product) {
       return res.status(404).json({ message: "Sản phẩm không tồn tại!" });
     }
 
-    // Kiểm tra xem người dùng đã mua sản phẩm chưa
-    const orderExists = await Order.findOne({
-      orderedBy: userId,
-      "products.prodId": prodId,
-      orderStatus: "Hoàn Thành",
-    });
-
-    if (!orderExists) {
-      return res
-        .status(403)
-        .json({ message: "Bạn chỉ có thể đánh giá sản phẩm đã mua." });
-    }
-
-    // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
-    const existingRating = product.ratings.find(
-      (rating) => rating.postedby.toString() === userId.toString()
+    // Lọc các bình luận có isClose = 1
+    const closedComments = product.ratings.filter(
+      (rating) => rating.isClose === 1
     );
 
-    if (existingRating) {
-      return res.status(403).json({
-        message: "Bạn chỉ được đánh giá sản phẩm này một lần.",
-      });
-    }
-
-    // Nếu chưa đánh giá, thêm đánh giá mới
-    product.ratings.push({ star, comment, postedby: userId });
-
-    // Tính tổng số sao trung bình
-    const totalStars = product.ratings.reduce(
-      (acc, rating) => acc + rating.star,
-      0
-    );
-    product.totalrating = (totalStars / product.ratings.length).toFixed(1);
-
-    await product.save();
-    res.status(201).json({ message: "Đánh giá thành công!", product });
+    // Trả về danh sách các bình luận  (isClose = 1)
+    res.status(200).json({ closedComments });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -587,26 +569,6 @@ const getAllProductComments = asyncHandler(async (req, res) => {
   }
 });
 
-//!xóa biến thể của sản phẩm
-// const deleteProductVariant = asyncHandler(async (req, res) => {
-//   try {
-//     const { variantId } = req.params;
-
-//     const variant = await ProductVariant.findByIdAndDelete(variantId);
-//     if (!variant) {
-//       return res.status(404).json({ message: "Không tìm thấy biến thể" });
-//     }
-
-//     // Xóa biến thể khỏi mảng biến thể của sản phẩm
-//     await Product.findByIdAndUpdate(variant.product, {
-//       $pull: { variants: variant._id },
-//     });
-
-//     res.status(200).json({ message: "Đã xóa biến thể thành công" });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
 const deleteProductVariant = asyncHandler(async (req, res) => {
   const { variantId } = req.params;
   try {
@@ -766,6 +728,74 @@ const getProductsByViews = asyncHandler(async (req, res) => {
   }
 });
 
+//! Đánh giá sản phẩm
+const rateProduct = asyncHandler(async (req, res) => {
+  const { prodId, star, comment } = req.body;
+  const { _id: userId } = req.user;
+
+  try {
+    // Kiểm tra sản phẩm có tồn tại
+    const product = await Product.findById(prodId);
+    if (!product) {
+      return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+    }
+
+    // Kiểm tra người dùng đã mua sản phẩm hay chưa
+    const completedOrders = await Order.find({
+      orderedBy: userId,
+      "products.prodId": prodId,
+      orderStatus: "Hoàn Thành",
+    });
+
+    if (!completedOrders || completedOrders.length === 0) {
+      return res
+        .status(403)
+        .json({ message: "Bạn chỉ có thể đánh giá sản phẩm đã mua" });
+    }
+
+    // Lấy danh sách orderId đã được đánh giá
+    const ratedOrderIds = product.ratings
+      .filter((rating) => rating.postedby.toString() === userId.toString())
+      .map((rating) => rating.orderId?.toString());
+
+    // Lọc các đơn hàng chưa được đánh giá
+    const unratedOrders = completedOrders.filter(
+      (order) => !ratedOrderIds.includes(order._id.toString())
+    );
+
+    if (unratedOrders.length === 0) {
+      return res
+        .status(403)
+        .json({ message: "Bạn đã đánh giá tất cả các lần mua" });
+    }
+
+    // Lấy orderId đầu tiên trong danh sách chưa đánh giá
+    const targetOrder = unratedOrders[0];
+
+    // Thêm đánh giá mới cho lần mua chưa được đánh giá
+    product.ratings.push({
+      star,
+      comment,
+      orderId: targetOrder._id,
+      postedby: userId,
+    });
+
+    // Tính lại trung bình số sao
+    const totalStars = product.ratings.reduce(
+      (acc, rating) => acc + rating.star,
+      0
+    );
+
+    product.totalrating = (totalStars / product.ratings.length).toFixed(1);
+    await product.save();
+
+    res.status(200).json({ message: "Đánh giá sản phẩm thành công" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = {
   createProduct,
   getaProduct,
@@ -789,4 +819,5 @@ module.exports = {
   getProductsBySales,
   getProductsByViews,
   getTopSellingProductsUsers,
+  getReviewsUser,
 };
