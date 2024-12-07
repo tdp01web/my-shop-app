@@ -332,10 +332,21 @@ const getTopSellingProducts = async (req, res) => {
 
 const getLoyalCustomers = async (req, res) => {
   try {
+    const { startDate, endDate } = req.query;
+
+    const matchStage = {
+      orderStatus: { $in: ["Hoàn Thành", "Đã Giao Hàng"] },
+    };
+
+    if (startDate && endDate) {
+      matchStage.createdAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(new Date(endDate).setHours(23, 59, 59, 999)),
+      };
+    }
+
     const loyalCustomers = await Order.aggregate([
-      {
-        $match: { orderStatus: { $in: ["Hoàn Thành", "Đã Giao Hàng"] } },
-      },
+      { $match: matchStage },
       {
         $group: {
           _id: "$orderedBy",
@@ -343,9 +354,7 @@ const getLoyalCustomers = async (req, res) => {
           totalOrders: { $count: {} },
         },
       },
-      {
-        $sort: { totalSpent: -1 },
-      },
+      { $sort: { totalSpent: -1 } },
       {
         $lookup: {
           from: "users",
@@ -354,9 +363,7 @@ const getLoyalCustomers = async (req, res) => {
           as: "userDetails",
         },
       },
-      {
-        $unwind: "$userDetails",
-      },
+      { $unwind: "$userDetails" },
       {
         $project: {
           _id: 0,
@@ -780,7 +787,128 @@ const getOrderAndProductStats = async (req, res) => {
   }
 };
 
-module.exports = { getOrderAndProductStats };
+const getSalesTypeStats = async (req, res) => {
+  try {
+    const { filterType, startDate, endDate } = req.query;
+
+    let start,
+      end,
+      timeLabels = [];
+    const now = new Date();
+
+    switch (filterType) {
+      case "week": {
+        const startOfWeek = moment().startOf("week");
+        const endOfWeek = moment().endOf("week");
+        start = startOfWeek.toDate();
+        end = endOfWeek.toDate();
+
+        timeLabels = Array.from({ length: 7 }, (_, i) =>
+          startOfWeek.clone().add(i, "days").format("dddd")
+        );
+        break;
+      }
+      case "month": {
+        const startOfMonth = moment().startOf("month");
+        const endOfMonth = moment().endOf("month");
+        start = startOfMonth.toDate();
+        end = endOfMonth.toDate();
+
+        const weeksInMonth = Math.ceil(
+          endOfMonth.diff(startOfMonth, "days") / 7
+        );
+        timeLabels = Array.from(
+          { length: weeksInMonth },
+          (_, i) => `Week ${i + 1}`
+        );
+        break;
+      }
+      case "year": {
+        const startOfYear = moment().startOf("year");
+        const endOfYear = moment().endOf("year");
+        start = startOfYear.toDate();
+        end = endOfYear.toDate();
+
+        timeLabels = Array.from({ length: 12 }, (_, i) =>
+          moment().month(i).format("MMMM")
+        );
+        break;
+      }
+      case "custom": {
+        if (!startDate || !endDate) {
+          return res.status(400).json({
+            error: "Start and end dates are required for custom filter.",
+          });
+        }
+        start = moment(startDate).toDate();
+        end = moment(endDate).toDate();
+
+        const daysDiff = moment(endDate).diff(moment(startDate), "days") + 1;
+        timeLabels = Array.from({ length: daysDiff }, (_, i) =>
+          moment(startDate).add(i, "days").format("DD-MM-YYYY")
+        );
+        break;
+      }
+      default:
+        return res.status(400).json({ error: "Invalid filter type." });
+    }
+
+    const matchCondition = { createdAt: { $gte: start, $lt: end } };
+
+    let groupByField;
+    switch (filterType) {
+      case "week":
+        groupByField = { $dayOfWeek: "$createdAt" };
+        break;
+      case "month":
+        groupByField = { $week: "$createdAt" };
+        break;
+      case "year":
+        groupByField = { $month: "$createdAt" };
+        break;
+      case "custom":
+        groupByField = { $dayOfYear: "$createdAt" };
+        break;
+      default:
+        groupByField = null;
+    }
+
+    const stats = await Order.aggregate([
+      { $match: matchCondition },
+      {
+        $group: {
+          _id: groupByField,
+          totalOrders: { $sum: 1 },
+          salesTypeOnline: {
+            $sum: { $cond: [{ $eq: ["$salesTypes", 1] }, 1, 0] },
+          },
+          salesTypeOffline: {
+            $sum: { $cond: [{ $eq: ["$salesTypes", 0] }, 1, 0] },
+          },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    const formattedStats = timeLabels.map((label, index) => {
+      const stat = stats.find((s) => s._id === index + 1) || {
+        totalOrders: 0,
+        salesTypeOnline: 0,
+        salesTypeOffline: 0,
+      };
+      return {
+        timeLabel: label,
+        online: stat.salesTypeOnline,
+        offline: stat.salesTypeOffline,
+      };
+    });
+
+    res.status(200).json({ filterType, stats: formattedStats });
+  } catch (error) {
+    console.error("Error fetching sales type stats:", error);
+    res.status(500).json({ error: "Failed to fetch stats." });
+  }
+};
 
 module.exports = {
   getMonthlySales,
@@ -794,4 +922,5 @@ module.exports = {
   getProductSalesByTime,
   getOrderStatusStats,
   getOrderAndProductStats,
+  getSalesTypeStats,
 };

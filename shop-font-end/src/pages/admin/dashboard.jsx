@@ -17,6 +17,8 @@ import OrderAndProductStats from "./Dashboard/OrderAndProductStats";
 import OrderStatusStats from "./Dashboard/OrderStatusStats";
 import ProductSalesFilter from "./Dashboard/ProductSalesFilter";
 import SalesFilter from "./Dashboard/SalesFilter";
+import TopView from "./Dashboard/TopView";
+import SalesTypeStats from "./Dashboard/SalesTypeStats";
 
 const { RangePicker } = DatePicker;
 
@@ -168,64 +170,6 @@ const Dashboard = () => {
     },
   };
 
-  const dataTable = [
-    {
-      key: "1",
-      metric: "Doanh thu ngày",
-      value: "11.000.000 VND",
-      growth: "0%",
-    },
-    {
-      key: "2",
-      metric: "Doanh thu tháng",
-      value: "641.025.000 VND",
-      growth: "0%",
-    },
-    {
-      key: "3",
-      metric: "Doanh thu năm",
-      value: "641.025.000 VND",
-      growth: "0%",
-    },
-    {
-      key: "4",
-      metric: "Sản phẩm tháng",
-      value: "366 Sản phẩm",
-      growth: "0%",
-    },
-    {
-      key: "5",
-      metric: "Hóa đơn ngày",
-      value: "2 Hóa đơn",
-      growth: "0%",
-    },
-    {
-      key: "6",
-      metric: "Hóa đơn tháng",
-      value: "204 Hóa đơn",
-      growth: "0%",
-    },
-  ];
-
-  const columnsTable = [
-    {
-      title: "Tên chỉ số",
-      dataIndex: "metric",
-      key: "metric",
-    },
-    {
-      title: "Giá trị",
-      dataIndex: "value",
-      key: "value",
-    },
-    {
-      title: "Tăng trưởng",
-      dataIndex: "growth",
-      key: "growth",
-      render: (text) => <span style={{ color: "green" }}>{text}</span>,
-    },
-  ];
-
   return (
     <div className="flex flex-col justify-center gap-5">
       {/* <h1 className="text-center text-xl">Thống kê</h1> */}
@@ -239,8 +183,11 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="bg-gray-200 p-4 rounded-md">
+      {/* <div className="bg-gray-200 p-4 rounded-md">
         <OrderAndProductStats />
+      </div> */}
+      <div className="bg-gray-200 p-4 rounded-md">
+        <SalesTypeStats />
       </div>
       <div className="flex gap-3 w-full">
         <div className="flex flex-col gap-4 w-3/5">
@@ -306,27 +253,18 @@ const Dashboard = () => {
               }}
             />
           </div>
-        </div>
-        <div className="flex flex-col gap-4 w-2/5">
-          <div className="bg-gray-200 p-4 rounded-md">
-            <OrderStatusStats />
-          </div>
-          <div className="bg-gray-200 p-4 rounded-md">
-            <h2 className="mb-2 font-bold text-[20px] text-center">
-              Biểu đồ thống kê hóa đơn và sản phẩm
-            </h2>
-            <Table
-              dataSource={dataTable}
-              columns={columnsTable}
-              pagination={false}
-            />
-          </div>
           <div className="bg-gray-200 p-4 rounded-md">
             <h2 className="mb-2 font-bold text-[20px] text-center">
               Top khách hàng thân thiết
             </h2>
             <LoyalCustomers />
           </div>
+        </div>
+        <div className="flex flex-col gap-4 w-2/5">
+          <div className="bg-gray-200 p-4 rounded-md">
+            <OrderStatusStats />
+          </div>
+          <TopView />
         </div>
       </div>
     </div>

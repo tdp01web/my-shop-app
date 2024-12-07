@@ -23,6 +23,7 @@ const {
   getProductsByViews,
   getTopSellingProductsUsers,
   getReviewsUser,
+  getLatestProducts,
 } = require("../../controller/product/productCtrl");
 const router = express.Router();
 const {
@@ -78,6 +79,8 @@ router.get("/top-selling-user", getTopSellingProductsUsers);
 
 // Lấy danh sách sản phẩm theo lượt bán giảm dần
 router.get("/products-by-sales", getProductsBySales);
+//sản phẩm mới nhất
+router.get("/getLatestProducts", getLatestProducts);
 
 // Lấy danh sách sản phẩm theo lượt xem giảm dần
 router.get("/products-by-views", getProductsByViews);

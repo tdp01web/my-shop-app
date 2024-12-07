@@ -11,6 +11,7 @@ const {
   getProductSalesByTime,
   getOrderStatusStats,
   getOrderAndProductStats,
+  getSalesTypeStats,
 } = require("../controller/statsCtrl");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddlewares");
 const router = express.Router();
@@ -26,5 +27,6 @@ router.get("/getSalesByTime", getSalesByTime);
 router.get("/getProductSalesByTime", getProductSalesByTime);
 router.get("/getOrderStatusStats", getOrderStatusStats);
 router.get("/getOrderAndProductStats", getOrderAndProductStats);
+router.get("/getSalesTypeStats", getSalesTypeStats);
 
 module.exports = router;
