@@ -194,7 +194,7 @@ const createOrderSales = asyncHandler(async (req, res) => {
     const user = await User.findById(_id);
     const newOrder = await Order.create({
       ...req.body,
-      orderedBy: user
+      orderedBy: user,
     });
     await OrderHistory.create({
       orderId: newOrder._id,
@@ -650,6 +650,44 @@ const cancelMyOrder = asyncHandler(async (req, res) => {
     order,
   });
 });
+
+// user cập nhật trạng thái đã nhận hàng
+const deliveredOrder = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { orderId } = req.params;
+
+  const order = await Order.findOne({
+    _id: orderId,
+    orderedBy: _id,
+  });
+  const user = await User.findById(_id);
+
+  if (!order) {
+    return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+  }
+
+  if (order.orderStatus !== "Đã Giao Hàng") {
+    return res.status(400).json({
+      message: "Không thể cập nhật trạng thái.",
+    });
+  }
+
+  order.orderStatus = "Hoàn Thành";
+
+  await OrderHistory.create({
+    orderId: orderId,
+    name: `${user.lastName} ${user.firstName}`,
+    status: order.orderStatus,
+    user: user._id,
+    time: new Date(),
+  });
+  await order.save();
+
+  return res.status(200).json({
+    message: "Cập nhật trạng thái thành công",
+    order,
+  });
+});
 //Lấy top 5 sản phẩm bán chạy
 
 module.exports = {
@@ -664,5 +702,6 @@ module.exports = {
   callback,
   transactionStatus,
   cancelMyOrder,
-  createOrderSales
+  createOrderSales,
+  deliveredOrder,
 };
