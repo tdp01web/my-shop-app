@@ -1,20 +1,20 @@
 import { BackwardFilled, HistoryOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Input, message, Select } from "antd";
+import { Button, Flex, message, Popconfirm } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetOrderByID } from "../../../hooks/queries/useGetOrderByID";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import moment from "moment/moment";
 import ModalHistoryOrder from "./modalHistoryOrder";
+import CancelOrderModal from "./CancelOrderModal";
 const DetailCart = () => {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
-  const [form] = Form.useForm();
   const { id } = useParams();
   const queryClient = useQueryClient();
-  const [cancellationReason, setCancellationReason] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -37,7 +37,7 @@ const DetailCart = () => {
     },
   });
 
-  const { mutate, isPending } = usePutOrder(id, {
+  const { mutate, mutateAsync, isPending } = usePutOrder(id, {
     onSuccess: () => {
       messageApi.success("Cập nhật trạng thái thành công!");
       queryClient.invalidateQueries({ queryKey: ["get-all-orders"] });
@@ -50,47 +50,72 @@ const DetailCart = () => {
     },
   });
 
-  const options = useMemo(() => {
-    switch(data?.data?.orderStatus) {
-      case 'Đang Xử Lý':
-        return [
-          { label: 'Đã Xác Nhận', value: 'Đã Xác Nhận' },
-          { label: 'Đã Hủy', value: 'Đã Hủy' },
-        ];
+  const renderStatusButtons = () => {
+    switch (data?.data?.orderStatus) {
+      case "Đang Xử Lý":
+        return (
+          <>
+            <PopConfirmWrap status="Đã Xác Nhận">
+              <Button type="primary">Đã Xác Nhận</Button>
+            </PopConfirmWrap>
 
-      case 'Đã Xác Nhận':
-        return [
-          { label: 'Đang Giao Hàng', value: 'Đang Giao Hàng' },
-        ];
+            <Button onClick={() => setCancelModalOpen(true)} danger>
+              Đã Hủy
+            </Button>
+          </>
+        );
 
-      case 'Đang Giao Hàng':
-        return [
-          { label: 'Đã Giao Hàng', value: 'Đã Giao Hàng' },
-        ]
+      case "Đã Xác Nhận":
+        return (
+          <PopConfirmWrap status="Đang Giao Hàng">
+            <Button type="primary">Đang Giao Hàng</Button>
+          </PopConfirmWrap>
+        );
 
-      case 'Đã Giao Hàng':
-        return [
-          { label: 'Hoàn Thành', value: 'Hoàn Thành' },
-        ]
+      case "Đang Giao Hàng":
+        return (
+          <PopConfirmWrap status="Đã Giao Hàng">
+            <Button type="primary">Đã Giao Hàng</Button>
+          </PopConfirmWrap>
+        );
+
+      case "Đã Giao Hàng":
+        return (
+          <PopConfirmWrap status="Hoàn Thành">
+            <Button type="primary">Hoàn Thành</Button>
+          </PopConfirmWrap>
+        );
 
       default:
-        return []
+        return [];
     }
-  }, [data?.data?.orderStatus])
-
-  const onFinish = (values) => {
-    mutate({
-      orderStatus: values.orderStatus,
-      cancellationReason: values.cancellationReason,
-    });
   };
 
-  const handleValuesChange = (changedValues) => {
-    if (changedValues === "Đã Hủy") {
-      setCancellationReason("Đã Hủy");
-    } else {
-      setCancellationReason("");
-    }
+  const onCancelOrder = async (values) => {
+    await mutateAsync({
+      orderStatus: "Đã Hủy",
+      cancellationReason: values.cancelReason,
+    });
+
+    setCancelModalOpen(false);
+  };
+
+  const PopConfirmWrap = ({ children, status }) => {
+    const onOk = () => {
+      mutate({
+        orderStatus: status,
+      });
+    };
+
+    return (
+      <Popconfirm
+        title="Cập nhật trạng thái"
+        description={`Xác nhận cập nhật trạng thái ${status}?`}
+        onConfirm={onOk}
+      >
+        {children}
+      </Popconfirm>
+    );
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -124,7 +149,12 @@ const DetailCart = () => {
         <Button type="primary" className="mt-4" onClick={showModal}>
           <HistoryOutlined /> Lịch sử đơn hàng
         </Button>
-        <ModalHistoryOrder id={id} isModalOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
+        <ModalHistoryOrder
+          id={id}
+          isModalOpen={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        />
         <div className="gap-4 grid grid-cols-12 mt-6">
           <div className="col-span-12 md:col-span-8 p-4 border rounded">
             <div className="flex items-center gap-x-3 mb-3">
@@ -203,53 +233,27 @@ const DetailCart = () => {
             </p>
           </div>
         </div>
-        
-        {order.orderStatus !== 'Hoàn Thành' && order.orderStatus !== 'Đã Hủy' && (
-          <div className="mt-6 p-4 border rounded">
-            <Form
-              form={form}
-              name="basic"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              onFinish={onFinish}
-              autoComplete="off"
-            >
-              <Form.Item label="Trạng thái đơn hàng" name="orderStatus">
-                <Select
-                  showSearch
-                  placeholder="Trạng thái đơn hàng"
-                  optionFilterProp="label"
-                  options={options}
-                  onChange={handleValuesChange}
-                />
-              </Form.Item>
 
-              {cancellationReason === "Đã Hủy" && (
-                <Form.Item
-                  label="Lý do hủy"
-                  name="cancellationReason"
-                  rules={[
-                    { required: true, message: "Lý do hủy bắt buộc phải điền" },
-                  ]}
-                >
-                  <Input placeholder="Nhập lý do hủy" />
-                </Form.Item>
-              )}
+        {order.orderStatus !== "Hoàn Thành" &&
+          order.orderStatus !== "Đã Hủy" && (
+            <div className="mt-6 p-4 text-center border rounded">
+              <p className="text-[18px] font-semibold">
+                Cập nhật trạng thái đơn hàng
+              </p>
 
-              <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  disabled={isPending}
-                  loading={isPending}
-                >
-                  Cập nhật
-                </Button>
-              </Form.Item>
-            </Form>
-          </div>
-        )}
+              <Flex justify="center" className="mt-4" gap="8px">
+                {renderStatusButtons()}
+              </Flex>
+            </div>
+          )}
       </div>
+
+      <CancelOrderModal
+        open={cancelModalOpen}
+        onClose={() => setCancelModalOpen(false)}
+        onOk={onCancelOrder}
+        loading={isPending}
+      />
     </div>
   );
 };
