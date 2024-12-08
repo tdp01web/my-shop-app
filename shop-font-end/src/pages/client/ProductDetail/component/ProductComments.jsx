@@ -11,6 +11,7 @@ const ProductComments = ({ data }) => {
   // State cho đánh giá mới
   const [newRating, setNewRating] = useState(0);
   const [newComment, setNewComment] = useState("");
+  const [showComment, setShowComment] = useState(false);
 
   // Lấy danh sách đánh giá
   const { data: reviews, isLoading } = useQuery({
@@ -72,15 +73,15 @@ const ProductComments = ({ data }) => {
   );
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-[24px] font-bold mb-6">
+    <div className="bg-white shadow-md p-6 rounded-lg">
+      <h3 className="mb-6 font-bold text-[24px]">
         Đánh giá và nhận xét về sản phẩm {data?.title}
       </h3>
 
-      <div className="flex flex-col md:flex-row gap-24 w-[70%] mx-auto">
+      <div className="flex md:flex-row flex-col gap-24 mx-auto w-[70%]">
         {/* Tổng điểm và số lượng đánh giá */}
-        <div className="flex flex-col items-center justify-center">
-          <p className="text-2xl font-bold items-center justify-center text-red-500">
+        <div className="flex flex-col justify-center items-center">
+          <p className="justify-center items-center font-bold text-2xl text-red-500">
             {averageRating.toFixed(1)}/5
           </p>
           <Rate disabled value={Math.round(averageRating)} />
@@ -92,14 +93,14 @@ const ProductComments = ({ data }) => {
           {[5, 4, 3, 2, 1].map((star, index) => (
             <div key={star} className="flex items-center mb-2">
               <span className="w-12">{star} </span>
-              <div className="flex-1   mx-2 bg-gray-200 h-2 rounded-full  overflow-hidden">
+              <div className="flex-1 bg-gray-200 mx-2 rounded-full h-2 overflow-hidden">
                 <div
                   style={{
                     width: `${
                       (ratingsCount[5 - star] / totalReviews) * 100 || 0
                     }%`,
                   }}
-                  className="bg-yellow-500 h-full "
+                  className="bg-yellow-500 h-full"
                 ></div>
               </div>
               <span className="">{ratingsCount[5 - star]} đánh giá</span>
@@ -112,12 +113,12 @@ const ProductComments = ({ data }) => {
 
       {/* Form đánh giá */}
       {data?.statusCmt === 0 ? (
-        <p className="text-red-500 text-[20px] w-full text-center">
+        <p className="w-full text-[20px] text-center text-red-500">
           Sản phẩm này đã bị khóa bình luận
         </p>
       ) : (
         <div className="mb-6">
-          <h4 className="text-lg font-bold mb-4">Gửi đánh giá của bạn</h4>
+          <h4 className="mb-4 font-bold text-lg">Gửi đánh giá của bạn</h4>
           <Rate value={newRating} onChange={setNewRating} />
           <Input.TextArea
             rows={4}
@@ -141,16 +142,29 @@ const ProductComments = ({ data }) => {
             <Spin />
           ) : (
             <div className="flex flex-col gap-6">
-              {reviews?.closedComments?.length > 0 ? (
-                reviews?.closedComments.map((review) => (
-                  <div key={review._id} className="p-4 border-b">
-                    <Rate disabled value={review.star} />
-                    <p className="mt-2">{review.comment}</p>
-                    <small className="text-gray-500">
-                      Bởi {review.postedby?.email}
-                    </small>
-                  </div>
-                ))
+              {reviews?.ratings?.length > 0 ? (
+                <>
+                  {reviews.ratings
+                    .slice(0, showComment ? undefined : 3)
+                    .map((review) => (
+                      <div key={review._id} className="p-4 border-b">
+                        <Rate disabled value={review.star} />
+                        <p className="mt-2">{review.comment}</p>
+                        <small className="text-gray-500">
+                          Bởi {review.postedby?.email}
+                        </small>
+                      </div>
+                    ))}
+                  {!showComment && reviews.ratings.length > 3 && (
+                    <Button
+                      type="link"
+                      onClick={() => setShowComment(true)}
+                      className="mt-4"
+                    >
+                      Xem thêm...
+                    </Button>
+                  )}
+                </>
               ) : (
                 <p className="text-gray-500">
                   Chưa có đánh giá nào cho sản phẩm này.
