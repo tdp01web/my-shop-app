@@ -7,9 +7,11 @@ const Menu = ({ products }) => {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
 
   const topNewProducts = useMemo(() => {
-    return products?.filter((product) => product.status !== 0).slice(0, 5);
+    return products
+      ?.filter((product) => product.status !== 0)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 5);
   }, [products]);
-  console.log(topNewProducts);
 
   return (
     <div className="relative flex gap-4 md:w-full">
