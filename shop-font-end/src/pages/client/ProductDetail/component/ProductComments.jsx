@@ -20,7 +20,6 @@ const ProductComments = ({ data }) => {
       const { data } = await instance.get(
         `/product/getReviewsUser/${productId}`
       );
-      console.log(data);
       return data;
     },
     enabled: !!productId,
@@ -142,11 +141,28 @@ const ProductComments = ({ data }) => {
             <Spin />
           ) : (
             <div className="flex flex-col gap-6">
-              {reviews?.ratings?.length > 0 ? (
+              {reviews?.closedComments?.length > 0 ? (
                 <>
-                  {reviews.ratings
-                    .slice(0, showComment ? undefined : 3)
-                    .map((review) => (
+                  {reviews.closedComments.slice(0, 3).map((review) => (
+                    <div key={review._id} className="p-4 border-b">
+                      <Rate disabled value={review.star} />
+                      <p className="mt-2">{review.comment}</p>
+                      <small className="text-gray-500">
+                        Bởi {review.postedby?.email}
+                      </small>
+                    </div>
+                  ))}
+                  {reviews.closedComments.length > 3 && !showComment && (
+                    <Button
+                      type="link"
+                      onClick={() => setShowComment(true)}
+                      className="mt-4"
+                    >
+                      Xem thêm {reviews.closedComments.length - 3} đánh giá...
+                    </Button>
+                  )}
+                  {showComment &&
+                    reviews.closedComments.slice(3).map((review) => (
                       <div key={review._id} className="p-4 border-b">
                         <Rate disabled value={review.star} />
                         <p className="mt-2">{review.comment}</p>
@@ -155,15 +171,6 @@ const ProductComments = ({ data }) => {
                         </small>
                       </div>
                     ))}
-                  {!showComment && reviews.ratings.length > 3 && (
-                    <Button
-                      type="link"
-                      onClick={() => setShowComment(true)}
-                      className="mt-4"
-                    >
-                      Xem thêm...
-                    </Button>
-                  )}
                 </>
               ) : (
                 <p className="text-gray-500">
