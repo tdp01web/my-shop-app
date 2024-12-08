@@ -4,8 +4,7 @@ import { Button, Form, Input, message, Select } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetOrderByID } from "../../../hooks/queries/useGetOrderByID";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
-import { useEffect, useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
+import { useMemo, useState } from "react";
 import moment from "moment/moment";
 import ModalHistoryOrder from "./modalHistoryOrder";
 const DetailCart = () => {
@@ -28,14 +27,6 @@ const DetailCart = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const options = [
-    { value: "Đang Xử Lý", label: "Đang Xử Lý" },
-    { value: "Đã Xác Nhận", label: "Đã Xác Nhận" },
-    { value: "Đang Giao Hàng", label: "Đang Giao Hàng" },
-    { value: "Đã Giao Hàng", label: "Đã Giao Hàng" },
-    { value: "Hoàn Thành", label: "Hoàn Thành" },
-    { value: "Đã Hủy", label: "Đã Hủy" },
-  ];
 
   const { data, isLoading, isError } = useGetOrderByID(id, {
     onSuccess: () => {
@@ -59,6 +50,34 @@ const DetailCart = () => {
     },
   });
 
+  const options = useMemo(() => {
+    switch(data?.data?.orderStatus) {
+      case 'Đang Xử Lý':
+        return [
+          { label: 'Đã Xác Nhận', value: 'Đã Xác Nhận' },
+          { label: 'Đã Hủy', value: 'Đã Hủy' },
+        ];
+
+      case 'Đã Xác Nhận':
+        return [
+          { label: 'Đang Giao Hàng', value: 'Đang Giao Hàng' },
+        ];
+
+      case 'Đang Giao Hàng':
+        return [
+          { label: 'Đã Giao Hàng', value: 'Đã Giao Hàng' },
+        ]
+
+      case 'Đã Giao Hàng':
+        return [
+          { label: 'Hoàn Thành', value: 'Hoàn Thành' },
+        ]
+
+      default:
+        return []
+    }
+  }, [data?.data?.orderStatus])
+
   const onFinish = (values) => {
     mutate({
       orderStatus: values.orderStatus,
@@ -73,12 +92,6 @@ const DetailCart = () => {
       setCancellationReason("");
     }
   };
-
-  useEffect(() => {
-    if (data?.data.orderStatus === "Đã Hủy") {
-      setCancellationReason("Đã Hủy");
-    }
-  }, [data?.data.orderStatus]);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError || !data) return <p>Error loading data.</p>;
@@ -190,53 +203,52 @@ const DetailCart = () => {
             </p>
           </div>
         </div>
-        <div className="mt-6 p-4 border rounded">
-          <Form
-            form={form}
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            onFinish={onFinish}
-            initialValues={{
-              orderStatus: order.orderStatus,
-              cancellationReason: order.cancellationReason,
-            }}
-            autoComplete="off"
-          >
-            <Form.Item label="Trạng thái đơn hàng" name="orderStatus">
-              <Select
-                showSearch
-                placeholder="Trạng thái đơn hàng"
-                optionFilterProp="label"
-                options={options}
-                onChange={handleValuesChange}
-              />
-            </Form.Item>
-
-            {cancellationReason === "Đã Hủy" && (
-              <Form.Item
-                label="Lý do hủy"
-                name="cancellationReason"
-                rules={[
-                  { required: true, message: "Lý do hủy bắt buộc phải điền" },
-                ]}
-              >
-                <Input placeholder="Nhập lý do hủy" />
+        
+        {order.orderStatus !== 'Hoàn Thành' && order.orderStatus !== 'Đã Hủy' && (
+          <div className="mt-6 p-4 border rounded">
+            <Form
+              form={form}
+              name="basic"
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 16 }}
+              onFinish={onFinish}
+              autoComplete="off"
+            >
+              <Form.Item label="Trạng thái đơn hàng" name="orderStatus">
+                <Select
+                  showSearch
+                  placeholder="Trạng thái đơn hàng"
+                  optionFilterProp="label"
+                  options={options}
+                  onChange={handleValuesChange}
+                />
               </Form.Item>
-            )}
 
-            <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                disabled={isPending}
-                loading={isPending}
-              >
-                Cập nhật
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
+              {cancellationReason === "Đã Hủy" && (
+                <Form.Item
+                  label="Lý do hủy"
+                  name="cancellationReason"
+                  rules={[
+                    { required: true, message: "Lý do hủy bắt buộc phải điền" },
+                  ]}
+                >
+                  <Input placeholder="Nhập lý do hủy" />
+                </Form.Item>
+              )}
+
+              <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={isPending}
+                  loading={isPending}
+                >
+                  Cập nhật
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        )}
       </div>
     </div>
   );
