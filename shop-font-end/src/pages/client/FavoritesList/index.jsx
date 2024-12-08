@@ -8,6 +8,7 @@ import Notification from "../../../components/Notification";
 import { Link } from "react-router-dom";
 
 const FavoritesList = () => {
+  const user = localStorage.getItem("user");
   const { data, isLoading } = useQuery({
     queryKey: ["favorites"],
     queryFn: async () => {
@@ -21,6 +22,7 @@ const FavoritesList = () => {
     onError: () => {
       message.error("Đã có lỗi xảy ra");
     },
+    enabled: !!user
   });
 
   const wishlist = data?.wishlist || [];
@@ -30,7 +32,7 @@ const FavoritesList = () => {
   }
 
   return (
-    <div className="w-[80%] mx-auto ">
+    <div className="mx-auto w-[80%]">
       {wishlist.length === 0 ? (
         <div className="text-center">
           <Link to={"/"}>
@@ -41,7 +43,7 @@ const FavoritesList = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           {wishlist.map((product) => (
             <Product
               key={product._id}

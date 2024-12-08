@@ -18,6 +18,7 @@ const Product = ({
   totalrating = 0,
   ratings,
 }) => {
+  const user = localStorage.getItem("user");
   const productImage = images[0]?.url || "NaN";
   const firstVariant = variants[0];
   const queryClient = useQueryClient();
@@ -38,6 +39,7 @@ const Product = ({
       });
       return data?.wishlist || [];
     },
+    enabled: !!user
   });
 
   const isInWishlist = wishlist?.some((product) => product._id === _id);
@@ -84,7 +86,7 @@ const Product = ({
   }
 
   return (
-    <div className="relative h-[100%] bg-white border border-solid border-[#CFCFCF] flex gap-3 px-2 py-2 flex-col mx-[3px] rounded-sm group">
+    <div className="relative flex flex-col gap-3 border-[#CFCFCF] bg-white mx-[3px] px-2 py-2 border border-solid rounded-sm h-[100%] group">
       {/* Biểu tượng yêu thích */}
       <div
         className={`absolute z-10 top-2 left-2 ${
@@ -97,18 +99,18 @@ const Product = ({
 
       {/* Nội dung sản phẩm - dùng Link để điều hướng */}
       <Link to={`/products/${_id}`} className="flex flex-col gap-3 h-full">
-        <div className="w-full relative">
+        <div className="relative w-full">
           <img
             src={productImage}
             alt={title}
             className="w-full h-auto aspect-square"
           />
         </div>
-        <p className="line-clamp-2 h-[40px] font-600 text-[14px] overflow-hidden text-ellipsis">
+        <p className="line-clamp-2 h-[40px] font-600 text-[14px] text-ellipsis overflow-hidden">
           {title}
         </p>
-        <div className="leading-none text-gray-500 flex items-center gap-2">
-          <p className="text-red-500 font-600 text-[14px] md:text-[18px]">
+        <div className="flex items-center gap-2 text-gray-500 leading-none">
+          <p className="font-600 text-[14px] text-red-500 md:text-[18px]">
             {firstVariant?.price.toLocaleString()}đ
           </p>
         </div>
@@ -116,17 +118,17 @@ const Product = ({
           {specs.map((spec, index) => (
             <p
               key={index}
-              className="flex items-center h-[25px] text-[13px] gap-1 text-[#6D6E72]"
+              className="flex items-center gap-1 h-[25px] text-[#6D6E72] text-[13px]"
             >
               {spec.icon} {spec.text}
             </p>
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[#FF8A00] flex items-center gap-1 text-[14px]">
+          <span className="flex items-center gap-1 text-[#FF8A00] text-[14px]">
             {totalrating} <FaStar />
           </span>
-          <span className=" text-[14px] text-[#6D6E72]">
+          <span className="text-[#6D6E72] text-[14px]">
             ({ratings.length} đánh giá)
           </span>
         </div>

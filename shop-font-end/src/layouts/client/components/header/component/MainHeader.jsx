@@ -1,5 +1,5 @@
 import { Box, Drawer } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineMenu, AiOutlineUser } from "react-icons/ai";
 import { CiHeart } from "react-icons/ci";
@@ -21,24 +21,24 @@ import useProductFilters from "../../../../../hooks/useFilter/useProductFilters"
 import Menu from "../../../../../pages/client/HomePage/component/HomePageTop/component/Menu";
 import SearchProduct from "./Search";
 import SubHeader from "./SubHeader";
+
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
   const [hoveredItem, setHoveredItem] = useState(null);
   const [cartItemCount, setCartItemCount] = useState(0);
-  const [cartUpdated, setCartUpdated] = useState(false);
   const priceRange = useMemo(() => [0, 10000000000], []);
   const emptyArray = useMemo(() => [], []);
   const navigate = useNavigate();
   const hoverTimeout = useRef(null);
   const [selectedBrand, setSelectedBrand] = useState([]);
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
 
   const { data: products } = useQuery({
     queryKey: ["PRODUCTS"],
     queryFn: async () => {
       const { data } = await instance.get("/product/getAllProduct");
-      // console.log(data);
-
       return data;
     },
   });
@@ -65,7 +65,7 @@ function MainHeader() {
 
   const normanData = (value) => {
     if (typeof value === "string") {
-      return value.trim().toLowerCase().replace(/\s+/g, ""); // Xóa khoảng trắng dư thừa và chuẩn hóa chữ thường
+      return value.trim().toLowerCase().replace(/\s+/g, "");
     }
     return value;
   };
@@ -138,7 +138,7 @@ function MainHeader() {
 
   const handleMouseEnter = (index) => {
     if (hoverTimeout.current) {
-      clearTimeout(hoverTimeout.current); // Nếu có timeout, xóa nó
+      clearTimeout(hoverTimeout.current);
     }
     setHoveredItem(index);
   };
@@ -146,30 +146,31 @@ function MainHeader() {
   const handleMouseLeave = () => {
     hoverTimeout.current = setTimeout(() => {
       setHoveredItem(null);
-    }, 200); // Thêm độ trễ 200ms trước khi ẩn menu
+    }, 200);
   };
 
-  // =============================================
+  const {
+    data: cartData,
+    refetch,
+    isLoading: isLoadingCart,
+  } = useQuery({
+    queryKey: ["CartPage"],
+    queryFn: async () => {
+      const { data } = await instance.get("/cart/getCart", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return data;
+    },
+    enabled: !!user
+  });
 
   useEffect(() => {
-    const fetchCartData = async () => {
-      try {
-        const response = await instance.get("/cart/getCart");
-        const products = response.data.products || [];
-
-        const totalCount = products.reduce(
-          (total, product) => total + product.count,
-          0
-        );
-        setCartItemCount(totalCount);
-        setCartUpdated(products);
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
-      }
-    };
-
-    fetchCartData();
-  }, [cartItemCount]);
+    const totalCount = cartData?.products.reduce(
+      (total, product) => total + product.count,
+      0
+    ) || 0;
+    setCartItemCount(totalCount);
+  }, [cartData]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -240,7 +241,6 @@ function MainHeader() {
                 : "/images/logo/logoMobile.png"
             }
             alt="Logo"
-            // onClick={() => window.location.reload()}
           />
         </Link>
         <button className="md:flex items-center gap-2 hidden bg-[#BE1529] px-2 py-2 rounded-sm font-500">
@@ -321,7 +321,6 @@ function MainHeader() {
             <span className="text-[20px]">{link.icon}</span>
             <span className="2xl:flex flex-col hidden font-500 text-[13px] leading-4">
               <span>{link.label}</span>
-
               <span>{link.sublabel}</span>
             </span>
           </Link>

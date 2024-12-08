@@ -8,16 +8,10 @@ import SlideBanner from "./component/SlideBanner";
 const HomePageTop = () => {
   const { data: products } = useQuery({
     queryKey: ["PRODUCTS"],
-    queryFn: async () => {
-      const { data } = await instance.get("/product/getAllProducts");
-      // console.log("sfld;jsf", data.data);
-      return data;
-    },
   });
-
   return (
     <div className="flex flex-col">
-      <div className="flex w-full flex-col md:flex-row md:gap-2">
+      <div className="flex md:flex-row flex-col md:gap-2 w-full">
         <Menu products={products} />
         <SlideBanner />
       </div>

@@ -12,6 +12,7 @@ import OrderConfirmation from "./component/OrderConfirmation";
 const steps = ["Giỏ hàng", "Thông tin đặt hàng", "Thanh toán", "Hoàn tất"];
 
 const CartPage = () => {
+  const user = localStorage.getItem("user");
   const [activeStep, setActiveStep] = useState(0);
   const [orderInfo, setOrderInfo] = useState(null);
   const [addressData, setAddressData] = useState(null);
@@ -38,6 +39,7 @@ const CartPage = () => {
       });
       return data;
     },
+    enabled: !!user
   });
 
   const handleNext = (data) => {
@@ -99,7 +101,7 @@ const CartPage = () => {
   });
 
   return (
-    <div className="flex flex-col gap-5 w-full md:w-[50%] mx-auto bg-white p-5 rounded-lg">
+    <div className="flex flex-col gap-5 bg-white mx-auto p-5 rounded-lg w-full md:w-[50%]">
       {activeStep > 0 && activeStep < 3 ? (
         <div onClick={handleBack} className="text-[#E30019] cursor-pointer">
           <p>{`< Trở về`}</p>

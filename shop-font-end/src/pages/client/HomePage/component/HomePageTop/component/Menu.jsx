@@ -33,13 +33,13 @@ const Menu = ({ products }) => {
                 >
                   <Link
                     to={`/products/${product._id}`}
-                    className="text-black hover:underline flex"
+                    className="flex text-black hover:underline"
                   >
                     {product.images && product.images.length > 0 && (
                       <img
                         src={`${product.images[0].url}`}
                         alt={product.title}
-                        className="w-[50px] h-[50px] object-cover mr-2"
+                        className="mr-2 w-[50px] h-[50px] object-cover"
                       />
                     )}
                     {product.title}
