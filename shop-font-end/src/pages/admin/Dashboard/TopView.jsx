@@ -19,7 +19,7 @@ const TopView = () => {
   const dataTable = data?.products.map((item, index) => ({
     key: index + 1,
     name: item?.title,
-    images: item?.images[0].url,
+    images: item?.images[0]?.url,
     views: item?.views,
   }));
 
