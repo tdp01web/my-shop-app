@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Product from "../../../../components/Product";
 import useProductFilters from "../../../../hooks/useFilter/useProductFilters";
-import TotalFilter from "./Filter/TotalFilter";
 import ArrangeFilter from "./Filter/ArrangeFilter";
 import Filters from "./Filter/FilterModule/Filters";
+import TotalFilter from "./Filter/TotalFilter";
 
 const ProductList = ({ products }) => {
   const [selectedIndices, setSelectedIndices] = useState([]);
@@ -42,63 +42,71 @@ const ProductList = ({ products }) => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
-    setSelectedBrand([]);
-    setSelectedCpu([]);
-    setSelectedIndices([]);
-    setSelectedSSD([]);
-    setSelectedVga([]);
-    setSelectedCategory([]);
+    const resetFilter = () => {
+      setSelectedBrand([]);
+      setSelectedCpu([]);
+      setSelectedIndices([]);
+      setSelectedSSD([]);
+      setSelectedVga([]);
+      setSelectedCategory([]);
+    };
 
     // Hãng
     const brandFilter = searchParams.get("brand");
     if (brandFilter && Brand && Brand.length > 0) {
       const brand = Brand.findIndex((brand) => brand === brandFilter);
       if (brand !== -1 && !selectedBrand.includes(brand)) {
+        setSelectedBrand();
         setSelectedBrand([brand]);
       }
     }
 
-    // Cpu
+    // CPU
     const cpuFilter = searchParams.get("cpu");
     if (cpuFilter && Cpunames && Cpunames.length > 0) {
       const cpu = Cpunames.findIndex((cpu) => cpu === cpuFilter);
       if (cpu !== -1 && !selectedCpu.includes(cpu)) {
+        resetFilter();
         setSelectedCpu([cpu]);
       }
     }
 
-    // Ram
+    // RAM
     const ramFilter = searchParams.get("ram");
     if (ramFilter && ramSizes && ramSizes.length > 0) {
       const ram = ramSizes.findIndex((ram) => ram === ramFilter);
       if (ram !== -1 && !selectedIndices.includes(ram)) {
+        resetFilter();
         setSelectedIndices([ram]);
       }
     }
 
-    // ssd
+    // SSD
     const ssdFilter = searchParams.get("ssd");
     if (ssdFilter && SSDnames && SSDnames.length > 0) {
       const ssd = SSDnames.findIndex((ssd) => ssd === ssdFilter);
       if (ssd !== -1 && !selectedSSD.includes(ssd)) {
+        resetFilter();
         setSelectedSSD([ssd]);
       }
     }
 
-    // vga
+    // VGA
     const vgaFilter = searchParams.get("vga");
     if (vgaFilter && Vganames && Vganames.length > 0) {
       const vga = Vganames.findIndex((vga) => vga === vgaFilter);
       if (vga !== -1 && !selectedVga.includes(vga)) {
+        resetFilter();
         setSelectedVga([vga]);
       }
     }
 
-    // danh mục
+    // Danh mục
     const categoryFilter = searchParams.get("category");
     if (categoryFilter && Category && Category.length > 0) {
       const category = Category.findIndex((cat) => cat === categoryFilter);
       if (category !== -1 && !selectedCategory.includes(category)) {
+        resetFilter();
         setSelectedCategory([category]);
       }
     }
@@ -110,12 +118,6 @@ const ProductList = ({ products }) => {
     SSDnames,
     Vganames,
     Category,
-    selectedBrand,
-    selectedCpu,
-    selectedIndices,
-    selectedSSD,
-    selectedVga,
-    selectedCategory,
   ]);
 
   return (
