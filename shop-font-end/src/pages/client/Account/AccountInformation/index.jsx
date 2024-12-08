@@ -42,6 +42,7 @@ const AccountInformation = () => {
         lastName: data?.lastName,
         phone: data.mobile,
         email: data.email,
+        address: data?.address,
       });
     }
   }, [data]);
@@ -52,6 +53,7 @@ const AccountInformation = () => {
       lastName: values.lastName,
       email: values.email,
       mobile: values.phone,
+      address: values.address,
     });
   };
 
@@ -130,6 +132,19 @@ const AccountInformation = () => {
           <Input placeholder="Email" className="rounded" />
         </Form.Item>
 
+        <Form.Item
+          name="address"
+          label={<p className="text-[16px]">Địa chỉ</p>}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập địa chỉ",
+            },
+          ]}
+        >
+          <Input placeholder="Địa chỉ" className="rounded" />
+        </Form.Item>
+
         <Form.Item wrapperCol={{ offset: 8 }}>
           <Button
             htmlType="submit"
@@ -137,7 +152,6 @@ const AccountInformation = () => {
           >
             Lưu thay đổi
           </Button>
-          
         </Form.Item>
       </Form>
     </>
