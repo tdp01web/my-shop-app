@@ -7,10 +7,7 @@ const Menu = ({ products }) => {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
 
   const topNewProducts = useMemo(() => {
-    return products
-      ?.filter((product) => product.status !== 0)
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 7);
+    return products?.filter((product) => product.status !== 0).slice(0, 5);
   }, [products]);
   console.log(topNewProducts);
 
@@ -34,8 +31,15 @@ const Menu = ({ products }) => {
                 >
                   <Link
                     to={`/products/${product._id}`}
-                    className="text-blue-500 hover:underline"
+                    className="text-blue-500 hover:underline flex"
                   >
+                    {product.images && product.images.length > 0 && (
+                      <img
+                        src={`${product.images[0].url}`}
+                        alt={product.title}
+                        className="w-[50px] h-[50px] object-cover mr-2"
+                      />
+                    )}
                     {product.title}
                   </Link>
                 </li>

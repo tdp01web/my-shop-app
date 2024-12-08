@@ -10,7 +10,7 @@ const HomePageTop = () => {
   const { data: products } = useQuery({
     queryKey: ["PRODUCTS"],
     queryFn: async () => {
-      const { data } = await instance.get("/product/getAllProduct");
+      const { data } = await instance.get("/product/getLatestProducts");
       // console.log(data);
 
       return data;
