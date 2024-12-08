@@ -56,11 +56,11 @@ const DetailCart = () => {
         return (
           <>
             <PopConfirmWrap status="Đã Xác Nhận">
-              <Button type="primary">Đã Xác Nhận</Button>
+              <Button type="primary">Xác nhận đơn hàng</Button>
             </PopConfirmWrap>
 
             <Button onClick={() => setCancelModalOpen(true)} danger>
-              Đã Hủy
+              Hủy
             </Button>
           </>
         );
@@ -79,12 +79,12 @@ const DetailCart = () => {
           </PopConfirmWrap>
         );
 
-      case "Đã Giao Hàng":
-        return (
-          <PopConfirmWrap status="Hoàn Thành">
-            <Button type="primary">Hoàn Thành</Button>
-          </PopConfirmWrap>
-        );
+      // case "Đã Giao Hàng":
+      //   return (
+      //     <PopConfirmWrap status="Hoàn Thành">
+      //       <Button type="primary">Hoàn Thành</Button>
+      //     </PopConfirmWrap>
+      //   );
 
       default:
         return [];
@@ -235,9 +235,10 @@ const DetailCart = () => {
         </div>
 
         {order.orderStatus !== "Hoàn Thành" &&
-          order.orderStatus !== "Đã Hủy" && (
-            <div className="mt-6 p-4 text-center border rounded">
-              <p className="text-[18px] font-semibold">
+          order.orderStatus !== "Đã Hủy" &&
+          order.orderStatus !== "Đã Giao Hàng" && (
+            <div className="mt-6 p-4 border rounded text-center">
+              <p className="font-semibold text-[18px]">
                 Cập nhật trạng thái đơn hàng
               </p>
 
