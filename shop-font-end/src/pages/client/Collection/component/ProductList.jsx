@@ -42,7 +42,14 @@ const ProductList = ({ products }) => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
-    // hãng
+    setSelectedBrand([]);
+    setSelectedCpu([]);
+    setSelectedIndices([]);
+    setSelectedSSD([]);
+    setSelectedVga([]);
+    setSelectedCategory([]);
+
+    // Hãng
     const brandFilter = searchParams.get("brand");
     if (brandFilter && Brand && Brand.length > 0) {
       const brand = Brand.findIndex((brand) => brand === brandFilter);

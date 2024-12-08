@@ -1,31 +1,155 @@
-import { Box, Button, Drawer } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import SearchProduct from "./Search";
-import { IoIosMenu } from "react-icons/io";
-import { RiCustomerServiceLine } from "react-icons/ri";
-import { FiMapPin, FiUser } from "react-icons/fi";
-import { LuClipboardList } from "react-icons/lu";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { AiOutlineMenu } from "react-icons/ai";
-import { useBreakpoints } from "../../../../../hooks/useBreakpoints";
-import SubHeader from "./SubHeader";
-import { useEffect, useState } from "react";
-import Menu from "../../../../../pages/client/HomePage/component/HomePageTop/component/Menu";
-import { AiOutlineUser } from "react-icons/ai";
-import { MdWavingHand } from "react-icons/md";
-import { IoIosEye } from "react-icons/io";
-import { PiNotepadBold } from "react-icons/pi";
-import { HiOutlineLogout } from "react-icons/hi";
-import useGetProfile from "../../../../../hooks/queries/useGetProfile";
-import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { Box, Drawer } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AiOutlineMenu, AiOutlineUser } from "react-icons/ai";
 import { CiHeart } from "react-icons/ci";
+import { FiMapPin, FiUser } from "react-icons/fi";
+import { HiOutlineLogout } from "react-icons/hi";
+import { LuClipboardList } from "react-icons/lu";
+import {
+  MdOutlineAdminPanelSettings,
+  MdOutlineShoppingCart,
+  MdWavingHand,
+} from "react-icons/md";
+import { PiNotepadBold } from "react-icons/pi";
+import { RiCustomerServiceLine } from "react-icons/ri";
+import { Link, useNavigate } from "react-router-dom";
 import { instance } from "../../../../../configs/instance";
+import useGetProfile from "../../../../../hooks/queries/useGetProfile";
+import { useBreakpoints } from "../../../../../hooks/useBreakpoints";
+import useProductFilters from "../../../../../hooks/useFilter/useProductFilters";
+import Menu from "../../../../../pages/client/HomePage/component/HomePageTop/component/Menu";
+import SearchProduct from "./Search";
+import SubHeader from "./SubHeader";
 function MainHeader() {
   const { mobile, tablet, laptop, desktop } = useBreakpoints();
   const { data } = useGetProfile();
+  const [hoveredItem, setHoveredItem] = useState(null);
   const [cartItemCount, setCartItemCount] = useState(0);
   const [cartUpdated, setCartUpdated] = useState(false);
+  const priceRange = useMemo(() => [0, 10000000000], []);
+  const emptyArray = useMemo(() => [], []);
   const navigate = useNavigate();
+  const hoverTimeout = useRef(null);
+  const [selectedBrand, setSelectedBrand] = useState([]);
+
+  const { data: products } = useQuery({
+    queryKey: ["PRODUCTS"],
+    queryFn: async () => {
+      const { data } = await instance.get("/product/getAllProduct");
+      // console.log(data);
+
+      return data;
+    },
+  });
+
+  const {
+    Brand,
+    Cpunames,
+    ramSizes,
+    SSDnames,
+    Category,
+    Vganames,
+    filteredProducts,
+  } = useProductFilters(
+    products,
+    priceRange,
+    emptyArray,
+    emptyArray,
+    emptyArray,
+    emptyArray,
+    selectedBrand,
+    emptyArray,
+    emptyArray
+  );
+
+  const normanData = (value) => {
+    if (typeof value === "string") {
+      return value.trim().toLowerCase().replace(/\s+/g, ""); // Xóa khoảng trắng dư thừa và chuẩn hóa chữ thường
+    }
+    return value;
+  };
+
+  const GBSize = (size) =>
+    parseInt(size.toLowerCase().replace("gb", "").trim(), 10);
+
+  const menuItems = [
+    {
+      title: "Danh mục",
+      link: "/collection",
+      subItems: [
+        {
+          title: "Thương hiệu",
+          subItems: Brand.sort((a, b) =>
+            normanData(a).localeCompare(normanData(b))
+          ).map((brand) => ({
+            title: brand,
+            action: () => navigate(`/collection?brand=${brand}`),
+          })),
+        },
+        {
+          title: "CPU",
+          subItems: Cpunames.sort((a, b) =>
+            normanData(a).localeCompare(normanData(b))
+          ).map((cpu) => ({
+            title: cpu,
+            action: () => navigate(`/collection?cpu=${cpu}`),
+          })),
+        },
+        {
+          title: "RAM",
+          subItems: ramSizes
+            .sort((a, b) => GBSize(a) - GBSize(b))
+            .map((ram) => ({
+              title: ram,
+              action: () => navigate(`/collection?ram=${ram}`),
+            })),
+        },
+        {
+          title: "SSD",
+          subItems: SSDnames.sort((a, b) => GBSize(a) - GBSize(b)).map(
+            (ssd) => ({
+              title: ssd,
+              action: () => navigate(`/collection?ssd=${ssd}`),
+            })
+          ),
+        },
+        {
+          title: "VGA",
+          subItems: Vganames.sort((a, b) =>
+            normanData(a).localeCompare(normanData(b))
+          ).map((vga) => ({
+            title: vga,
+            action: () => navigate(`/collection?vga=${vga}`),
+          })),
+        },
+        {
+          title: "Danh mục",
+          subItems: Category.sort((a, b) =>
+            normanData(a).localeCompare(normanData(b))
+          ).map((ctg) => ({
+            title: ctg,
+            action: () => navigate(`/collection?category=${ctg}`),
+          })),
+        },
+      ],
+    },
+  ];
+
+  const handleMouseEnter = (index) => {
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current); // Nếu có timeout, xóa nó
+    }
+    setHoveredItem(index);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeout.current = setTimeout(() => {
+      setHoveredItem(null);
+    }, 200); // Thêm độ trễ 200ms trước khi ẩn menu
+  };
+
+  // =============================================
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -102,7 +226,7 @@ function MainHeader() {
 
   return (
     <Box className="bg-[#E30019] w-full">
-      <div className="flex justify-between   items-center mx-auto px-4 xl:px-0 py-3 md:py-5 2xl:w-[80%] text-white">
+      <div className="flex justify-between items-center mx-auto px-4 xl:px-0 py-3 md:py-5 2xl:w-[80%] text-white">
         <div className="md:hidden text-[25px]">
           <AiOutlineMenu onClick={handleDrawerOpen} />
         </div>
@@ -119,11 +243,73 @@ function MainHeader() {
             // onClick={() => window.location.reload()}
           />
         </Link>
-        <button className="md:flex items-center gap-2 hidden bg-[#BE1529] px-2 py-2 rounded-sm font-500 text-white">
+        <button className="md:flex items-center gap-2 hidden bg-[#BE1529] px-2 py-2 rounded-sm font-500">
           <span className="text-[25px]">
             <AiOutlineMenu />
           </span>
-          <span className="text-[13px]">Danh mục</span>
+          <ul className="flex md:flex-col md:gap-[10px] md:rounded-lg w-full md:w-full font-500 text-[14px] 2xl:text-[13px] overflow-x-auto hide-scrollbar">
+            {menuItems.map((item, index) => (
+              <li
+                key={index}
+                className="relative px-3 md:px-0"
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <Link to={item.link}>
+                  <div className="flex whitespace-nowrap">
+                    {(laptop || desktop) && (
+                      <p className="text-[13px]">{item.icon}</p>
+                    )}
+                    <p>{item.title}</p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {hoveredItem !== null && menuItems[hoveredItem].subItems && (
+            <div
+              className="top-16 md:top-76 z-9999 absolute flex flex-wrap md:flex-nowrap justify-between gap-8 bg-white shadow-lg p-4 rounded-lg text-black text-start"
+              onMouseEnter={() => handleMouseEnter(hoveredItem)}
+              onMouseLeave={handleMouseLeave}
+            >
+              {menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
+                <div key={subIndex} className="w-full md:w-auto">
+                  <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>
+                  {Array.isArray(subItem.subItems) ? (
+                    <div className="flex flex-col gap-2">
+                      {subItem.subItems.map((item, index) => (
+                        <div key={index}>
+                          <Link
+                            to={item.link || "#"}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (item.action) {
+                                item.action();
+                              }
+                            }}
+                          >
+                            <div className="pt-1">{item.title}</div>
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Link
+                      to={subItem.link || "#"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (subItem.action) {
+                          subItem.action();
+                        }
+                      }}
+                    >
+                      {subItem.title}
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </button>
         <SearchProduct />
         {links.map((link, index) => (
