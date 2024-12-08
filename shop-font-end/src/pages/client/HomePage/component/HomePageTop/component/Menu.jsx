@@ -31,7 +31,7 @@ const Menu = ({ products }) => {
                 >
                   <Link
                     to={`/products/${product._id}`}
-                    className="text-blue-500 hover:underline flex"
+                    className="text-black hover:underline flex"
                   >
                     {product.images && product.images.length > 0 && (
                       <img
