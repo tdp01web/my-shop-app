@@ -2,14 +2,15 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, Popconfirm } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { instance } from "../../../../configs/instance";
 import { queryClient } from "../../../../main";
 
 const MAX_SHOW = 2;
 
-const OrderCard = ({ data, onChangeTab }) => {
+const OrderCard = ({ data, onChangeTab, activeTab }) => {
   const [limitShow, setLimitShow] = useState(MAX_SHOW);
+  const navigate = useNavigate();
 
   const { mutate: onUpdateStatus, isPending } = useMutation({
     mutationFn: () => instance.put(`/order/my-orders/delivered/${data._id}`),
@@ -23,6 +24,10 @@ const OrderCard = ({ data, onChangeTab }) => {
     setLimitShow(
       limitShow < data.products.length ? data.products.length : MAX_SHOW
     );
+  };
+
+  const onRateClick = (productId) => {
+    navigate(`/products/${productId}`);
   };
 
   const isShowFull = limitShow === data.products.length;
@@ -54,13 +59,25 @@ const OrderCard = ({ data, onChangeTab }) => {
               </div>
 
               <div className="flex-1">
-                <Link
-                  to={`/products/${product.prodId}`}
-                  className="text-[#111] font-semibold"
-                >
-                  {product?.title} | {product?.gpu} | {product?.ram} |{" "}
-                  {product?.storage}
-                </Link>
+                <div>
+                  <Link
+                    to={`/products/${product.prodId}`}
+                    className="text-[#111] font-semibold"
+                  >
+                    {product?.title} | {product?.gpu} | {product?.ram} |{" "}
+                    {product?.storage}
+                  </Link>
+                </div>
+
+                {activeTab === "Hoàn Thành" && (
+                  <Button
+                    size="small"
+                    className="border border-[#1982f9] mt-1 rounded text-white bg-[#1982f9] inline-flex items-center text-[14px]"
+                    onClick={() => onRateClick(product.prodId)}
+                  >
+                    Đánh Giá
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -97,7 +114,7 @@ const OrderCard = ({ data, onChangeTab }) => {
               Xem chi tiết
             </Link>
 
-            {data.orderStatus === "Đã Giao Hàng" && (
+            {activeTab === "Đã Giao Hàng" && (
               <Popconfirm
                 title="Đã nhận hàng"
                 description="Xác nhận đã nhận hàng"
@@ -123,11 +140,16 @@ OrderCard.propTypes = {
   data: {},
 };
 
-const OrderList = ({ data = [], onChangeTab }) => {
+const OrderList = ({ data = [], onChangeTab, activeTab }) => {
   return (
     <div className="bg-[#ececec]">
       {data.map((it) => (
-        <OrderCard key={it._id} data={it} onChangeTab={onChangeTab} />
+        <OrderCard
+          key={it._id}
+          data={it}
+          onChangeTab={onChangeTab}
+          activeTab={activeTab}
+        />
       ))}
     </div>
   );
