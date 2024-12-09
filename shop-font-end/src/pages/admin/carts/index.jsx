@@ -92,11 +92,12 @@ const DetailCart = () => {
       totalPrice: (item.totalPrice).toString(),
       users: item?.shippingAddress.name,
       mobile: item?.shippingAddress.phone,
+      paymentStatus: item?.paymentStatus,
       date: moment(item.createdAt).format("YYYY-MM-DD HH:mm"),
       comple: item?.orderStatus,
       isDone: item?.orderStatus === "Hoàn Thành",
       isCancel: item?.orderStatus === "Đã Hủy",
-      salesTypes: item?.salesTypes === 0 ? "Tại Quầy" : "Online"
+      salesTypes: item?.salesTypes === 0 ? "Offline" : "Online"
     }
   })
 
@@ -119,6 +120,7 @@ const DetailCart = () => {
       title: "Số điện thoại",
       dataIndex: "mobile",
       key: "mobile",
+      width: "8%",
       ...getColumnSearchProps('mobile'),
       sorter: (a, b) => a.mobile.localeCompare(b.mobile),
     },
@@ -126,7 +128,7 @@ const DetailCart = () => {
       title: "Số lượng",
       dataIndex: "count",
       key: "count",
-      ...getColumnSearchProps('count'),
+      width: "5%",
       sorter: (a, b) => a.count.localeCompare(b.count)
     },
     {
@@ -150,7 +152,14 @@ const DetailCart = () => {
       sorter: (a, b) => a.salesTypes.localeCompare(b.salesTypes),
     },
     {
-      title: "Trạng thái",
+      title: "Tình trạng thanh toán",
+      dataIndex: "paymentStatus",
+      key: "paymentStatus",
+      ...getColumnSearchProps('paymentStatus'),
+      sorter: (a, b) => a.paymentStatus.localeCompare(b.paymentStatus),
+    },
+    {
+      title: "Trạng thái đơn hàng",
       dataIndex: "comple",
       key: "comple",
       ...getColumnSearchProps('title'),
@@ -159,7 +168,6 @@ const DetailCart = () => {
     {
       title: "Hành động",
       dataIndex: "action",
-      width: 250,
       render: (_, carts) => (
         <div className="flex space-x-3">
           <Button>

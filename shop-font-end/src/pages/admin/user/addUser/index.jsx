@@ -29,7 +29,7 @@ export const AddUser = () => {
         content: "Thêm tài khoản thành công",
       });
       setTimeout(() => {
-        navigate('/admin/user');
+        navigate('/admin/users');
       }, 500);
       form.resetFields();
     },
