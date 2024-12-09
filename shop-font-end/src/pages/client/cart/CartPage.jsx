@@ -42,6 +42,14 @@ const CartPage = () => {
     enabled: !!user
   });
 
+  useEffect(() => {
+    if (cartData && cartData.products.some(product => product.unavailable === true)) {
+      setActiveStep(0);
+    } else {
+      refetch();
+    }
+  }, [cartData]);
+
   const handleNext = (data) => {
     if (activeStep === 1) {
       setAddressData(data);
@@ -121,9 +129,8 @@ const CartPage = () => {
           <Step key={label}>
             <StepLabel>
               <p
-                className={`${
-                  activeStep >= index ? "text-[#E30019]" : "text-gray-400"
-                } text-[18px]`}
+                className={`${activeStep >= index ? "text-[#E30019]" : "text-gray-400"
+                  } text-[18px]`}
               >
                 {label}
               </p>
