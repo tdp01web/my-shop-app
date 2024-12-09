@@ -9,6 +9,7 @@ const OrderHistory = require("../../models/orderHistory");
 const productVariantModel = require("../../models/product/productVariantModel");
 const axios = require("axios");
 const crypto = require("crypto");
+const ProductVariant = require("../../models/product/productVariantModel");
 
 const nodemailer = require("nodemailer");
 
@@ -89,6 +90,21 @@ const createOrder = asyncHandler(async (req, res) => {
     });
     const savedOrder = await newOrder.save();
 
+    let emailContent = `Xin chào ${user.lastName} ${user.firstName},\n\nCảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi.\n\nThông tin đơn hàng của bạn:\nMã đơn hàng: ${savedOrder._id}\nTổng số tiền: ${totalPrice}\n\nChi tiết sản phẩm:\n`;
+    userCart.products.forEach((item) => {
+      emailContent += `- ${item.product.title} (${item.count} x ${
+        item.variant ? item.variant.price : item.product.price
+      }): ${
+        item.count * (item.variant ? item.variant.price : item.product.price)
+      }\n`;
+      emailContent += `  RAM: ${item.variant?.ram?.size || "N/A"}, Storage: ${
+        item.variant?.storage?.capacity || "N/A"
+      }, Processor: ${item.variant?.processor?.name || "N/A"}, GPU: ${
+        item.variant?.gpu?.name || "N/A"
+      }\n`;
+    });
+    emailContent += `\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng,\nCửa hàng của bạn`;
+
     let paymentIntent;
     if (paymentMethod === "MOMO") {
       try {
@@ -112,7 +128,7 @@ const createOrder = asyncHandler(async (req, res) => {
           from: process.env.EMAIL_USER,
           to: user.email,
           subject: "Cảm ơn bạn đã đặt hàng!",
-          text: `Xin chào \n\nCảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi.\nMã đơn hàng của bạn là: ${savedOrder._id}\nTổng số tiền: ${totalPrice}.\n\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng,\nCửa hàng của bạn`,
+          text: emailContent,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -170,7 +186,7 @@ const createOrder = asyncHandler(async (req, res) => {
         from: process.env.EMAIL_USER,
         to: user.email,
         subject: "Cảm ơn bạn đã đặt hàng!",
-        text: `Xin chào \n\nCảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi.\nMã đơn hàng của bạn là: ${savedOrder._id}\nTổng số tiền: ${totalPrice}.\n\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng,\nCửa hàng của bạn`,
+        text: emailContent,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -193,10 +209,13 @@ const createOrderSales = asyncHandler(async (req, res) => {
   validateMongoDbId(_id);
   try {
     const user = await User.findById(_id);
+    if (!user) throw new Error("User not found");
+
     const newOrder = await Order.create({
       ...req.body,
       orderedBy: user,
     });
+
     await OrderHistory.create({
       orderId: newOrder._id,
       name: `${user.lastName} ${user.firstName}`,
@@ -205,11 +224,38 @@ const createOrderSales = asyncHandler(async (req, res) => {
       time: new Date(),
     });
 
+    let updateProducts = req.body.products.map((item) => ({
+      updateOne: {
+        filter: { _id: item.prodId },
+        update: {
+          $inc: {
+            quantity: -item.count,
+            sold: +item.count,
+          },
+        },
+      },
+    }));
+
+    await Product.bulkWrite(updateProducts, {});
+
+    let updateVariants = req.body.products
+      .filter((item) => item.variant)
+      .map((item) => ({
+        updateOne: {
+          filter: { _id: item.variant },
+          update: { $inc: { quantity: -item.count } },
+        },
+      }));
+
+    await ProductVariant.bulkWrite(updateVariants, {});
+
     res.json(newOrder);
   } catch (error) {
+    console.error("Error:", error); // Log error
     res.status(500).json({ message: error.message });
   }
 });
+
 // Hàm xử lý thanh toán MOMO
 const handleMomoPayment = async (amount, orderId) => {
   var accessKey = "F8BBA842ECF85";

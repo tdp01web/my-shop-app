@@ -76,3 +76,12 @@
   width: 25px !important;
   height: 40px !important;
 }
+a:hover {
+  color: red;
+}
+.menu a:hover {
+  color: white;
+}
+.menuHover a:hover {
+  color: red;
+}
