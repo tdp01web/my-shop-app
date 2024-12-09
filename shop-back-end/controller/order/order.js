@@ -75,7 +75,8 @@ const createOrder = asyncHandler(async (req, res) => {
       totalPrice: totalPrice,
       shippingAddress: shippingAddress,
       paymentMethod: paymentMethod,
-      paymentStatus: paymentMethod === "MOMO" ? "Chờ Thanh Toán" : "Đang Xử lý",
+      paymentStatus:
+        paymentMethod === "MOMO" ? "Đã Thanh Toán" : "Chưa Thanh Toán",
       orderStatus: "Đang Xử Lý",
     });
 
@@ -582,6 +583,14 @@ const updateStatus = asyncHandler(async (req, res) => {
 
   // Cập nhật trạng thái và lý do hủy (nếu có)
   order.orderStatus = orderStatus;
+
+  if (
+    orderStatus === "Đã Giao Hàng" &&
+    order.paymentMethod === "Thanh Toán Khi Nhận Hàng"
+  ) {
+    order.paymentStatus = "Đã Thanh Toán";
+  }
+
   if (orderStatus === "Đã Hủy") {
     order.cancellationReason = cancellationReason;
   }
