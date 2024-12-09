@@ -178,6 +178,7 @@ const DetailCart = () => {
               <p className="font-semibold text-[#333]">Hình thức thanh toán</p>
             </div>
             <p className="text-[#FF7A00]">{order.paymentMethod}</p>
+            <p className="text-[#FF7A00]">{order.paymentStatus}</p>
           </div>
         </div>
 
