@@ -4,7 +4,7 @@ import { Table } from "antd";
 const ProductDescription = ({ description, selectedVariant }) => {
   // Xử lý dynamic attributes
   const dynamicAttributes =
-    selectedVariant.attributes?.map((attr, index) => ({
+    selectedVariant?.attributes?.map((attr, index) => ({
       key: `dynamic-${index}`,
       name: attr.keyA,
       value: attr.valueA,
@@ -25,10 +25,10 @@ const ProductDescription = ({ description, selectedVariant }) => {
   ];
 
   return (
-    <div className="flex flex-col w-full lg:w-[60%] bg-white p-4 gap-3 rounded-md">
+    <div className="flex flex-col gap-3 bg-white p-4 rounded-md w-full lg:w-[60%]">
       {dynamicAttributes.length > 0 && (
         <>
-          <h3 className="text-[20px] font-500 mt-4">Thông số biến thể</h3>
+          <h3 className="mt-4 font-500 text-[20px]">Thông số biến thể</h3>
           <Table
             dataSource={dynamicAttributes}
             columns={columns}
@@ -37,7 +37,7 @@ const ProductDescription = ({ description, selectedVariant }) => {
           />
         </>
       )}
-      <h2 className="text-[24px] font-600 mt-4">Đặc điểm nổi bật</h2>
+      <h2 className="mt-4 font-600 text-[24px]">Đặc điểm nổi bật</h2>
       <p>{description}</p>
     </div>
   );

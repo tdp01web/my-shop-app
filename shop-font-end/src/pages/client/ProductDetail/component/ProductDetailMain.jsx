@@ -86,8 +86,8 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
   });
 
   return (
-    <div className="w-full flex flex-col lg:flex-row gap-4 bg-white rounded-lg">
-      <div className="slider-product w-full lg:w-1/3">
+    <div className="flex lg:flex-row flex-col gap-4 bg-white rounded-lg w-full">
+      <div className="w-full lg:w-1/3 slider-product">
         {product?.images?.length > 2 ? (
           <>
             <Slider asNavFor={nav2} ref={(slider) => (sliderRef1 = slider)}>
@@ -96,7 +96,7 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
                   <img
                     src={image.url}
                     alt="Product"
-                    className="inset-0 w-full h-full  object-cover object-center rounded-lg"
+                    className="inset-0 rounded-lg w-full h-full object-center object-cover"
                   />
                 </div>
               ))}
@@ -114,64 +114,64 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
                   <img
                     src={image.url}
                     alt="Product Thumbnail"
-                    className="inset-0 w-full  h-full p-1 object-cover cursor-pointer"
+                    className="inset-0 p-1 w-full h-full cursor-pointer object-cover"
                   />
                 </div>
               ))}
             </Slider>
           </>
         ) : (
-          <div className=" h-full p-5 justify-center  flex items-center">
+          <div className="flex justify-center items-center p-5 h-full">
             <img
               src={product?.images[0]?.url || "fallback-image.jpg"}
               alt="Product"
-              className="inset-0 w-full rounded-lg"
+              className="inset-0 rounded-lg w-full"
             />
           </div>
         )}
       </div>
 
-      <div className="w-full lg:w-2/3 p-5 border-l-2 flex flex-col gap-4 border-solid">
-        <h2 className="text-[24px] font-600">{product?.title}</h2>
-        <p className="text-[20px] font-500 text-red-600">
+      <div className="flex flex-col gap-4 p-5 border-l-2 border-solid w-full lg:w-2/3">
+        <h2 className="font-600 text-[24px]">{product?.title}</h2>
+        <p className="font-500 text-[20px] text-red-600">
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
           }).format(selectedVariant?.price)}
         </p>
 
-        <table className="min-w-full border border-gray-200">
+        <table className="border-gray-200 border min-w-full">
           <tbody>
             <tr className="border-b">
-              <td className="p-3 bg-gray-100 font-semibold">SSD</td>
+              <td className="bg-gray-100 p-3 font-semibold">SSD</td>
               <td className="p-3">
                 {selectedVariant?.storage?.capacity || "Chưa có thông tin"}
               </td>
             </tr>
             <tr className="border-b">
-              <td className="p-3 bg-gray-100 font-semibold">CPU</td>
+              <td className="bg-gray-100 p-3 font-semibold">CPU</td>
               <td className="p-3">
                 {selectedVariant?.processor?.name || "Chưa có thông tin"}
               </td>
             </tr>
             <tr className="border-b">
-              <td className="p-3 bg-gray-100 font-semibold">VGA</td>
+              <td className="bg-gray-100 p-3 font-semibold">VGA</td>
               <td className="p-3">
                 {selectedVariant?.gpu?.name || "Chưa có thông tin"}
               </td>
             </tr>
             <tr className="border-b">
-              <td className="p-3 bg-gray-100 font-semibold">RAM</td>
+              <td className="bg-gray-100 p-3 font-semibold">RAM</td>
               <td className="p-3">
                 {selectedVariant?.ram?.size || "Chưa có thông tin"}
               </td>
             </tr>
             <tr className="border-b">
-              <td className="p-3 bg-gray-100 font-semibold">LCD</td>
+              <td className="bg-gray-100 p-3 font-semibold">LCD</td>
               <td className="p-3">{product?.lcd || "Chưa có thông tin"} | </td>
             </tr>
             <tr>
-              <td className="p-3 bg-gray-100 font-semibold">Số lượng</td>
+              <td className="bg-gray-100 p-3 font-semibold">Số lượng</td>
               <td className="p-3">
                 {selectedVariant?.quantity || "Chưa có thông tin"}
               </td>
@@ -182,12 +182,12 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
         {product?.variants?.length > 0 && (
           <>
             <div className="flex flex-wrap gap-2 mt-5">
-              {product.variants.map((variant) => (
+              {product.variants.filter(variant => variant?.status === 1).map((variant) => (
                 <button
-                  key={variant._id}
+                  key={variant?._id}
                   onClick={() => handleVariantChange(variant)}
                   className={`px-4 py-2 border ${
-                    variant._id === selectedVariant._id
+                    variant?._id === selectedVariant?._id
                       ? "border-orange-400"
                       : "border-gray-300"
                   }`}
@@ -206,7 +206,7 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
                   <Link to={"/"}>
                     <Button
                       variant="contained"
-                      className="w-[50%] p-4 bg-[#E30019]"
+                      className="bg-[#E30019] p-4 w-[50%]"
                     >
                       Sản phẩm này hiện đang hết hàng
                     </Button>
@@ -220,7 +220,7 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
                     <Button
                       variant="contained"
                       onClick={handleAddToCart}
-                      className="w-[40%] p-4 bg-[#E30019]"
+                      className="bg-[#E30019] p-4 w-[40%]"
                     >
                       Thêm vào giỏ hàng
                     </Button>
@@ -231,7 +231,7 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
               <Link to={"/login"}>
                 <Button
                   variant="contained"
-                  className="w-[50%] p-4 bg-[#E30019]"
+                  className="bg-[#E30019] p-4 w-[50%]"
                 >
                   Vui lòng đăng nhập để mua hàng
                 </Button>

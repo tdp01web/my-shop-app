@@ -7,51 +7,57 @@ import SimilarProducts from "./component/SimilarProducts";
 import ProductDescription from "./component/ProductDescription";
 import ProductComments from "./component/ProductComments";
 import Notification from "../../../components/Notification";
+import { useQuery } from "@tanstack/react-query";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [data, setData] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState(null); // Thêm state cho selectedVariant
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const { data } = await instance.get(`product/getaProduct/${id}`);
-        setData(data);
-
-        if (data?.variants?.length > 0) {
-          setSelectedVariant(data.variants[0]);
-        }
-
-        if (data?.category?._id) {
-          const { data: relatedData } = await instance.get(
-            `/product/getRelatedProducts/${data.category._id}/${id}`
-          );
-          setRelatedProducts(relatedData);
-        }
-        setError(false);
-      } catch (err) {
-        setError(true);
-      } finally {
-        setIsLoading(false);
+  const { data, isLoading, isError, refetch, error } = useQuery({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      const { data } = await instance.get(`product/getaProduct/${id}`);
+      return data;
+    },
+    onSuccess: (data) => {
+      if (data?.variants?.length > 0) {
+        setSelectedVariant(data.variants[0]);
       }
-    };
+    },
+    onError: (error) => {
+      throw new Error(error.message);
+    }
+  })
+  useEffect(() => {
+    if (data) {
+      if (data?.variants?.length > 0) {
+        setSelectedVariant(data.variants[0]);
+      }
+    }
+    refetch();
+  }, [data])
+  const idCategory = data?.category?._id
+  const { data: dataRelated, isLoading: isLoadingRelated, isError: isErrorRelated, refetch: refetchRelated, error: errorRelated } = useQuery({
+    queryKey: ["productRelated", idCategory],
+    queryFn: async () => {
+      const { data } = await instance.get(`/product/getRelatedProducts/${idCategory}/${id}`);
+      return data;
+    },
+    enabled: !!idCategory,
+  })
+  useEffect(()=>{
+    setRelatedProducts(dataRelated);
+  },[dataRelated])
 
-    fetchData();
-  }, [id]);
-
-  if (isLoading)
+  if (isLoading && isLoadingRelated)
     return (
       <div>
         <Loader />
       </div>
     );
 
-  if (error)
+  if (isError && isErrorRelated)
     return (
       <Link to={"/"}>
         <Notification
@@ -69,7 +75,7 @@ const ProductDetail = () => {
       />
     </Link>
   ) : (
-    <div className="lg:w-[80%] w-full flex flex-col mx-auto gap-5  p-5">
+    <div className="flex flex-col gap-5 mx-auto p-5 w-full lg:w-[80%]">
       {data && (
         <ProductDetailMain
           product={data}
@@ -78,7 +84,7 @@ const ProductDetail = () => {
         />
       )}
 
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex lg:flex-row flex-col gap-4">
         {data && (
           <ProductDescription
             description={data.description}
