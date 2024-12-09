@@ -1,5 +1,5 @@
 import React from "react";
-import { MdOutlineDiscount } from "react-icons/md";
+import { MdGamepad, MdOutlineDiscount } from "react-icons/md";
 import { HiOutlineNewspaper } from "react-icons/hi2";
 import { SlSocialYoutube } from "react-icons/sl";
 import { FaRegCreditCard } from "react-icons/fa6";
@@ -12,7 +12,7 @@ const SubHeader = ({ vertical }) => {
   const navigate = useNavigate();
 
   const listMenu = [
-    { icon: <MdOutlineDiscount />, title: "Săn Voucher Gaming Gear",path: "/voucher" },
+    { icon: <MdGamepad />, title: "Giới thiệu về Gaming Gear", path: "/abouts" },
 
     { icon: <HiOutlineNewspaper />, title: "Tin công nghệ", path: "blog" },
     {

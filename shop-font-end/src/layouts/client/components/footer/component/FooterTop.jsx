@@ -5,7 +5,7 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 const FooterTop = () => {
   const sections = [
     {
-      title: "VỀ GEARVN",
+      title: "VỀ GAMING GEARVN",
       items: [
         { text: "Giới thiệu", link: "/abouts" },
         { text: "Tuyển dụng", link: "/" },
@@ -36,7 +36,7 @@ const FooterTop = () => {
         { text: "Mua hàng: 1900.5301", link: "/" },
         { text: "Bảo hành: 1900.5325", link: "/" },
         { text: "Khiếu nại: 1800.6173", link: "/" },
-        { text: "Email: cskh@gearvn.com", link: "/" },
+        { text: "Email: cskh@gaminggearvn.com", link: "/" },
       ],
     },
   ];

@@ -6,7 +6,7 @@ const AboutsPage = () => {
       <div className="md:mx-auto px-4 md:px-6 lg:px-20 py-9 md:py-12 lg:py-16 md:w-[80%]">
         <div className="w-full">
           <h1 className="mt-2 w-full font-bold text-2xl text-center text-red-600 lg:text-4xl leading-9 lg:leading-10">
-            Giới thiệu Gearvn
+            Giới thiệu Gaming Gear
           </h1>
           <p className="mt-6 font-semibold text-[16px] text-gray-800 lg:text-12 italic">
             "Khách hàng hôm nay là đồng đội tương lai! Chúng ta cùng nhau lan
@@ -28,19 +28,19 @@ const AboutsPage = () => {
               Về chúng tôi
             </h2>
             <p className="mt-6 font-normal text-[16px] text-black lg:text-12 leading-8">
-              GearVN là thương hiệu được sinh ra từ giấc mơ của một game thủ,
-              phát triển bởi tập thể các game thủ để phục vụ cho cộng đồng game
-              thủ Việt.
+              Gaming Gear là thương hiệu được sinh ra từ giấc mơ của một game
+              thủ, phát triển bởi tập thể các game thủ để phục vụ cho cộng đồng
+              game thủ Việt.
             </p>
             <p className="mt-6 font-normal text-[16px] text-black lg:text-12 leading-8">
-              Đội ngũ tư vấn của GearVN không đơn thuần là nhân viên kinh doanh,
-              chúng tôi còn là những người yêu game với mong muốn giúp bạn cùng
-              sở thích có được dàn máy và gear phù hợp.
+              Đội ngũ tư vấn của Gaming Gear không đơn thuần là nhân viên kinh
+              doanh, chúng tôi còn là những người yêu game với mong muốn giúp
+              bạn cùng sở thích có được dàn máy và gear phù hợp.
             </p>
             <p className="mt-6 font-normal text-[16px] text-black lg:text-12 leading-8">
-              Sự hài lòng của khách hàng chính là động lực giúp GearVN không
-              ngừng hoàn thiện, mang lại ngày càng nhiều giá trị tích cực cho
-              cộng đồng.
+              Sự hài lòng của khách hàng chính là động lực giúp Gaming Gear
+              không ngừng hoàn thiện, mang lại ngày càng nhiều giá trị tích cực
+              cho cộng đồng.
             </p>
           </div>
           <div className="lg:flex items-center w-full lg:w-1/2">
@@ -100,14 +100,14 @@ const AboutsPage = () => {
                 Miền Bắc
               </h3>
               <ul className="mx-7 my-3 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
-                <li>Showroom GearVn Thái Hà</li>
+                <li>Showroom Gaming Gear Thái Hà</li>
               </ul>
               <h3 className="font-bold text-gray-700 text-lg leading-7 lg:leading-9">
                 Miền Nam
               </h3>
               <ul className="mx-7 my-3 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
-                <li>Showroom GearVn Hoàng Hoa Thám</li>
-                <li>Showroom GearVn Kha Vạn Cân</li>
+                <li>Showroom Gaming Gear Hoàng Hoa Thám</li>
+                <li>Showroom Gaming Gear Kha Vạn Cân</li>
               </ul>
             </div>
             <div className="w-full lg:w-6/12 xl:w-5/12">
@@ -116,10 +116,10 @@ const AboutsPage = () => {
               </h2>
               <img src="./images/abouts/download2.png" alt="" />
               <h3 className="font-bold text-gray-700 text-lg leading-7 lg:leading-9">
-                Website GearVn
+                Website Gaming Gear
               </h3>
               <ul className="mx-7 my-3 font-light text-12 text-red-500 leading-7 lg:leading-9 list-disc">
-                <li>www.gearvn.com</li>
+                <li>www.gamingGear.com</li>
                 <li>Miễn phí giao hàng toàn quốc</li>
               </ul>
             </div>
