@@ -798,7 +798,7 @@ const rateProduct = asyncHandler(async (req, res) => {
 
 const getLatestProducts = asyncHandler(async (req, res) => {
   try {
-    const latestProducts = await Product.find()
+    const latestProducts = await Product.find({ status: 1 })
       .populate("category")
       .populate("brand")
       .populate("lcd")
@@ -807,7 +807,7 @@ const getLatestProducts = asyncHandler(async (req, res) => {
         populate: ["ram", "storage", "processor", "gpu"],
       })
       .sort({ createdAt: -1 }) // Sắp xếp theo trường createdAt, giảm dần (mới nhất trước)
-      .limit(6); // Lấy tối đa 6 sản phẩm
+      .limit(5); // Lấy tối đa 6 sản phẩm
 
     res.status(200).json(latestProducts);
   } catch (error) {
@@ -839,5 +839,5 @@ module.exports = {
   getProductsByViews,
   getTopSellingProductsUsers,
   getReviewsUser,
-  getLatestProducts
+  getLatestProducts,
 };
