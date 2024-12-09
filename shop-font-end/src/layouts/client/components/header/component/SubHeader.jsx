@@ -30,7 +30,9 @@ const SubHeader = ({ vertical }) => {
       title: "Hướng dẫn trả góp",
       path: "installment",
     },
-    { icon: <GoShieldCheck />, title: "Tra cứu bảo hành" },
+    { icon: <GoShieldCheck />,
+      path: "contacts",
+      title: "Liên hệ" },
   ];
 
   const onMenuClick = (item) => {
@@ -43,12 +45,12 @@ const SubHeader = ({ vertical }) => {
 
   return (
     <div
-      className={clsx("w-full border-b bg-white", {
+      className={clsx("bg-white border-b w-full", {
         "md:block border-gray-200": !vertical,
       })}
     >
       <div
-        className={clsx("mx-auto md:w-[80%] md:p-3  hide-scrollbar", {
+        className={clsx("mx-auto md:p-3 md:w-[80%] hide-scrollbar", {
           "flex overflow-x-auto": !vertical,
           "flex flex-col": vertical,
         })}
@@ -58,7 +60,7 @@ const SubHeader = ({ vertical }) => {
             <div
               key={index}
               className={clsx(
-                "flex items-center  gap-2 text-[14px] font-500 hover:text-[#E30019] cursor-pointer",
+                "flex items-center gap-2 font-500 text-[14px] hover:text-[#E30019] cursor-pointer",
                 {
                   "px-[32px]": !vertical,
                   "border-r border-gray-700":
