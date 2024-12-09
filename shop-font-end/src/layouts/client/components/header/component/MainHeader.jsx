@@ -35,6 +35,12 @@ function MainHeader() {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
 
+  useEffect(() => {
+    if (data && data.status !== 1) {
+      handleLogout();
+    }
+  }, [data]);
+
   const { data: products } = useQuery({
     queryKey: ["PRODUCTS"],
     queryFn: async () => {
