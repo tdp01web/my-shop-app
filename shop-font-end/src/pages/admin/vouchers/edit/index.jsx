@@ -7,21 +7,21 @@ import { useGetVouchersByID } from "../../../../hooks/queries/useGetVouchersById
 import moment from "moment";
 
 const EditVouchers = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const { id } = useParams();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError } = useGetVouchersByID(id,
-    {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      onError: (error) => {
-        console.log(error);
-      }
-    })
+  const { data, isLoading, isError } = useGetVouchersByID(id, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
+
   const { mutate, isPending } = usePutVouchers(id, {
     onSuccess: () => {
       messageApi.open({
@@ -57,11 +57,30 @@ const EditVouchers = () => {
       }
     },
   });
+
   const onFinish = (values) => {
     mutate(values);
   };
-  if (isLoading) return <p>Loading...</p>
-  if (isError) return <p>Error loading data.</p>
+
+  const validateDates = (_, value) => {
+    const startDate = form.getFieldValue('startDate');
+    if (startDate && value && startDate.isAfter(value)) {
+      return Promise.reject(new Error('Ngày bắt đầu không được lớn hơn ngày hết hạn!'));
+    }
+    return Promise.resolve();
+  };
+
+  const validateMaxUses = (_, value) => {
+    const usageCount = form.getFieldValue('usageCount');
+    if (value < usageCount) {
+      return Promise.reject(new Error('Số lần sử dụng không thể nhỏ hơn số lần đã sử dụng!'));
+    }
+    return Promise.resolve();
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading data.</p>;
+
   return (
     <div className="">
       {contextHolder}
@@ -86,9 +105,10 @@ const EditVouchers = () => {
             name: data?.data.name,
             discount: data?.data.discount,
             maxDiscountAmount: data?.data.maxDiscountAmount,
+            maxUses: data?.data.maxUses,
+            usageCount: data?.data?.usageCount,
             startDate: moment(data?.data.startDate),
             expiry: moment(data?.data.expiry),
-            masUses: data?.data?.maxUses
           }}
           disabled={isPending}
         >
@@ -101,48 +121,53 @@ const EditVouchers = () => {
           </Form.Item>
 
           <Form.Item
-            label="Số tiền giảm"
-            name="discount"
-            rules={[
-              { required: true, message: "Số tiền giảm là bắt buộc!" },
-              { type: 'number', min: 0, message: "Số tiền giảm phải lớn hơn hoặc bằng 0!" }
-            ]}
-          >
-            <InputNumber />
-          </Form.Item>
-          <Form.Item
             label="Số tiền giảm tối đa"
             name="maxDiscountAmount"
             rules={[
               { required: true, message: "Số tiền giảm tối đa là bắt buộc!" },
-              { type: 'number', min: 0, message: "Số tiền giảm tối đa phải lớn hơn hoặc bằng 0!" }
+              { type: 'number', min: 0, max: 1000000, message: "Số tiền giảm tối đa phải lớn hơn 0 đồng và nhỏ hơn hoặc bằng 1 triệu đồng!" }
             ]}
           >
             <InputNumber />
           </Form.Item>
+
           <Form.Item
             label="Số lần sử dụng"
             name="maxUses"
             rules={[
-              { required: true, message: "Số tiền giảm tối đa là bắt buộc!" },
-              { type: 'number', min: 0, message: "Số tiền giảm tối đa phải lớn hơn hoặc bằng 0!" }
+              { required: true, message: "Số lần sử dụng là bắt buộc!" },
+              { type: 'number', min: 0, message: "Số lần sử dụng phải lớn hơn hoặc bằng 0!" },
+              { validator: validateMaxUses } // Thêm kiểm tra cho maxUses
             ]}
           >
             <InputNumber />
           </Form.Item>
+
+          <Form.Item
+            label="Số lần đã sử dụng"
+            name="usageCount"
+            rules={[]}
+          >
+            <InputNumber disabled={true} />
+          </Form.Item>
+
           <Form.Item
             label="Ngày bắt đầu"
             name="startDate"
             rules={[{ required: true, message: "Ngày bắt đầu là bắt buộc!" }]}
           >
-            <DatePicker format="YYYY-MM-DD" />
+            <DatePicker />
           </Form.Item>
+
           <Form.Item
             label="Ngày hết hạn"
             name="expiry"
-            rules={[{ required: true, message: "Ngày hết hạn là bắt buộc!" }]}
+            rules={[
+              { required: true, message: "Ngày hết hạn là bắt buộc!" },
+              { validator: validateDates }
+            ]}
           >
-            <DatePicker format="YYYY-MM-DD" />
+            <DatePicker />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

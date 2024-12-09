@@ -22,12 +22,14 @@ const FormUser = ({ item }) => {
         ?.filter(item =>
           item.status === 1 &&
           new Date(item.expiry) > currentDate &&
-          item.maxUses > 0
+          item.maxUses > 0 &&
+          item.maxUses > item.usageCount
         )
         .map(item => ({
           value: `${item?.maxDiscountAmount}-${item?._id}`,
           label: item?.name,
         }));
+
       setOptionVoucher(voucher);
     },
     onError: (error) => {
@@ -118,8 +120,8 @@ const FormUser = ({ item }) => {
         addressLine1: values.address,
       },
       shippingFee: values.ship === 1 ? 40000 : 25000,
-      totalProductPrice:  Number(values.totalProductPrice.replace(/[₫,. ]/g, '')),
-      totalPrice:  Number(values.totalPrice.replace(/[₫,. ]/g, '')),
+      totalProductPrice: Number(values.totalProductPrice.replace(/[₫,. ]/g, '')),
+      totalPrice: Number(values.totalPrice.replace(/[₫,. ]/g, '')),
       paymentMethod: values.paymentMethod === 1 ? "Tiền Mặt" : "Chuyển Khoản",
       paymentStatus: "Đã Thanh Toán",
       orderStatus: "Hoàn Thành",

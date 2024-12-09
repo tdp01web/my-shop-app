@@ -1,11 +1,10 @@
-import { BackwardFilled, Loading3QuartersOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, InputNumber, message, Select, Upload } from "antd";
+import { BackwardFilled, Loading3QuartersOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Form, Input, InputNumber, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { usePostBrand } from "../../../../hooks/mutations/usePostBrand";
 import { usePostVouchers } from "../../../../hooks/mutations/usePostVouchers";
 
 const AddVouchers = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const { mutate, isPending } = usePostVouchers({
@@ -22,17 +21,12 @@ const AddVouchers = () => {
     onError(error) {
       if (error.response?.data) {
         const { message } = error.response.data;
-        if (message.includes("duplicate key error")) {
-          messageApi.open({
-            type: "error",
-            content: "Vouchers đã tồn tại vui lòng nhập vouchers khác",
-          });
-        } else {
-          messageApi.open({
-            type: "error",
-            content: message,
-          });
-        }
+        messageApi.open({
+          type: "error",
+          content: message.includes("duplicate key error")
+            ? "Vouchers đã tồn tại vui lòng nhập vouchers khác"
+            : message,
+        });
       } else {
         messageApi.open({
           type: "error",
@@ -41,11 +35,21 @@ const AddVouchers = () => {
       }
     },
   });
+
   const onFinish = (values) => {
     mutate(values);
   };
+
+  const validateDates = (_, value) => {
+    const startDate = form.getFieldValue('startDate');
+    if (startDate && value && startDate.isAfter(value)) {
+      return Promise.reject(new Error('Ngày bắt đầu không được lớn hơn ngày hết hạn!'));
+    }
+    return Promise.resolve();
+  };
+
   return (
-    <div className="">
+    <div>
       {contextHolder}
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-semibold text-2xl">Thêm vouchers</h1>
@@ -74,37 +78,28 @@ const AddVouchers = () => {
             <Input />
           </Form.Item>
 
-          {/* <Form.Item
-            label="Số tiền giảm"
-            name="discount"
-            rules={[
-              { required: true, message: "Số tiền giảm là bắt buộc!" },
-              { type: 'number', min: 0, message: "Số tiền giảm phải lớn hơn hoặc bằng 0!" }
-            ]}
-          >
-            <InputNumber />
-          </Form.Item> */}
-
           <Form.Item
             label="Số tiền giảm tối đa"
             name="maxDiscountAmount"
             rules={[
               { required: true, message: "Số tiền giảm tối đa là bắt buộc!" },
-              { type: 'number', min: 0, message: "Số tiền giảm tối đa phải lớn hơn hoặc bằng 0!" }
+              { type: 'number', min: 0, max: 1000000, message: "Số tiền giảm tối đa phải lớn hơn 0 đồng và nhỏ hơn hoặc bằng 1 triệu đồng!" }
             ]}
           >
             <InputNumber />
           </Form.Item>
+
           <Form.Item
             label="Số lần sử dụng"
             name="maxUses"
             rules={[
-              { required: true, message: "Số tiền giảm tối đa là bắt buộc!" },
-              { type: 'number', min: 0, message: "Số tiền giảm tối đa phải lớn hơn hoặc bằng 0!" }
+              { required: true, message: "Số lần sử dụng là bắt buộc!" },
+              { type: 'number', min: 0, message: "Số lần sử dụng phải lớn hơn hoặc bằng 0!" }
             ]}
           >
             <InputNumber />
           </Form.Item>
+
           <Form.Item
             label="Ngày bắt đầu"
             name="startDate"
@@ -112,10 +107,14 @@ const AddVouchers = () => {
           >
             <DatePicker />
           </Form.Item>
+
           <Form.Item
             label="Ngày hết hạn"
             name="expiry"
-            rules={[{ required: true, message: "Ngày hết hạn là bắt buộc!" }]}
+            rules={[
+              { required: true, message: "Ngày hết hạn là bắt buộc!" },
+              { validator: validateDates }
+            ]}
           >
             <DatePicker />
           </Form.Item>
