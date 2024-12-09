@@ -167,14 +167,13 @@ function MainHeader() {
       });
       return data;
     },
-    enabled: !!user
+    enabled: !!user,
   });
 
   useEffect(() => {
-    const totalCount = cartData?.products.reduce(
-      (total, product) => total + product.count,
-      0
-    ) || 0;
+    const totalCount =
+      cartData?.products.reduce((total, product) => total + product.count, 0) ||
+      0;
     setCartItemCount(totalCount);
   }, [cartData]);
 
@@ -232,7 +231,7 @@ function MainHeader() {
   };
 
   return (
-    <Box className="bg-[#E30019] w-full">
+    <Box className="bg-[#E30019] w-full  menu">
       <div className="flex justify-between items-center mx-auto px-4 xl:px-0 py-3 md:py-5 2xl:w-[80%] text-white">
         <div className="md:hidden text-[25px]">
           <AiOutlineMenu onClick={handleDrawerOpen} />
@@ -257,7 +256,7 @@ function MainHeader() {
             {menuItems.map((item, index) => (
               <li
                 key={index}
-                className="relative px-3 md:px-0"
+                className="relative px-3 md:px-0 "
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -274,12 +273,12 @@ function MainHeader() {
           </ul>
           {hoveredItem !== null && menuItems[hoveredItem].subItems && (
             <div
-              className="top-16 md:top-76 z-9999 absolute flex flex-wrap md:flex-nowrap justify-between gap-8 bg-white shadow-lg p-4 rounded-lg text-black text-start"
+              className="top-16 md:top-76 menuHover z-9999 absolute flex flex-wrap md:flex-nowrap justify-between gap-8 bg-white shadow-lg p-4 rounded-lg text-black text-start"
               onMouseEnter={() => handleMouseEnter(hoveredItem)}
               onMouseLeave={handleMouseLeave}
             >
               {menuItems[hoveredItem].subItems.map((subItem, subIndex) => (
-                <div key={subIndex} className="w-full md:w-auto">
+                <div key={subIndex} className="w-full md:w-auto ">
                   <h3 className="font-bold text-[#E30019]">{subItem.title}</h3>
                   {Array.isArray(subItem.subItems) ? (
                     <div className="flex flex-col gap-2">
