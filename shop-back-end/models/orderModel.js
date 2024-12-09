@@ -72,13 +72,7 @@ var orderSchema = new mongoose.Schema(
     },
     paymentStatus: {
       type: String,
-      enum: [
-        "Đang Xử lý",
-        "Chờ Thanh Toán",
-        "Chưa Thanh Toán",
-        "Đã Thanh Toán",
-        "Hoàn Tiền",
-      ],
+      enum: ["Chưa Thanh Toán", "Đã Thanh Toán"],
       default: "Chưa Thanh Toán",
     },
     orderStatus: {
