@@ -44,7 +44,7 @@ const TopView = () => {
       <Table
         columns={columns}
         dataSource={dataTable}
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 3 }}
       />
     </div>
   );

@@ -6,7 +6,7 @@ import { instance } from "../../../configs/instance";
 const { RangePicker } = DatePicker;
 
 const LoyalCustomers = () => {
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(3);
   const [dateRange, setDateRange] = useState([]);
 
   // Fetch dữ liệu khách hàng thân thiết

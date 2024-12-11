@@ -247,6 +247,7 @@ const getSalesStatistics = async (req, res) => {
   }
 };
 
+//! Các sản phẩm sắp hết hàng
 const getLowStockProducts = async (req, res) => {
   try {
     // Tìm các biến thể sản phẩm có số lượng dưới 5
@@ -386,52 +387,65 @@ const getLoyalCustomers = async (req, res) => {
   }
 };
 
+//! Doanh số
 const getSalesByTime = async (req, res) => {
   try {
-    const { filterType } = req.query;
+    const { filterType, startDate, endDate } = req.query;
 
-    // Xác định khoảng thời gian dựa trên filterType
-    const now = new Date();
+    // Khởi tạo thời gian bắt đầu và kết thúc
     let start, end;
 
-    switch (filterType) {
-      case "day":
-        start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        end = new Date(start);
-        end.setDate(start.getDate() + 1);
-        break;
-      case "week":
-        const dayOfWeek = now.getDay(); // 0: Chủ nhật, 1: Thứ hai, ..., 6: Thứ bảy
-        start = new Date(now); // Bắt đầu từ ngày hiện tại
-        start.setDate(now.getDate() - dayOfWeek); // Lùi về Chủ nhật đầu tuần
-        start.setHours(0, 0, 0, 0); // Đặt thời gian đầu tuần về 0h
-        end = new Date(start);
-        end.setDate(start.getDate() + 7); // Tiến tới cuối tuần (không bao gồm)
-        break;
-      case "month":
-        start = new Date(now.getFullYear(), now.getMonth(), 1);
-        end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-        break;
-      case "year":
-        start = new Date(now.getFullYear(), 0, 1);
-        end = new Date(now.getFullYear() + 1, 0, 1);
-        break;
-      default:
+    if (filterType === "custom") {
+      if (!startDate || !endDate) {
         return res.status(400).json({
-          error: "Invalid filterType. Use 'day', 'week', 'month', or 'year'.",
+          error: "startDate and endDate are required for custom filterType.",
         });
+      }
+      start = new Date(startDate);
+      end = new Date(endDate);
+      // Đảm bảo ngày kết thúc là 23:59:59 của ngày cuối cùng
+      end.setHours(23, 59, 59, 999);
+    } else {
+      const now = new Date();
+
+      switch (filterType) {
+        case "day":
+          start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          end = new Date(start);
+          end.setDate(start.getDate() + 1);
+          break;
+        case "week":
+          const dayOfWeek = now.getDay(); // 0: Chủ nhật, 1: Thứ hai, ..., 6: Thứ bảy
+          start = new Date(now);
+          start.setDate(now.getDate() - dayOfWeek);
+          start.setHours(0, 0, 0, 0);
+          end = new Date(start);
+          end.setDate(start.getDate() + 7);
+          break;
+        case "month":
+          start = new Date(now.getFullYear(), now.getMonth(), 1);
+          end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+          break;
+        case "year":
+          start = new Date(now.getFullYear(), 0, 1);
+          end = new Date(now.getFullYear() + 1, 0, 1);
+          break;
+        default:
+          return res.status(400).json({
+            error:
+              "Invalid filterType. Use 'day', 'week', 'month', 'year', or 'custom'.",
+          });
+      }
     }
 
     const salesData = await Order.aggregate([
       {
-        // Lọc các đơn hàng hoàn thành trong khoảng thời gian
         $match: {
           orderStatus: "Hoàn Thành",
           createdAt: { $gte: start, $lt: end },
         },
       },
       {
-        // Nhóm để tính tổng doanh thu và số lượng đơn hàng
         $group: {
           _id: null,
           totalRevenue: { $sum: "$totalPrice" },
@@ -440,7 +454,6 @@ const getSalesByTime = async (req, res) => {
       },
     ]);
 
-    // Nếu không có dữ liệu, trả về 0
     if (!salesData.length) {
       return res.status(200).json({
         totalOrders: 0,
@@ -461,6 +474,7 @@ const getSalesByTime = async (req, res) => {
   }
 };
 
+//! Sản phẩm bán được
 const getProductSalesByTime = async (req, res) => {
   try {
     const { filterType, startDate, endDate } = req.query;
@@ -541,6 +555,8 @@ const getProductSalesByTime = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch product sales data" });
   }
 };
+
+//! Thống kê Trạng Thái Đơn Hàng
 
 const getOrderStatusStats = async (req, res) => {
   try {
@@ -787,6 +803,7 @@ const getOrderAndProductStats = async (req, res) => {
   }
 };
 
+//!Thống kê Loại Bán Hàng
 const getSalesTypeStats = async (req, res) => {
   try {
     const { filterType, startDate, endDate } = req.query;
