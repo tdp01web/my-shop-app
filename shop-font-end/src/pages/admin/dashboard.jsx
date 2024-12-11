@@ -174,7 +174,7 @@ const Dashboard = () => {
     <div className="flex flex-col justify-center gap-5">
       {/* <h1 className="text-center text-xl">Thống kê</h1> */}
       <div className="flex gap-5">
-        <div className="flex flex-col gap-1 bg-gray-200 p-4 rounded-md w-1/3">
+        <div className="flex flex-col gap-1 bg-gray-200 p-4 rounded-md w-1/2">
           <SalesFilter />
         </div>
 
@@ -200,7 +200,7 @@ const Dashboard = () => {
               columns={columnsTopProducts}
               loading={!dataTopProduct}
               pagination={{
-                pageSize: 5,
+                pageSize: 3,
               }}
             />
           </div>
@@ -249,7 +249,7 @@ const Dashboard = () => {
               ]}
               loading={!dataLowStockProducts}
               pagination={{
-                pageSize: 5,
+                pageSize: 3,
               }}
             />
           </div>

@@ -341,37 +341,52 @@ function MainHeader() {
               </div>
             </div>
 
-            <div className="user-menu">
-              <Link to={"/account"} className="flex items-center gap-2">
+            <div className="user-menu ">
+              <Link
+                to={"/account"}
+                className="flex items-center gap-2 hover:text-red-600"
+              >
                 <MdWavingHand /> {data.email.split("@")[0]}
               </Link>
               {data.role === "Admin" || data.role === "Owner" ? (
-                <Link to={"/admin"} className="flex items-center gap-2">
+                <Link
+                  to={"/admin"}
+                  className="flex items-center gap-2 hover:text-red-600"
+                >
                   <MdOutlineAdminPanelSettings /> Vào trang quản lý
                 </Link>
               ) : data.role === "Shipper" ? (
-                <Link to={"/shipper"} className="flex items-center gap-2">
+                <Link
+                  to={"/shipper"}
+                  className="flex items-center gap-2 hover:text-red-600"
+                >
                   <MdOutlineAdminPanelSettings /> Vào trang giao hàng
                 </Link>
               ) : data.role === "Staff" ? (
-                <Link to={"/staff"} className="flex items-center gap-2">
+                <Link
+                  to={"/staff"}
+                  className="flex items-center gap-2 hover:text-red-600"
+                >
                   <MdOutlineAdminPanelSettings /> Vào trang nhân viên
                 </Link>
               ) : null}
               <hr />
-              <Link to={"/favorites-list"} className="flex items-center gap-2">
+              <Link
+                to={"/favorites-list"}
+                className="flex items-center gap-2 hover:text-red-600"
+              >
                 <CiHeart /> Sản phẩm yêu thích
               </Link>
               <Link
                 to={"account/orders-history"}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 hover:text-red-600"
               >
                 <PiNotepadBold /> Đơn hàng của tôi
               </Link>
               <hr />
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 hover:text-red-600"
               >
                 <HiOutlineLogout /> Đăng xuất
               </button>
