@@ -113,7 +113,10 @@ const createOrder = asyncHandler(async (req, res) => {
         savedOrder.paymentIntent = paymentIntent;
         await savedOrder.save();
 
-        // Gửi email xác nhận khi thanh toán MOMO thành công
+        // Xóa giỏ hàng sau khi thanh toán thành công
+        await Cart.findOneAndDelete({ orderedBy: user._id });
+
+        // Gửi email xác nhận thanh toán
         const transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
           port: 587,

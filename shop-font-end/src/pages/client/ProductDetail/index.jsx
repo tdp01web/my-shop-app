@@ -27,28 +27,33 @@ const ProductDetail = () => {
     },
     onError: (error) => {
       throw new Error(error.message);
-    }
-  })
+    },
+  });
   useEffect(() => {
-    if (data) {
-      if (data?.variants?.length > 0) {
-        setSelectedVariant(data.variants[0]);
-      }
+    if (data?.variants?.length > 0) {
+      setSelectedVariant(data.variants[0]);
     }
-    refetch();
-  }, [data])
-  const idCategory = data?.category?._id
-  const { data: dataRelated, isLoading: isLoadingRelated, isError: isErrorRelated, refetch: refetchRelated, error: errorRelated } = useQuery({
+  }, [data]);
+  const idCategory = data?.category?._id;
+  const {
+    data: dataRelated,
+    isLoading: isLoadingRelated,
+    isError: isErrorRelated,
+    refetch: refetchRelated,
+    error: errorRelated,
+  } = useQuery({
     queryKey: ["productRelated", idCategory],
     queryFn: async () => {
-      const { data } = await instance.get(`/product/getRelatedProducts/${idCategory}/${id}`);
+      const { data } = await instance.get(
+        `/product/getRelatedProducts/${idCategory}/${id}`
+      );
       return data;
     },
     enabled: !!idCategory,
-  })
-  useEffect(()=>{
+  });
+  useEffect(() => {
     setRelatedProducts(dataRelated);
-  },[dataRelated])
+  }, [dataRelated]);
 
   if (isLoading && isLoadingRelated)
     return (
