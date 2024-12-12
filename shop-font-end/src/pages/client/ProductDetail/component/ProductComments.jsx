@@ -6,7 +6,6 @@ import { instance } from "../../../../configs/instance";
 const ProductComments = ({ data }) => {
   const queryClient = useQueryClient();
   const productId = data?._id;
-  console.log(data?.statusCmt);
 
   // State cho đánh giá mới
   const [newRating, setNewRating] = useState(0);
@@ -61,14 +60,16 @@ const ProductComments = ({ data }) => {
   };
 
   // Tính toán số lượng đánh giá và trung bình
-  const totalReviews = reviews?.ratings?.length || 0;
+  const totalReviews = reviews?.closedComments?.length || 0;
   const averageRating =
     totalReviews > 0
-      ? reviews.ratings.reduce((sum, r) => sum + r.star, 0) / totalReviews
+      ? reviews.closedComments.reduce((sum, r) => sum + r.star, 0) /
+        totalReviews
       : 0;
 
   const ratingsCount = [5, 4, 3, 2, 1].map(
-    (star) => reviews?.ratings?.filter((r) => r.star === star).length || 0
+    (star) =>
+      reviews?.closedComments?.filter((r) => r.star === star).length || 0
   );
 
   return (
@@ -81,7 +82,7 @@ const ProductComments = ({ data }) => {
         {/* Tổng điểm và số lượng đánh giá */}
         <div className="flex flex-col justify-center items-center">
           <p className="justify-center items-center font-bold text-2xl text-red-500">
-            {averageRating.toFixed(1)}/5
+            {data?.totalrating.toFixed(1)}/5
           </p>
           <Rate disabled value={Math.round(averageRating)} />
           <p className="mt-2 text-gray-600">{totalReviews} đánh giá</p>

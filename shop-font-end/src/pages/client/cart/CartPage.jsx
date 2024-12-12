@@ -21,6 +21,11 @@ const CartPage = () => {
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
 
+  const firstName = JSON.parse(user)?.firstName;
+  const lastName = JSON.parse(user)?.lastName;
+  const fullName = firstName + " " + lastName;
+  const mobile = JSON.parse(user)?.mobile;
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -39,11 +44,14 @@ const CartPage = () => {
       });
       return data;
     },
-    enabled: !!user
+    enabled: !!user,
   });
 
   useEffect(() => {
-    if (cartData && cartData.products.some(product => product.unavailable === true)) {
+    if (
+      cartData &&
+      cartData.products.some((product) => product.unavailable === true)
+    ) {
       setActiveStep(0);
     } else {
       refetch();
@@ -129,8 +137,9 @@ const CartPage = () => {
           <Step key={label}>
             <StepLabel>
               <p
-                className={`${activeStep >= index ? "text-[#E30019]" : "text-gray-400"
-                  } text-[18px]`}
+                className={`${
+                  activeStep >= index ? "text-[#E30019]" : "text-gray-400"
+                } text-[18px]`}
               >
                 {label}
               </p>
@@ -152,6 +161,8 @@ const CartPage = () => {
         <AddressStep
           cartTotal={totalAfterDiscount ?? cartData.totalAfterDiscount}
           handleNext={handleNext}
+          mobile={mobile}
+          fullName={fullName}
         />
       )}
       {activeStep === 2 && (

@@ -4,8 +4,7 @@ import axios from "axios";
 
 const { Option } = Select;
 
-const AddressStep = ({ handleNext, cartTotal }) => {
-  console.log("🚀 ~ AddressStep ~ cartTotal:", cartTotal);
+const AddressStep = ({ handleNext, cartTotal, mobile, fullName }) => {
   const [tinhList, setTinhList] = useState([]);
   const [quanList, setQuanList] = useState([]);
   const [phuongList, setPhuongList] = useState([]);
@@ -91,7 +90,14 @@ const AddressStep = ({ handleNext, cartTotal }) => {
   };
 
   return (
-    <Form layout="vertical" onFinish={handleSubmit}>
+    <Form
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={{
+        fullName: fullName || "",
+        phoneNumber: mobile || "",
+      }}
+    >
       <h2 className="text-[24px] font-semibold text-[#333]">
         Thông tin khách mua hàng
       </h2>
