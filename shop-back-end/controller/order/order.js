@@ -10,6 +10,7 @@ const productVariantModel = require("../../models/product/productVariantModel");
 const axios = require("axios");
 const crypto = require("crypto");
 const ProductVariant = require("../../models/product/productVariantModel");
+const Coupon = require("../../models/couponModel");
 
 const nodemailer = require("nodemailer");
 
@@ -71,7 +72,7 @@ const createOrder = asyncHandler(async (req, res) => {
       orderedBy: user._id,
       totalProductPrice: finalAmount,
       discountApplied: couponApplied ? userCart.cartTotal - finalAmount : 0,
-      couponDiscountDetails: couponDetails,
+      couponDiscountDetails: couponApplied,
       shippingFee: shippingFee,
       totalPrice: totalPrice,
       shippingAddress: shippingAddress,
@@ -199,6 +200,15 @@ const createOrder = asyncHandler(async (req, res) => {
           console.log("Email gửi thành công:", info.response);
         }
       });
+    }
+
+    if (couponApplied) {
+      const coupon = await Coupon.findById(couponApplied);
+      if (coupon) {
+        coupon.usedBy.push(_id);
+        coupon.usageCount = (coupon.usageCount || 0) + 1;
+        await coupon.save();
+      }
     }
 
     res.json({ message: "Đơn hàng đã được đặt thành công", order: savedOrder });

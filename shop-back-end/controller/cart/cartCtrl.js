@@ -180,7 +180,6 @@ const applyCoupon = asyncHandler(async (req, res) => {
     }
 
     const now = new Date();
-
     if (coupon.startDate > now) {
       return res.status(400).json({ message: "Mã giảm giá chưa bắt đầu." });
     }
@@ -201,20 +200,21 @@ const applyCoupon = asyncHandler(async (req, res) => {
         .json({ message: "Mã giảm giá đã đạt giới hạn sử dụng." });
     }
 
-    // Áp dụng mã giảm giá
     const cart = await Cart.findOne({ orderedBy: userId });
     if (!cart) {
       return res.status(404).json({ message: "Giỏ hàng không tồn tại." });
     }
 
-    cart.applyCoupon(coupon); // Áp dụng giảm giá vào giỏ hàng
-    coupon.usedBy.push(userId); // Thêm user vào danh sách đã sử dụng
-    coupon.usageCount += 1; // Tăng số lần sử dụng
-    await coupon.save();
+    cart.applyCoupon(coupon);
+    console.log("Cart after applying coupon:", cart);
+
+    await cart.save();
+    const result = await cart.save();
 
     res.status(200).json({
       message: "Mã giảm giá đã được áp dụng thành công.",
       totalAfterDiscount: cart.totalAfterDiscount,
+      appliedCoupon: cart.appliedCoupon,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -223,51 +223,30 @@ const applyCoupon = asyncHandler(async (req, res) => {
 
 // Hủy mã giảm giá
 const cancelCoupon = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-  validateMongoDbId(userId);
+  const userId = req.user._id; // Lấy userId từ JWT hoặc session
+  validateMongoDbId(userId); // Kiểm tra id người dùng hợp lệ
 
   try {
+    // Tìm giỏ hàng của người dùng
     const cart = await Cart.findOne({ orderedBy: userId });
     if (!cart) {
       return res.status(404).json({ message: "Giỏ hàng không tồn tại." });
     }
 
+    // Nếu không có mã giảm giá nào được áp dụng, thông báo lỗi
     if (!cart.appliedCoupon) {
-      return res.status(400).json({ message: "Không có mã giảm giá để hủy." });
+      return res
+        .status(400)
+        .json({ message: "Giỏ hàng không áp dụng mã giảm giá." });
     }
 
-    // console.log("Canceling coupon:", cart.appliedCoupon, "User ID:", userId);
-
-    // Truy vấn mã giảm giá
-    const coupon = await Coupon.findOne({ _id: cart.appliedCoupon });
-    if (!coupon) {
-      return res.status(404).json({ message: "Không tìm thấy mã giảm giá." });
-    }
-
-    // console.log("Before update usedBy list:", coupon.usedBy);
-
-    // Xóa userId khỏi usedBy
-    const result = await Coupon.updateOne(
-      { _id: cart.appliedCoupon },
-      { $pull: { usedBy: userId } }
-    );
-
-    // console.log("Update result:", result);
-
-    if (result.modifiedCount === 0) {
-      return res.status(400).json({
-        message: "Không tìm thấy mã giảm giá hoặc không cập nhật được.",
-      });
-    }
-
-    // Xóa mã giảm giá trong giỏ hàng
-    cart.appliedCoupon = null;
-    cart.totalAfterDiscount = cart.cartTotal; // Khôi phục tổng tiền gốc
-    await cart.save();
+    // Hủy mã giảm giá
+    await cart.cancelCoupon();
 
     res.status(200).json({
-      message: "Mã giảm giá đã được hủy.",
-      totalAfterDiscount: cart.totalAfterDiscount,
+      message: "Mã giảm giá đã bị hủy.",
+      totalAfterDiscount: cart.totalAfterDiscount, // Cập nhật lại tổng giỏ hàng sau khi hủy mã giảm giá
+      appliedCoupon: cart.appliedCoupon, // Trả về thông tin mã giảm giá đã áp dụng (null nếu không có)
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
