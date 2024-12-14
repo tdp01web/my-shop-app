@@ -15,6 +15,7 @@ const CartItems = ({
   totalAfterDiscount,
   onApplyCouponSuccess,
   isLoadingCart,
+  appliedCoupon,
 }) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["Mã Giảm Giá"],
@@ -61,6 +62,7 @@ const CartItems = ({
           <CouponDropdown
             data={data}
             onApplyCouponSuccess={onApplyCouponSuccess}
+            appliedCoupon={appliedCoupon}
           />
           <hr className="border border-gray-300" />
           <div>

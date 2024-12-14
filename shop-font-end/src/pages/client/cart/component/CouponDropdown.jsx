@@ -5,12 +5,28 @@ import {
 } from "@mui/icons-material";
 import { CiDiscount1 } from "react-icons/ci";
 import { instance } from "../../../../configs/instance";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { message } from "antd";
 
-export default function CouponDropdown({ data, onApplyCouponSuccess }) {
+export default function CouponDropdown({
+  data,
+  onApplyCouponSuccess,
+  appliedCoupon,
+}) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
+
+  const { data: couponData } = useQuery({
+    queryKey: ["coupon", appliedCoupon],
+    queryFn: async () => {
+      const { data } = await instance.get(
+        `/coupon/getaCoupons/${appliedCoupon}`
+      );
+      return data;
+    },
+    enabled: !!appliedCoupon,
+  });
+  console.log("🚀 ~ couponData:", couponData);
 
   // Mutation để hủy mã giảm giá
   const cancelMutation = useMutation({
@@ -36,9 +52,8 @@ export default function CouponDropdown({ data, onApplyCouponSuccess }) {
     },
   });
 
-  const handleCouponApply = (coupon) => {
-    setSelectedCoupon(coupon);
-    message.success(`Đã áp dụng mã giảm giá "${coupon.name}"`);
+  const handleCouponApply = (appliedCoupon, couponData) => {
+    setSelectedCoupon(appliedCoupon);
   };
 
   const handleCouponCancel = () => {
@@ -61,7 +76,7 @@ export default function CouponDropdown({ data, onApplyCouponSuccess }) {
       return data;
     },
     onSuccess: (data) => {
-      onApplyCouponSuccess(data.totalAfterDiscount);
+      onApplyCouponSuccess(data.totalAfterDiscount, data.appliedCoupon);
     },
     onError: (error) => {
       message.error("Áp dụng mã giảm giá thất bại.");
@@ -136,10 +151,10 @@ export default function CouponDropdown({ data, onApplyCouponSuccess }) {
         </div>
       </div>
 
-      {selectedCoupon && (
+      {couponData && (
         <div className="flex justify-between items-center border-green-400 bg-green-100 mt-4 p-4 border rounded-md">
           <p>
-            Mã giảm giá đã áp dụng: <strong>{selectedCoupon.name}</strong>
+            Mã giảm giá đã áp dụng: <strong>{couponData.name}</strong>
           </p>
           <button
             className="flex items-center bg-red-500 px-4 py-1 rounded-md text-white"

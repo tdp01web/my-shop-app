@@ -63,8 +63,12 @@ cartSchema.methods.calculateCartTotal = async function () {
       .findById(item.variant);
 
     // Kiểm tra nếu sản phẩm bị ẩn (status = 0) hoặc hết hàng (quantity = 0)
-    if (product.status === 0 || !variant || variant.quantity === 0 ||
-      variant.status === 0) {
+    if (
+      product.status === 0 ||
+      !variant ||
+      variant.quantity === 0 ||
+      variant.status === 0
+    ) {
       item.unavailable = true; // Đánh dấu là không khả dụng
     } else {
       item.unavailable = false; // Sản phẩm khả dụng
@@ -157,17 +161,10 @@ cartSchema.statics.findCartAndUpdatePrices = async function (cartId) {
   return cart;
 };
 
-cartSchema.methods.applyCoupon = async function (coupon) {
-  // const discountAmount = Math.min(
-  //   (this.cartTotal * coupon.discount) / 100,
-  //   coupon.maxDiscountAmount
-  // );
-  const discountAmount = coupon.maxDiscountAmount
-
-  this.totalAfterDiscount = this.cartTotal - discountAmount; // Trừ trực tiếp vào giỏ hàng
+cartSchema.methods.applyCoupon = function (coupon) {
+  const discountAmount = coupon.maxDiscountAmount; // Tính giảm giá
+  this.totalAfterDiscount = this.cartTotal - discountAmount; // Trừ trực tiếp vào tổng tiền
   this.appliedCoupon = coupon._id; // Lưu mã giảm giá đã áp dụng
-
-  await this.save(); // Lưu lại giỏ hàng sau khi áp dụng giảm giá
 };
 
 // Hủy mã giảm giá

@@ -17,6 +17,7 @@ const CartPage = () => {
   const [orderInfo, setOrderInfo] = useState(null);
   const [addressData, setAddressData] = useState(null);
   const [totalAfterDiscount, setTotalAfterDiscount] = useState(null);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
@@ -72,16 +73,25 @@ const CartPage = () => {
     if (activeStep > 0) setActiveStep((prevStep) => prevStep - 1);
   };
 
-  const handleApplyCouponSuccess = (discountedTotal) => {
+  const handleApplyCouponSuccess = (discountedTotal, coupon) => {
     setTotalAfterDiscount(discountedTotal);
+    setAppliedCoupon(coupon);
     refetch(); // Refetch lại dữ liệu giỏ hàng để đảm bảo tất cả cập nhật
   };
 
   const createOrderMutation = useMutation({
     mutationFn: async (orderDetails) => {
-      const { data } = await instance.post("/order", orderDetails, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const { data } = await instance.post(
+        "/order",
+        {
+          ...orderDetails,
+          couponApplied: appliedCoupon,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("🚀 ~ mutationFn: ~ data:", data);
       return data;
     },
     onSuccess: (data) => {
@@ -155,6 +165,7 @@ const CartPage = () => {
           handleNext={handleNext}
           onApplyCouponSuccess={handleApplyCouponSuccess}
           isLoadingCart={isLoadingCart}
+          appliedCoupon={appliedCoupon}
         />
       )}
       {activeStep === 1 && (
