@@ -104,7 +104,7 @@ const createOrder = asyncHandler(async (req, res) => {
         item.variant?.gpu?.name || "N/A"
       }\n`;
     });
-    emailContent += `\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng,\nCửa hàng của bạn`;
+    emailContent += `\nChúng tôi sẽ xử lý đơn hàng và giao hàng trong thời gian sớm nhất!\n\nTrân trọng`;
 
     let paymentIntent;
     if (paymentMethod === "MOMO") {
