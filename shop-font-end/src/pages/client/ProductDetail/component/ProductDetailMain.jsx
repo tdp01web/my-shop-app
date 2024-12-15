@@ -182,7 +182,7 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
         {product?.variants?.length > 0 && (
           <>
             <div className="flex flex-wrap gap-2 mt-5">
-              {product.variants.filter(variant => variant?.status === 1).map((variant) => (
+              {product.variants.map((variant) => (
                 <button
                   key={variant?._id}
                   onClick={() => handleVariantChange(variant)}
@@ -191,18 +191,29 @@ const ProductDetailMain = ({ product, selectedVariant, onVariantChange }) => {
                       ? "border-orange-400"
                       : "border-gray-300"
                   }`}
-                  disabled={variant?.quantity <= 0} // Vô hiệu hóa các biến thể hết hàng
+                  // disabled={variant?.quantity <= 0 || variant?.status === 0} // Disable nếu hết hàng hoặc không khả dụng
                 >
                   {variant?.processor?.name} | {variant?.ram?.size} |{" "}
                   {variant?.storage?.capacity}
                   {variant?.quantity <= 0 && " (Hết hàng)"}
+                  {variant?.status === 0 && " (Không khả dụng)"}{" "}
+                  {/* Thêm thông báo */}
                 </button>
               ))}
             </div>
 
             {user ? (
               <>
-                {selectedVariant?.quantity <= 0 ? (
+                {selectedVariant?.status === 0 ? (
+                  <Link to={"/"}>
+                    <Button
+                      variant="contained"
+                      className="bg-[#E30019] p-4 w-[50%]"
+                    >
+                      Sản phẩm này hiện không khả dụng
+                    </Button>
+                  </Link>
+                ) : selectedVariant?.quantity <= 0 ? (
                   <Link to={"/"}>
                     <Button
                       variant="contained"

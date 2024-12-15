@@ -129,14 +129,20 @@ const OrderDetail = () => {
             )} */}
           </div>
 
-          <div className="col-span-12 md:col-span-4 pt-3 px-4 pb-4 border border-[#CFCFCF] rounded">
+          <div className="col-span-12 md:col-span-4 pt-3 px-2 pb-4 border border-[#CFCFCF] rounded">
             <div className="flex items-center gap-x-3 mb-3">
               <img src="/svg/payment-method.svg" alt="Icon" className="h-7" />
 
-              <p className="text-[#333] font-semibold">Hình thức thanh toán</p>
+              <p className="text-[#333] font-semibold">Hình thức thanh toán:</p>
             </div>
 
-            <p className="text-[#ff7300]">{data.paymentMethod}</p>
+            <p className="text-[#ff7300]">{data.paymentMethod} </p>
+            <div className="flex gap-[5px] mt-3">
+              <p className="text-[#333] font-semibold">
+                Trạng thái thanh toán:
+              </p>
+              <p className="text-[#ff7300]">{data.paymentStatus}</p>
+            </div>
           </div>
         </div>
 

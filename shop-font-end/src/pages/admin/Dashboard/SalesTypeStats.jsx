@@ -27,7 +27,7 @@ const { RangePicker } = DatePicker;
 const SalesTypeStats = () => {
   const [filterType, setFilterType] = useState("year");
   const [customDateRange, setCustomDateRange] = useState([]);
-  const [salesTypeStats, setSalesTypeStats] = useState([]); // Đổi tên biến cho chính xác hơn
+  const [salesTypeStats, setSalesTypeStats] = useState([]);
 
   const fetchSalesTypeStats = async (type = "year", startDate, endDate) => {
     try {
