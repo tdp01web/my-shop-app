@@ -18,6 +18,7 @@ const CartPage = () => {
   const [addressData, setAddressData] = useState(null);
   const [totalAfterDiscount, setTotalAfterDiscount] = useState(null);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const token = localStorage.getItem("token");
@@ -59,6 +60,48 @@ const CartPage = () => {
     }
   }, [cartData]);
 
+  const { data: couponData} = useQuery({
+    queryKey: ["coupon", appliedCoupon],
+    queryFn: async () => {
+      const { data } = await instance.get(
+        `/coupon/getaCoupons/${appliedCoupon}`
+      );
+      return data;
+    },
+    enabled: !!appliedCoupon,
+  });
+  useEffect(() => {
+    if (
+      couponData &&
+      couponData.status === 0
+    ) {
+      setActiveStep(0);
+      cancelMutation.mutate();
+    }
+  }, [couponData]);
+
+  const cancelMutation = useMutation({
+    mutationFn: async () => {
+      const token = localStorage.getItem("token");
+      const { data } = await instance.put(
+        "/cart/cancelCoupon",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return data;
+    },
+    onSuccess: (data) => {
+      setSelectedCoupon(null);
+      handleApplyCouponSuccess(data.totalAfterDiscount);
+      // message.success("Mã giảm giá đã được hủy.");
+    },
+    onError: (error) => {
+      message.error("Hủy mã giảm giá thất bại.");
+      console.log("🚀 ~ cancelMutation error:", error);
+    },
+  });
   const handleNext = (data) => {
     if (activeStep === 1) {
       setAddressData(data);
@@ -166,6 +209,10 @@ const CartPage = () => {
           onApplyCouponSuccess={handleApplyCouponSuccess}
           isLoadingCart={isLoadingCart}
           appliedCoupon={appliedCoupon}
+          couponData={couponData}
+          setActiveStep={setActiveStep}
+          selectedCoupon={selectedCoupon}
+          setSelectedCoupon={setSelectedCoupon}
         />
       )}
       {activeStep === 1 && (

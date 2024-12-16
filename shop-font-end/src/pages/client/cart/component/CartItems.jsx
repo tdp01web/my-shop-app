@@ -14,8 +14,11 @@ const CartItems = ({
   handleNext,
   totalAfterDiscount,
   onApplyCouponSuccess,
-  isLoadingCart,
   appliedCoupon,
+  couponData,
+  setActiveStep,
+  selectedCoupon,
+  setSelectedCoupon,
 }) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["Mã Giảm Giá"],
@@ -34,12 +37,12 @@ const CartItems = ({
 
   return cartItems ? (
     cartItems.products.length === 0 ? (
-      <div className="text-center flex flex-col gap-5">
+      <div className="flex flex-col gap-5 text-center">
         <Typography variant="h6">Giỏ hàng của bạn đang trống</Typography>
         <Link to={"/"}>
           <Button
             variant="outlined"
-            className="w-[50%] mx-auto"
+            className="mx-auto w-[50%]"
             color="primary"
           >
             Tiếp tục mua hàng
@@ -58,19 +61,23 @@ const CartItems = ({
               <CartSkeleton />
             </div>
           )}
-          <hr className="border border-gray-300" />
+          <hr className="border-gray-300 border" />
           <CouponDropdown
             data={data}
             onApplyCouponSuccess={onApplyCouponSuccess}
             appliedCoupon={appliedCoupon}
+            couponData={couponData}
+            setActiveStep={setActiveStep}
+            selectedCoupon={selectedCoupon}
+            setSelectedCoupon={setSelectedCoupon}
           />
-          <hr className="border border-gray-300" />
+          <hr className="border-gray-300 border" />
           <div>
             <div className="flex justify-between items-center">
-              <p className="text-[#535353] text-[15px] font-medium">
+              <p className="font-medium text-[#535353] text-[15px]">
                 Giá tạm tính
               </p>
-              <p className="text-[#E30019] font-bold text-[20px] ">
+              <p className="font-bold text-[#E30019] text-[20px]">
                 {new Intl.NumberFormat("vi-VN", {
                   style: "currency",
                   currency: "VND",
@@ -80,10 +87,10 @@ const CartItems = ({
             {totalAfterDiscount && totalAfterDiscount < cartItems.cartTotal && (
               <>
                 <div className="flex justify-between items-center">
-                  <p className="text-[#535353] text-[15px] font-medium">
+                  <p className="font-medium text-[#535353] text-[15px]">
                     Giảm giá
                   </p>
-                  <p className="text-[#E30019] font-bold text-[20px] ">
+                  <p className="font-bold text-[#E30019] text-[20px]">
                     -{" "}
                     {new Intl.NumberFormat("vi-VN", {
                       style: "currency",
@@ -93,8 +100,8 @@ const CartItems = ({
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <p className="text-[#535353] text-[15px] font-medium">Tổng</p>
-                  <p className="text-[#E30019] font-bold text-[20px] ">
+                  <p className="font-medium text-[#535353] text-[15px]">Tổng</p>
+                  <p className="font-bold text-[#E30019] text-[20px]">
                     {new Intl.NumberFormat("vi-VN", {
                       style: "currency",
                       currency: "VND",
@@ -109,7 +116,7 @@ const CartItems = ({
             <Button
               type="primary"
               size="large"
-              className="mt-4 bg-red-600"
+              className="bg-red-600 mt-4"
               onClick={handleNext}
             >
               Vui lòng xóa những sản phẩm không khả dụng để đặt hàng
@@ -118,7 +125,7 @@ const CartItems = ({
             <Button
               type="primary"
               size="large"
-              className="mt-4 bg-red-600"
+              className="bg-red-600 mt-4"
               onClick={handleNext}
               disabled={cartItems.products.some((item) => item.unavailable)}
             >

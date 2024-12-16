@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ExpandMore as ExpandMoreIcon,
   Cancel as CancelIcon,
@@ -11,24 +11,13 @@ import { message } from "antd";
 export default function CouponDropdown({
   data,
   onApplyCouponSuccess,
-  appliedCoupon,
+  couponData,
+  selectedCoupon,
+  setSelectedCoupon
 }) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedCoupon, setSelectedCoupon] = useState(null);
 
-  const { data: couponData } = useQuery({
-    queryKey: ["coupon", appliedCoupon],
-    queryFn: async () => {
-      const { data } = await instance.get(
-        `/coupon/getaCoupons/${appliedCoupon}`
-      );
-      return data;
-    },
-    enabled: !!appliedCoupon,
-  });
-  console.log("🚀 ~ couponData:", couponData);
-
-  // Mutation để hủy mã giảm giá
+  //Mutation để hủy mã giảm giá
   const cancelMutation = useMutation({
     mutationFn: async () => {
       const token = localStorage.getItem("token");
@@ -76,6 +65,7 @@ export default function CouponDropdown({
       return data;
     },
     onSuccess: (data) => {
+      // message.success("Áp dụng mã giảm giá thành công.");
       onApplyCouponSuccess(data.totalAfterDiscount, data.appliedCoupon);
     },
     onError: (error) => {
@@ -102,9 +92,8 @@ export default function CouponDropdown({
         </button>
 
         <div
-          className={`transition-all duration-500 ease-in-out overflow-hidden ${
-            isDropdownOpen ? "max-h-full" : "max-h-0"
-          }`}
+          className={`transition-all duration-500 ease-in-out overflow-hidden ${isDropdownOpen ? "max-h-full" : "max-h-0"
+            }`}
         >
           {data?.length === 0 ? (
             <p className="mt-4 text-red-600">Không có voucher nào khả dụng</p>
@@ -136,9 +125,8 @@ export default function CouponDropdown({
                     </div>
                   </div>
                   <button
-                    className={`bg-blue-500 w-[20%] md:w-[15%] text-white px-4 py-1 rounded-md ${
-                      selectedCoupon ? "hidden" : ""
-                    }`}
+                    className={`bg-blue-500 w-[20%] md:w-[15%] text-white px-4 py-1 rounded-md ${selectedCoupon ? "hidden" : ""
+                      }`}
                     onClick={() => handleApplyCoupon(coupon._id)}
                     disabled={selectedCoupon} // Disable nút áp dụng khi đã có mã giảm giá
                   >
