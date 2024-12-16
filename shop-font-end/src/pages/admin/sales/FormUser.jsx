@@ -5,6 +5,8 @@ import { useGetAllVouchers } from '../../../hooks/queries/useGetAllVouchers';
 import { useTabsContext } from './contextTab';
 import { usePostOrderSales } from '../../../hooks/mutations/usePostOrderSales';
 import { App, message } from "antd";
+import { queryClient } from '../../../main';
+import { useQueryClient } from '@tanstack/react-query';
 
 const FormUser = ({ item }) => {
   const [form1] = Form.useForm();
@@ -13,6 +15,7 @@ const FormUser = ({ item }) => {
   const modalUserRef = useRef();
   const [optionVoucher, setOptionVoucher] = useState([]);
   const { message } = App.useApp()
+  const queryClient= useQueryClient();
   const { items, handleRemoveItem } = useTabsContext();
 
   const { data: dataVoucher, isLoading, isError } = useGetAllVouchers({
@@ -85,6 +88,7 @@ const FormUser = ({ item }) => {
         type: "success",
         content: "Đặt hàng thành công",
       });
+      queryClient.invalidateQueries({ queryKey: ["get-all-products"]});
       handleRemoveItem(item.key)
     },
     onError(error) {

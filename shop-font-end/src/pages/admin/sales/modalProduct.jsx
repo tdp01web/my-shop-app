@@ -1,4 +1,4 @@
-import React, { startTransition, useImperativeHandle, useRef, useState } from 'react';
+import React, { startTransition, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Button, Input, Modal, Space, Table } from 'antd';
 import { useGetAllProducts } from '../../../hooks/queries/useGetAllProduct';
 import { Link } from 'react-router-dom';
@@ -35,7 +35,7 @@ const ModalProduct = React.forwardRef((_, ref) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const { data: product } = useGetAllProducts({
+  const { data: product, refetch} = useGetAllProducts({
     onSuccess: (data) => {
       // console.log(data);
     },
@@ -240,7 +240,7 @@ const ModalProduct = React.forwardRef((_, ref) => {
     },
   ];
   const expandedRowRender = (record) => {
-    const variantsData = record.variants.map((variant) => ({
+    const variantsData = record.variants.filter((item) => item.status === 1).map((variant) => ({
       id: variant._id,
       key: variant._id,
       cpu: variant?.processor?.name,

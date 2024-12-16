@@ -29,7 +29,7 @@ router.post("/callback", callback);
 router.get("/", authMiddleware, getUserOrders);
 
 // Lấy tất cả đơn hàng của tất cả người dùng
-router.get("/my-orders", authMiddleware, isAdmin, getAllOrdersForAdmin);
+router.get("/my-orders", authMiddleware, getAllOrdersForAdmin);
 
 // Lấy chi tiết một đơn hàng cụ thể
 router.get("/:orderId", authMiddleware, getOrderById);

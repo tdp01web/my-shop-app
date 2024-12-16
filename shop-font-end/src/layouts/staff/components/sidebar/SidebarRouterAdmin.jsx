@@ -13,7 +13,8 @@ import {
   InsuranceOutlined,
   ProductOutlined,
   MenuOutlined,
-  FolderOpenOutlined
+  FolderOpenOutlined,
+  ShopOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -34,11 +35,14 @@ function getItem(
 }
 
 export const items = [
-  getItem(<Link to="/staff">Dashboard</Link>, '/staff/dashboard', <HomeOutlined />),
+  getItem(<Link to="/staff/sales">Bán hàng</Link>, '/staff/sales', <ShopOutlined />),
   getItem('Sản phẩm', 'Sản phẩm', <LaptopOutlined />, [
     getItem(<Link to="/staff/products">Danh sách sản phẩm</Link>, '/staff/products'),
   ]),
   getItem('Đơn hàng', 'Đơn hàng', <ShoppingCartOutlined />, [
     getItem(<Link to="/staff/carts">Danh sách đơn hàng</Link>, '/staff/carts'),
+  ]),
+  getItem('Vouchers', 'Vouchers', <TagsOutlined />, [
+    getItem(<Link to="/staff/vouchers">Danh sách Vouchers</Link>, '/staff/vouchers'),
   ]),
 ];

@@ -8,7 +8,7 @@ import { useDeleteVouchers } from "../../../hooks/mutations/useDeleteVouchers";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment/moment";
 
-export const ListVouchers = () => {
+export const ListVouchersStaff = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -98,7 +98,7 @@ export const ListVouchers = () => {
       });
     },
   })
-  const dataSource = vouchers?.data?.map((voucher) => ({
+  const dataSource = vouchers?.data?.filter(voucher => voucher.status === 1)?.map((voucher) => ({
     key: voucher._id,
     id: voucher._id,
     title: voucher.name,
@@ -160,40 +160,6 @@ export const ListVouchers = () => {
       ...getColumnSearchProps('endDate'),
       sorter: (a, b) => a.endDate - b.endDate,
     },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      ...getColumnSearchProps('status'),
-      sorter: (a, b) => a.status - b.status,
-    },
-    {
-      title: "Hành động",
-      dataIndex: "action",
-      width: 250,
-      render: (_, voucher) => {
-        const isActive = voucher.status === "Sử dụng"
-        return (
-          <div className="flex space-x-3">
-            <Popconfirm
-              title={isActive ? "Đình chỉ vouchers?" : "Kích hoạt vouchers?"}
-              onConfirm={() => {
-                mutate(voucher.id);
-              }}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
-                {isActive ? "Đình chỉ" : "Sử dụng"}
-              </Button>
-            </Popconfirm>
-            <Button>
-              <Link to={`/admin/vouchers/${voucher.id}/edit`}>Chi tiết</Link>
-            </Button>
-          </div>
-        )
-      }
-    },
   ];
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error loading data.</p>
@@ -201,12 +167,7 @@ export const ListVouchers = () => {
     <div>
       <div className="flex justify-between items-center mb-5">
         {contextHolder}
-        <h1 className="font-semibold text-2xl">Quản lý mã giảm giá</h1>
-        <Button type="primary">
-          <Link to="/admin/vouchers/add">
-            <PlusCircleFilled /> Thêm mới mã giảm giá
-          </Link>
-        </Button>
+        <h1 className="font-semibold text-2xl">Danh sách mã giảm giá</h1>
       </div>
       <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')} />
     </div>

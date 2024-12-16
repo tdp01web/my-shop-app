@@ -52,8 +52,10 @@ const HeaderLayoutAdmin = () => {
   );
 
   const handleLogout = () => {
-    console.log("Đăng xuất...");
-    navigate("/login");
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigate("/");
+    window.location.reload();
   };
 
   return (
@@ -84,7 +86,7 @@ const HeaderLayoutAdmin = () => {
               level={5}
               className="mr-44 !mb-0 !text-white cursor-pointer"
             >
-              {!user.role === "Owner" && !user.role === "Admin" ?  `Nhân viên ${user.lastName} ${user.firstName}`: `Quản trị ${user.lastName} ${user.firstName}`}
+              {`Quản trị ${user.lastName} ${user.firstName}`}
             </Typography.Title>
           </Dropdown>
         </div>

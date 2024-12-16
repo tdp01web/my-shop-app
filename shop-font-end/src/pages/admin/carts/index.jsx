@@ -9,7 +9,7 @@ import { useGetAllOrders } from "../../../hooks/queries/useGetAllOrder";
 import { usePutOrder } from "../../../hooks/mutations/usePutOrder";
 import moment from "moment/moment";
 
-const DetailCart = () => {
+const ListCart = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -188,4 +188,4 @@ const DetailCart = () => {
     </div>
   );
 };
-export default DetailCart;
+export default ListCart;

@@ -13,6 +13,7 @@ const EditUser = () => {
   const [form] = Form.useForm();
   const user = JSON.parse(localStorage.getItem("user"));
   const isOwner = user.role === "Owner"
+  const isStaff = user.role === "Staff"
   const [items, setItems] = useState(['Admin', 'Staff', 'Shipper', 'User']);
   const roleAdmin = ['Staff', 'Shipper', 'User'];
   const [name, setName] = useState('');
@@ -96,9 +97,16 @@ const EditUser = () => {
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-semibold text-2xl">Chi tiết tài khoản</h1>
         <Button type="primary">
-          <Link to="/admin/users">
-            <BackwardFilled /> Quay lại
-          </Link>
+          {
+            isStaff ?
+              <Link to="/staff/sales">
+                <BackwardFilled /> Quay lại
+              </Link> :
+              <Link to="/admin/users">
+                <BackwardFilled /> Quay lại
+              </Link>
+          }
+
         </Button>
       </div>
       <div className="mx-auto max-w-3xl">
