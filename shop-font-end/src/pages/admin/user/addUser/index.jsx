@@ -13,12 +13,16 @@ export const AddUser = () => {
   const [form] = Form.useForm();
   const user = JSON.parse(localStorage.getItem("user"));
   const isOwner = user.role === "Owner"
-  const [items, setItems] = useState(['Admin', 'Staff', 'Shipper', 'User']);
-  const roleAdmin = ['Staff', 'Shipper', 'User'];
+  const roleOwner = ['Admin', 'Staff', 'User'];
+  const roleAdmin = ['Staff', 'User'];
   const [name, setName] = useState('');
   const inputRef = useRef(null);
 
   const optionRoleAdmin = roleAdmin.map((item) => ({
+    value: item,
+    label: item
+  }))
+  const optionRoleOwner = roleOwner.map((item) => ({
     value: item,
     label: item
   }))
@@ -97,21 +101,21 @@ export const AddUser = () => {
           <Form.Item
             label="Họ"
             name="firstName"
-            rules={[{ required: true, message: "Tên tài khoản bắt buộc phải điền" }]}
+            rules={[{ required: true, message: "Họ bắt buộc phải điền" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Tên"
             name="lastName"
-            rules={[{ required: true, message: "Tên tài khoản bắt buộc phải điền" }]}
+            rules={[{ required: true, message: "Tên bắt buộc phải điền" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: "Giá sản phẩm bắt buộc phải điền" },
+            rules={[{ required: true, message: "Email bắt buộc phải điền" },
             {
               type: "email",
               message: "Mời nhập đúng định dạng email"
@@ -130,7 +134,7 @@ export const AddUser = () => {
           <Form.Item
             label="Số điện thoại"
             name="mobile"
-            rules={[{ required: true, message: "Mật khẩu bắt buộc phải điền" }]}
+            rules={[{ required: true, message: "Số điện thoại bắt buộc phải điền" }]}
           >
             <Input />
           </Form.Item>
@@ -143,47 +147,28 @@ export const AddUser = () => {
           <Form.Item
             label="Vai trò"
             name="role"
-            rules={[{ required: true, message: "Mật khẩu bắt buộc phải điền" }]}
+            rules={[{ required: true, message: "Vai trò bắt buộc phải điền" }]}
           >
             {isOwner ? <Select
-              dropdownRender={(menu) => (
-                <>
-                  {menu}
-                  <Divider style={{ margin: '8px 0' }} />
-                  <Space style={{ padding: '0 8px 4px' }}>
-                    <Input
-                      placeholder="Vai trò"
-                      ref={inputRef}
-                      value={name}
-                      onChange={onNameChange}
-                      onKeyDown={(e) => e.stopPropagation()
-
-                      }
-                    />
-                    <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
-                      Thêm mới
-                    </Button>
-                  </Space>
-                </>
-              )}
-              options={items.map((item) => ({ label: item, value: item }))}
+              showSearch
+              optionFilterProp="role"
+              options={optionRoleOwner}
             /> :
               <Select
                 showSearch
                 optionFilterProp="role"
                 options={optionRoleAdmin}
               />}
-
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button type="primary" htmlType="submit" disabled={isPending}>
               {isPending ? (
                 <>
                   <Loading3QuartersOutlined className="mr-2 animate-spin" />
-                  Submit
+                  Cập nhật
                 </>
               ) : (
-                "Submit"
+                "Cập nhật"
               )}
             </Button>
           </Form.Item>

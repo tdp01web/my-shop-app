@@ -177,7 +177,7 @@ export const ListUser = () => {
 
         return (
           <div className="flex space-x-3">
-            {isStaffUser || isOwner ? (
+            {isStaffUser || isOwner && !isSelf  ? (
               <Popconfirm
                 title={isActive ? "Đình chỉ tài khoản?" : "Kích hoạt tài khoản?"}
                 onConfirm={() => { mutate(user.id) }}

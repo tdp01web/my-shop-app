@@ -87,7 +87,7 @@ export const ListVouchers = () => {
     onSuccess: () => {
       messageApi.open({
         type: "success",
-        content: "Xoá vouchers thành công",
+        content: "Thay đổi trạng thái bình luận thành công",
       });
       queryClient.invalidateQueries({ queryKey: ["get-all-vouchers"] });
     },
