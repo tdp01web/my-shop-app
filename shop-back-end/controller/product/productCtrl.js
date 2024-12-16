@@ -20,6 +20,12 @@ const searchProducts = async (req, res) => {
       title: { $regex: query, $options: "i" },
     })
       .populate({
+        path: "brand",
+      })
+      .populate({
+        path: "category",
+      })
+      .populate({
         path: "variants",
         populate: [
           { path: "ram" },
