@@ -23,7 +23,8 @@ const statsRouter = require("./routes/statsRouter");
 const uploadRouter = require("./routes/uploadRouter");
 const morgan = require("morgan");
 const cors = require("cors");
-
+const scheduleOrderStatusUpdate = require('./utils/cron');
+scheduleOrderStatusUpdate();
 const PORT = process.env.PORT || 4000;
 
 dbConnect();
