@@ -8,7 +8,7 @@ const useCategoryFilter = (products, selectedCategory) => {
     if (products) {
       const categorySet = new Set();
       products.forEach((product) => {
-        if (product.category && product.category.name) {
+        if (product.category && product.category.name && product.status === 1) {
           categorySet.add(product.category.name);
         }
       });

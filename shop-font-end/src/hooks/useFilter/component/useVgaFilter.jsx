@@ -9,7 +9,7 @@ const useVgaFilter = (products, selectedVga) => {
       const names = new Set();
       products.forEach((product) =>
         product.variants.forEach((variant) => {
-          if (variant.gpu && variant.gpu.name) {
+          if (variant.gpu && variant.gpu.name && product.status === 1) {
             names.add(variant.gpu.name);
           }
         })

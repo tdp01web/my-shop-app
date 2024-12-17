@@ -21,9 +21,11 @@ const Collection = () => {
     queryKey: ["PRODUCTS"],
     queryFn: async () => {
       const { data } = await instance.get("/product/getAllProduct");
-      console.log(data);
-
-      return data;
+      console.log(
+        "data",
+        data.filter((product) => product.status === 1)
+      );
+      return data.filter((product) => product.status === 1);
     },
   });
 

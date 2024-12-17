@@ -9,7 +9,11 @@ const useSSDFilter = (products, selectedSSD) => {
       const names = new Set();
       products.forEach((product) =>
         product.variants.forEach((variant) => {
-          if (variant.storage && variant.storage.capacity) {
+          if (
+            variant.storage &&
+            variant.storage.capacity &&
+            product.status === 1
+          ) {
             names.add(variant.storage.capacity);
           }
         })
