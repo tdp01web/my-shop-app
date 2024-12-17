@@ -9,7 +9,7 @@ const useRamFilter = (products, selectedIndices) => {
       const sizes = new Set();
       products.forEach((product) =>
         product.variants.forEach((variant) => {
-          if (variant.ram && variant.ram.size) {
+          if (variant.ram && variant.ram.size && product.status === 1) {
             sizes.add(variant.ram.size);
           }
         })
@@ -20,7 +20,7 @@ const useRamFilter = (products, selectedIndices) => {
 
   useEffect(() => {
     if (selectedIndices.length === 0) {
-      setFilteredProducts(products); 
+      setFilteredProducts(products);
     } else {
       const selectedRAMs = selectedIndices.map((index) => ramSizes[index]);
       const newFilteredProducts = products.filter((product) =>

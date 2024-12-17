@@ -8,7 +8,7 @@ const useBrandFilter = (products, selectedBrand) => {
     if (products) {
       const brandSet = new Set();
       products.forEach((product) => {
-        if (product.brand && product.brand.title) {
+        if (product.brand && product.brand.title && product.status === 1) {
           brandSet.add(product.brand.title);
         }
       });
@@ -18,7 +18,7 @@ const useBrandFilter = (products, selectedBrand) => {
 
   useEffect(() => {
     if (selectedBrand.length === 0) {
-      setFilteredProducts(products); 
+      setFilteredProducts(products);
     } else {
       const selectedBrandTitles = selectedBrand
         .map((index) => Brand[index])

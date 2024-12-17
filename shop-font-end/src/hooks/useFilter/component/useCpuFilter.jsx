@@ -9,7 +9,11 @@ const useCpuFilter = (products, selectedCpu) => {
       const names = new Set();
       products.forEach((product) =>
         product.variants.forEach((variant) => {
-          if (variant.processor && variant.processor.name) {
+          if (
+            variant.processor &&
+            variant.processor.name &&
+            product.status === 1
+          ) {
             names.add(variant.processor.name);
           }
         })
@@ -20,7 +24,7 @@ const useCpuFilter = (products, selectedCpu) => {
 
   useEffect(() => {
     if (selectedCpu.length === 0) {
-      setFilteredProducts(products); 
+      setFilteredProducts(products);
     } else {
       const selectedCPU = selectedCpu.map((index) => Cpunames[index]);
       const newFilteredCpu = products.filter((product) =>
