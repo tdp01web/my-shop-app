@@ -331,9 +331,6 @@ const ListProduct = () => {
                 {isActive ? "Đình chỉ" : "Sử dụng"}
               </Button>
             </Popconfirm>
-            <Button>
-              <Link to={`/admin/variants/${record.id}/edit`}>Chi tiết</Link>
-            </Button>
           </div>
         );
       },
