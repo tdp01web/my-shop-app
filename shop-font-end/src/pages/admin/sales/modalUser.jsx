@@ -181,6 +181,7 @@ const ModalUser = React.forwardRef((_, ref) => {
       },
     },
   ];
+
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error loading data.</p>
 
