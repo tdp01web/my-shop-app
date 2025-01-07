@@ -160,6 +160,7 @@ const ListBrand = () => {
   ];
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error loading data.</p>
+
   return (
     <div>
       {contextHolder}
