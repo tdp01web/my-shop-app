@@ -16,7 +16,7 @@ const {
   resetPassword,
   loginAdmin,
   getWishlist,
-  saveUserAddress,
+
   crateOrder,
   getOrder,
   updateOrderStatus,
@@ -48,8 +48,7 @@ router.get("/logout", logout);
 router.get("/refresh", handleRefreshToken);
 //! Update user
 router.put("/updateUser", authMiddleware, updatedUser);
-//! Lưu địa chỉ người dùng
-router.put("/saveUserAddress", authMiddleware, saveUserAddress);
+
 //! Khóa tài khoản user
 router.put("/blockUser/:id", authMiddleware, isAdmin, blockUser);
 //! Mở tài khoản user
