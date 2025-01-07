@@ -406,18 +406,7 @@ const getWishlist = asyncHandler(async (req, res) => {
 
 
 
-//get all order
-const getAllOrders = asyncHandler(async (req, res) => {
-  try {
-    const alluserorders = await Order.find()
-      .populate("products.product")
-      .populate("orderedBy")
-      .exec();
-    res.json(alluserorders);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
+
 
 //! update trạng thái giỏ hàng
 const updateOrderStatus = asyncHandler(async (req, res) => {
@@ -491,7 +480,6 @@ module.exports = {
   loginAdmin,
   getWishlist,
   updateOrderStatus,
-  getAllOrders,
   toggleUserRole,
   updateUserByAdmin,
 };
