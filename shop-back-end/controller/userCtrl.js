@@ -401,35 +401,6 @@ const getWishlist = asyncHandler(async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-//! update trạng thái giỏ hàng
-const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { status } = req.body;
-  const { id } = req.params;
-  validateMongoDbId(id);
-  try {
-    const updateOrderStatus = await Order.findByIdAndUpdate(
-      id,
-      {
-        orderStatus: status,
-        paymentIntent: {
-          status: status,
-        },
-      },
-      { new: true }
-    );
-    res.json(updateOrderStatus);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
-
 const updateUserByAdmin = asyncHandler(async (req, res) => {
   const { id } = req.params; // Lấy id từ params
   const { firstName, lastName, email, mobile, address, role, password } =
@@ -479,7 +450,6 @@ module.exports = {
   resetPassword,
   loginAdmin,
   getWishlist,
-  updateOrderStatus,
   toggleUserRole,
   updateUserByAdmin,
 };
