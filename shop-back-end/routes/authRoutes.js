@@ -16,9 +16,6 @@ const {
   resetPassword,
   loginAdmin,
   getWishlist,
-
-  updateOrderStatus,
-
   toggleUserRole,
   updateUserByAdmin,
 } = require("../controller/userCtrl");
@@ -59,14 +56,5 @@ router.put("/update-user-admin/:id",authMiddleware, isAdmin, updateUserByAdmin);
 router.put("/updatePassword/:id", authMiddleware, updatePassword);
 //! Xóa user
 router.post("/deleteUser/:id", deleteUser);
-
-//! đơn hàng
-
-router.put(
-  "/order/updateOrderStatus/:id",
-  authMiddleware,
-  isAdmin,
-  updateOrderStatus
-);
 
 module.exports = router;
