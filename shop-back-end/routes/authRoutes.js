@@ -17,7 +17,6 @@ const {
   loginAdmin,
   getWishlist,
 
-  crateOrder,
   getOrder,
   updateOrderStatus,
   getAllOrders,
@@ -63,7 +62,6 @@ router.put("/updatePassword/:id", authMiddleware, updatePassword);
 router.post("/deleteUser/:id", deleteUser);
 
 //! đơn hàng
-router.post("/crateOrder", authMiddleware, crateOrder);
 router.get("/getOrder", authMiddleware, getOrder);
 router.get("/getAllOrders", authMiddleware, isAdmin, getAllOrders);
 router.put(
