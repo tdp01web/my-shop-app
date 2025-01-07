@@ -402,50 +402,7 @@ const getWishlist = asyncHandler(async (req, res) => {
 
 
 
-const crateOrder = asyncHandler(async (req, res) => {
-  const { COD, couponApplied } = req.body;
-  const { _id } = req.user;
-  validateMongoDbId(_id);
-  try {
-    if (!COD) {
-      throw new Error("Tạo đơn hàng thất bại");
-    }
-    const user = await User.findById({ _id });
-    let userCart = await Cart.findOne({ orderedBy: user._id });
-    let finalAmount = 0;
-    if (couponApplied && userCart.totalAfterDiscount) {
-      finalAmount = userCart.totalAfterDiscount;
-    } else {
-      finalAmount = userCart.cartTotal;
-    }
-    let newOrder = await new Order({
-      products: userCart.products,
-      paymentIntent: {
-        id: uniqid(),
-        method: "COD",
-        amount: finalAmount,
-        status: "Cash On Delivery",
-        created: Date.now(),
-        currency: "vnd",
-      },
-      orderedBy: user._id,
-      orderStatus: "Cash On Delivery",
-    }).save();
-    let update = userCart.products.map((item) => {
-      return {
-        updateOne: {
-          filter: { _id: item.product },
-          update: { $inc: { quantity: -item.count, sold: +item.count } },
-        },
-      };
-    });
 
-    const updated = await Product.bulkWrite(update, {});
-    res.json({ message: "Đơn hàng đã được đặt thành công" });
-  } catch (error) {
-    throw new Error(error);
-  }
-});
 
 const getOrder = asyncHandler(async (req, res) => {
   const { _id } = req.user;
@@ -545,7 +502,6 @@ module.exports = {
   resetPassword,
   loginAdmin,
   getWishlist,
-  crateOrder,
   getOrder,
   updateOrderStatus,
   getAllOrders,
