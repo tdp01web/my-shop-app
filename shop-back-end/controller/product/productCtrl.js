@@ -217,26 +217,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-//! Xóa sản phẩm
-// const deleteProduct = asyncHandler(async (req, res) => {
-//   try {
-//     const { id } = req.params;
 
-//     // Tìm và xóa sản phẩm cùng với các biến thể
-//     const product = await Product.findByIdAndDelete(id);
-
-//     if (!product) {
-//       return res.status(404).json({ message: "Product not found" });
-//     }
-
-//     // Xóa tất cả các biến thể liên quan đến sản phẩm này
-//     await ProductVariant.deleteMany({ product: product._id });
-
-//     res.status(200).json({ message: "Product deleted successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
