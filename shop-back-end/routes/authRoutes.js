@@ -18,7 +18,7 @@ const {
   getWishlist,
 
   updateOrderStatus,
-  getAllOrders,
+
   toggleUserRole,
   updateUserByAdmin,
 } = require("../controller/userCtrl");
@@ -61,7 +61,7 @@ router.put("/updatePassword/:id", authMiddleware, updatePassword);
 router.post("/deleteUser/:id", deleteUser);
 
 //! đơn hàng
-router.get("/getAllOrders", authMiddleware, isAdmin, getAllOrders);
+
 router.put(
   "/order/updateOrderStatus/:id",
   authMiddleware,
