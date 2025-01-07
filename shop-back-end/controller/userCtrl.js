@@ -404,19 +404,7 @@ const getWishlist = asyncHandler(async (req, res) => {
 
 
 
-const getOrder = asyncHandler(async (req, res) => {
-  const { _id } = req.user;
-  validateMongoDbId(_id);
-  try {
-    const userOrder = await Order.findOne({ orderedBy: _id })
-      .populate("products.product")
-      .populate("orderedBy")
-      .exec();
-    res.json(userOrder);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
+
 
 //get all order
 const getAllOrders = asyncHandler(async (req, res) => {
@@ -502,7 +490,6 @@ module.exports = {
   resetPassword,
   loginAdmin,
   getWishlist,
-  getOrder,
   updateOrderStatus,
   getAllOrders,
   toggleUserRole,
