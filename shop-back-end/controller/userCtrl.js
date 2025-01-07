@@ -400,25 +400,7 @@ const getWishlist = asyncHandler(async (req, res) => {
   }
 });
 
-//! lưu địa chỉ người dùng
-const saveUserAddress = asyncHandler(async (req, res, next) => {
-  const { _id } = req.user;
-  validateMongoDbId(_id);
-  try {
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: _id },
-      {
-        address: req?.body?.address,
-      },
-      {
-        new: true,
-      }
-    );
-    res.json(updatedUser);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
+
 
 const crateOrder = asyncHandler(async (req, res) => {
   const { COD, couponApplied } = req.body;
@@ -563,7 +545,6 @@ module.exports = {
   resetPassword,
   loginAdmin,
   getWishlist,
-  saveUserAddress,
   crateOrder,
   getOrder,
   updateOrderStatus,
