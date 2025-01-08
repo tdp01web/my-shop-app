@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button, Popover, Box } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import RAMcon from "./components/RAM";
+import { useSearchParams } from "react-router-dom";
 
 const theme = createTheme({
   components: {
@@ -19,6 +20,7 @@ const theme = createTheme({
 /* eslint-disable react/prop-types */
 const RAMFilter = ({ ramSizes, selectedIndices, setSelectedIndices }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -26,6 +28,10 @@ const RAMFilter = ({ ramSizes, selectedIndices, setSelectedIndices }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleReset = () => {
+    setSelectedIndices([]); 
+    setSearchParams({}); 
   };
 
   const open = Boolean(anchorEl);
@@ -66,15 +72,10 @@ const RAMFilter = ({ ramSizes, selectedIndices, setSelectedIndices }) => {
             justifyContent="space-between"
             width="100%"
           >
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => setSelectedIndices([])}
-            >
+            <Button variant="outlined" color="error" onClick={handleReset}>
               Bỏ chọn
             </Button>
             <Box ml={1} />
-            
           </Box>
         </Box>
       </Popover>

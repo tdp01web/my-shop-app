@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button, Popover, Box } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import VGAcon from "./components/VGA";
+import { useSearchParams } from "react-router-dom";
 
 const theme = createTheme({
   components: {
@@ -19,6 +20,7 @@ const theme = createTheme({
 /* eslint-disable react/prop-types */
 const VGAFilter = ({ Vganames, selectedVga, setSelectedVga }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -26,6 +28,10 @@ const VGAFilter = ({ Vganames, selectedVga, setSelectedVga }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleReset = () => {
+    setSelectedVga([]); 
+    setSearchParams({}); 
   };
 
   const open = Boolean(anchorEl);
@@ -76,11 +82,7 @@ const VGAFilter = ({ Vganames, selectedVga, setSelectedVga }) => {
             justifyContent="space-between"
             width="100%"
           >
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => setSelectedVga([])}
-            >
+            <Button variant="outlined" color="error" onClick={handleReset}>
               Bỏ chọn
             </Button>
             <Box ml={1} />
