@@ -4,8 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, message, Popconfirm, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
-import { useGetAllBrand } from '../../../hooks/queries/useGetAllBrands';
-import { useDeleteBrand } from '../../../hooks/mutations/useDeleteBrands';
+import { useGetAllBrand } from "../../../../hooks/queries/useGetAllBrands";
+import { useDeleteBrand } from "../../../../hooks/mutations/useDeleteBrands";
 
 const EditBrands = () => {
   const [searchText, setSearchText] = useState('');
