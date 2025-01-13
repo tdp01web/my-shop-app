@@ -322,7 +322,39 @@ const loginAdmin = asyncHandler(async (req, res) => {
   }
 });
 
+//! lấy ra danh sách yêu thích
+const getWishlist = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  try {
+    const user = await User.findById(_id).populate({
+      path: "wishlist",
+      populate: [
+        {
+          path: "variants",
+          populate: [
+            { path: "processor" },
+            { path: "gpu" },
+            { path: "ram" },
+            { path: "storage" },
+          ],
+        },
+      ],
+    });
 
+    // Kiểm tra nếu wishlist trống
+    // Nếu user hoặc wishlist không tồn tại, trả về danh sách rỗng
+    if (!user || !user.wishlist || user.wishlist.length === 0) {
+      return res
+        .status(200)
+        .json({ wishlist: [], message: "Wishlist is empty" });
+    }
+
+    // Trả về wishlist đã được populate
+    res.status(200).json({ wishlist: user.wishlist });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 
 const updateUserByAdmin = asyncHandler(async (req, res) => {
