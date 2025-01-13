@@ -13,72 +13,7 @@ const Cart = require("../models/cartModel");
 const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
 const bcrypt = require("bcrypt");
-//! Register
-const createUser = asyncHandler(async (req, res) => {
-  const { email, mobile } = req.body;
 
-  // Check if the email already exists
-  const findUserByEmail = await User.findOne({ email });
-  if (findUserByEmail) {
-    throw new Error("Tài khoản với email này đã tồn tại");
-  }
-
-  // Check if the mobile number already exists
-  const findUserByMobile = await User.findOne({ mobile });
-  if (findUserByMobile) {
-    throw new Error("Số điện thoại này đã tồn tại");
-  }
-
-  // Create a new user if neither email nor mobile number exists
-  const newUser = await User.create(req.body);
-  res.json(newUser);
-});
-
-//! Login
-const loginUserCtrl = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-
-  // Check if the user exists
-  const findUser = await User.findOne({ email });
-
-  if (!findUser) {
-    throw new Error("Tài khoản không tồn tại");
-  }
-
-  // Check if the user is blocked
-  if (findUser.status === 0 && findUser.role !== "Owner") {
-    throw new Error(
-      "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên."
-    );
-  }
-
-  // Check if the password matches
-  if (await findUser.isPasswordMatched(password)) {
-    const refreshToken = await generateRefreshToken(findUser._id);
-    const updateUser = await User.findByIdAndUpdate(
-      findUser.id,
-      { refreshToken },
-      { new: true }
-    );
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 72 * 60 * 60 * 1000, // 3 days
-    });
-
-    res.json({
-      _id: findUser._id,
-      firstName: findUser.firstName,
-      lastName: findUser.lastName,
-      mobile: findUser.mobile,
-      role: findUser.role,
-      email: findUser.email,
-      token: generateToken(findUser._id),
-    });
-  } else {
-    throw new Error("Tài khoản mật khẩu không chính xác");
-  }
-});
 
 //! handle refresh token
 const handleRefreshToken = asyncHandler(async (req, res) => {
