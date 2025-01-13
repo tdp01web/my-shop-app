@@ -3,6 +3,7 @@ import { Box, Button, Popover } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import Categorycon from "./components/Category";
+import { useSearchParams } from "react-router-dom";
 
 const theme = createTheme({
   components: {
@@ -24,6 +25,7 @@ const CategoryFilter = ({
   setSelectedCategory,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -31,6 +33,10 @@ const CategoryFilter = ({
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleReset = () => {
+    setSelectedCategory([]); 
+    setSearchParams({}); 
   };
 
   const open = Boolean(anchorEl);
@@ -71,11 +77,7 @@ const CategoryFilter = ({
             justifyContent="space-between"
             width="100%"
           >
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => setSelectedCategory([])}
-            >
+            <Button variant="outlined" color="error" onClick={handleReset}>
               Bỏ chọn
             </Button>
             <Box ml={1} />

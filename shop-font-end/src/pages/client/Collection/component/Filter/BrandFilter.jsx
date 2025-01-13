@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button, Popover, Box } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Brandcon from "./components/Brand";
+import { useSearchParams } from "react-router-dom";
 
 const theme = createTheme({
   components: {
@@ -20,6 +21,7 @@ const theme = createTheme({
 /* eslint-disable react/prop-types */
 const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -27,6 +29,11 @@ const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleReset = () => {
+    setSelectedBrand([]);
+    setSearchParams({});
   };
 
   const open = Boolean(anchorEl);
@@ -70,7 +77,7 @@ const BrandFilter = ({ Brand, selectedBrand, setSelectedBrand }) => {
             <Button
               variant="outlined"
               color="error"
-              onClick={() => setSelectedBrand([])}
+              onClick={handleReset} // Gọi hàm reset khi bấm nút
             >
               Bỏ chọn
             </Button>

@@ -3,6 +3,7 @@ import { Box, Button, Popover } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import SSDcon from "./components/SSD";
+import { useSearchParams } from "react-router-dom";
 
 const theme = createTheme({
   components: {
@@ -19,6 +20,7 @@ const theme = createTheme({
 /* eslint-disable react/prop-types */
 const SSDFilter = ({ SSDnames, selectedSSD, setSelectedSSD }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -26,6 +28,10 @@ const SSDFilter = ({ SSDnames, selectedSSD, setSelectedSSD }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleReset = () => {
+    setSelectedSSD([]); 
+    setSearchParams({}); 
   };
 
   const open = Boolean(anchorEl);
@@ -76,15 +82,10 @@ const SSDFilter = ({ SSDnames, selectedSSD, setSelectedSSD }) => {
             justifyContent="space-between"
             width="100%"
           >
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => setSelectedSSD([])}
-            >
+            <Button variant="outlined" color="error" onClick={handleReset}>
               Bỏ chọn
             </Button>
             <Box ml={1} />
-            
           </Box>
         </Box>
       </Popover>
