@@ -14,6 +14,27 @@ const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
 const bcrypt = require("bcrypt");
 
+//! Register
+const createUser = asyncHandler(async (req, res) => {
+  const { email, mobile } = req.body;
+
+  // Check if the email already exists
+  const findUserByEmail = await User.findOne({ email });
+  if (findUserByEmail) {
+    throw new Error("Tài khoản với email này đã tồn tại");
+  }
+
+  // Check if the mobile number already exists
+  const findUserByMobile = await User.findOne({ mobile });
+  if (findUserByMobile) {
+    throw new Error("Số điện thoại này đã tồn tại");
+  }
+
+  // Create a new user if neither email nor mobile number exists
+  const newUser = await User.create(req.body);
+  res.json(newUser);
+});
+
 
 //! handle refresh token
 const handleRefreshToken = asyncHandler(async (req, res) => {
