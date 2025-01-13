@@ -1,9 +1,56 @@
-import React from 'react'
-
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
+import { Button, Form, Input, message } from "antd";
+import React, { useRef, useState } from "react";
+import { Fade } from "react-awesome-reveal";
+import ReCAPTCHA from "react-google-recaptcha";
+import { Link, useNavigate } from "react-router-dom";
+import { instance } from "../../../configs/instance";
+import FooterLayoutClient from "../../../layouts/client/components/footer";
+import Header from "../register/component/Header";
 const Login = () => {
+  const [isVerified, setIsVerified] = useState(false);
+  const recaptchaRef = useRef();
+  const navigate = useNavigate();
+
+  const { mutate, isError, error, isLoading } = useMutation({
+    mutationFn: async (data) => {
+      try {
+        const response = await instance.post("/user/login", data);
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      if (data && data.token) {
+        message.success("Đăng nhập thành công!");
+        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("token", data.token);
+        navigate("/");
+      }
+    },
+    onError: (error) => {
+      const errorMessage =
+        error?.response?.data?.message || "Đã xảy ra lỗi. Vui lòng thử lại.";
+      message.error(errorMessage);
+    },
+  });
+  const onFinish = async (value) => {
+    if (isVerified) {
+      mutate(value);
+    } else {
+      message.error("Vui đoan xác thực Recaptcha trước khi đăng ký!");
+    }
+  };
+
+  const handleRecaptcha = (value) => {
+    if (value) {
+      setIsVerified(true);
+    }
+  };
   return (
     <div>
-      <div>
       <Header />
       <div
         style={{
@@ -104,8 +151,7 @@ const Login = () => {
       </div>
       <FooterLayoutClient />
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
