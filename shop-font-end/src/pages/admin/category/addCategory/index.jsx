@@ -14,7 +14,7 @@ const AddCategory = () => {
         content: "Thêm danh mục thành công",
       });
       setTimeout(() => {
-        navigate('/admin/categories');
+        navigate('/admin/category');
       }, 1000);
       form.resetFields();
     },
