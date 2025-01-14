@@ -34,6 +34,51 @@ const createUser = asyncHandler(async (req, res) => {
   const newUser = await User.create(req.body);
   res.json(newUser);
 });
+//! Login
+const loginUserCtrl = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if the user exists
+  const findUser = await User.findOne({ email });
+
+  if (!findUser) {
+    throw new Error("Tài khoản không tồn tại");
+  }
+
+  // Check if the user is blocked
+  if (findUser.status === 0 && findUser.role !== "Owner") {
+    throw new Error(
+      "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên."
+    );
+  }
+
+  // Check if the password matches
+  if (await findUser.isPasswordMatched(password)) {
+    const refreshToken = await generateRefreshToken(findUser._id);
+    const updateUser = await User.findByIdAndUpdate(
+      findUser.id,
+      { refreshToken },
+      { new: true }
+    );
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 72 * 60 * 60 * 1000, // 3 days
+    });
+
+    res.json({
+      _id: findUser._id,
+      firstName: findUser.firstName,
+      lastName: findUser.lastName,
+      mobile: findUser.mobile,
+      role: findUser.role,
+      email: findUser.email,
+      token: generateToken(findUser._id),
+    });
+  } else {
+    throw new Error("Tài khoản mật khẩu không chính xác");
+  }
+});
 
 
 //! handle refresh token
