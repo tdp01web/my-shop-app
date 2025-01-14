@@ -56,6 +56,7 @@ import AddBrands from "../pages/admin/brands/addBrand";
 import EditBrands from "../pages/admin/brands/editBrand";
 import ListCategories from "../pages/admin/category";
 import AddCategories from "../pages/admin/category/addCategory";
+import EditCategories from "../pages/admin/category/editCategory";
 // Sử dụng React.lazy() để lazy load các trang
 const LayoutAdmin = lazy(() => import("../layouts/admin"));
 const LayoutClient = lazy(() => import("../layouts/client"));
@@ -206,6 +207,7 @@ const Router = () => {
             <Route path="brands/:id/edit" element={<EditBrands></EditBrands>}> </Route>
             <Route path="category" element={<ListCategories></ListCategories>}> </Route>
             <Route path="category/add" element={<AddCategories></AddCategories>}> </Route>
+            <Route path="category/:id/edit" element={<EditCategories></EditCategories>}> </Route>
           </Route>
           //#region Staff
           <Route
