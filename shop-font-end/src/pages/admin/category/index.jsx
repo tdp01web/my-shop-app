@@ -152,7 +152,7 @@ const ListCategories = () => {
               </Button>
             </Popconfirm>
             <Button>
-              <Link to={`/admin/categories/${categories._id}/edit`}>Chi tiết</Link>
+              <Link to={`/admin/category/${categories._id}/edit`}>Chi tiết</Link>
             </Button>
           </div>
         );
@@ -167,7 +167,7 @@ const ListCategories = () => {
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-semibold text-2xl">Quản lý danh mục</h1>
         <Button type="primary">
-          <Link to="/admin/categories/add">
+          <Link to="/admin/category/add">
             <PlusCircleFilled /> Thêm danh mục
           </Link>
         </Button>

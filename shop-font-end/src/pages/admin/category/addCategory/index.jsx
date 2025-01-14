@@ -1,13 +1,51 @@
-import { BackwardFilled } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { BackwardFilled, Loading3QuartersOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Form, Input, InputNumber, message, Select, Upload } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { usePostCategory } from "../../../../hooks/mutations/usePostCategories";
 
-const AddCategories = () => {
+const AddCategory = () => {
+  const navigate = useNavigate()
+  const [messageApi, contextHolder] = message.useMessage();
+  const [form] = Form.useForm();
+  const { mutate, isPending } = usePostCategory({
+    onSuccess: () => {
+      messageApi.open({
+        type: "success",
+        content: "Thêm danh mục thành công",
+      });
+      setTimeout(() => {
+        navigate('/admin/categories');
+      }, 1000);
+      form.resetFields();
+    },
+    onError(error) {
+      if (error.response?.data) {
+        const { message } = error.response.data;
+        if (message.includes("duplicate key error")) {
+          messageApi.open({
+            type: "error",
+            content: "Danh mục đã tồn tại. Vui lòng chọn tên khác.",
+          });
+        } else {
+          messageApi.open({
+            type: "error",
+            content: message,
+          });
+        }
+      } else {
+        messageApi.open({
+          type: "error",
+          content: "Đã xảy ra lỗi. Vui lòng thử lại.",
+        });
+      }
+    },
+  });
   const onFinish = (values) => {
-    console.log(values);
+    mutate(values);
   };
   return (
     <div className="">
+      {contextHolder}
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-semibold text-2xl">Thêm danh mục</h1>
         <Button type="primary">
@@ -24,20 +62,28 @@ const AddCategories = () => {
           style={{ maxWidth: 600 }}
           onFinish={onFinish}
           autoComplete="off"
+          disabled={isPending}
         >
           <Form.Item
-            label="Tên hãng"
-            name="title"
+            label="Tên danh mục"
+            name="name"
             rules={[{
-              required: true, message: "Tên hãng bắt buộc phải điền",
-              max: 32, message: "Vui lòng nhập tên hãng nhỏ hơn 32 kí tự"
+              required: true, message: "Tên danh mục bắt buộc phải điền",
+              max: 32, message: "Vui lòng nhập tên danh mục nhỏ hơn 32 kí tự"
             }]}
           >
-            <Input placeholder="Nhập tên hãng" />
+            <Input placeholder="Nhập danh mục" />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit" >
-              Cập nhật
+            <Button type="primary" htmlType="submit" disabled={isPending}>
+              {isPending ? (
+                <>
+                  <Loading3QuartersOutlined className="mr-2 animate-spin" />
+                  Cập nhật
+                </>
+              ) : (
+                "Cập nhật"
+              )}
             </Button>
           </Form.Item>
         </Form>
@@ -46,4 +92,4 @@ const AddCategories = () => {
   );
 };
 
-export default AddCategories;
+export default AddCategory;
