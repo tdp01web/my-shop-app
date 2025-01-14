@@ -1,14 +1,42 @@
+import { useGetAllCategory } from '../../../hooks/queries/useGetAllCategories';
 import React, { useRef, useState } from "react";
 import { PlusCircleFilled, SearchOutlined } from "@ant-design/icons";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, message, Popconfirm, Space, Table } from "antd";
 import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
+import { useDeleteCategory } from '../../../hooks/mutations/useDeleteCategories';
 
 const ListCategories = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+  const [messageApi, contextHolder] = message.useMessage();
+  const queryClient = useQueryClient();
+  const { data: categories, isLoading, isError } = useGetAllCategory({
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
 
+  const { mutate } = useDeleteCategory({
+    onSuccess: () => {
+      messageApi.open({
+        type: "success",
+        content: "Thay đổi trạng thái danh mục thành công",
+      });
+      queryClient.invalidateQueries({ queryKey: ["get-all-category"] });
+    },
+    onError(error) {
+      messageApi.open({
+        type: "error",
+        content: error.message,
+      });
+    },
+  })
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -69,41 +97,18 @@ const ListCategories = () => {
       ),
   });
 
-  const dataSource = [
-    {
-      _id: '1',
-      title: 'Hãng A',
-      status: 'Kích hoạt',
-      isDisabled: false,
-    },
-    {
-      _id: '2',
-      title: 'Hãng B',
-      status: 'Đình chỉ',
-      isDisabled: true,
-    },
-    {
-      _id: '3',
-      title: 'Hãng C',
-      status: 'Kích hoạt',
-      isDisabled: false,
-    },
-    {
-      _id: '4',
-      title: 'Hãng D',
-      status: 'Kích hoạt',
-      isDisabled: false,
-    },
-    {
-      _id: '5',
-      title: 'Hãng E',
-      status: 'Đình chỉ',
-      isDisabled: true,
-    },
-  ];
+  const dataSource = categories?.data.map((item) => {
+    return {
+      key: item.id,
+      _id: item._id,
+      status: item.status === 1 ? "Sử dụng" : "Đình chỉ",
+      name: item.name,
+      isDisabled: item.status !== 1,
+    };
+  });
   const columns = [
     {
-      title: "Mã hãng",
+      title: "Mã danh mục",
       dataIndex: "_id",
       key: "_id",
       width: '20%',
@@ -111,17 +116,18 @@ const ListCategories = () => {
       sorter: (a, b) => a._id.localeCompare(b._id),
     },
     {
-      title: "Tên hãng",
-      dataIndex: "title",
-      key: "title",
+      title: "Tên danh mục",
+      dataIndex: "name",
+      key: "name",
       width: '30%',
-      ...getColumnSearchProps('title'),
-      sorter: (a, b) => a.title.localeCompare(b.title),
+      ...getColumnSearchProps('name'),
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      width: '15%',
       ...getColumnSearchProps('status'),
       sorter: (a, b) => a.status.localeCompare(b.status),
     },
@@ -129,42 +135,44 @@ const ListCategories = () => {
       title: "Hành động",
       dataIndex: "action",
       width: 250,
-      render: (_, category) => {
+      render: (_, categories) => {
+        const isActive = categories.status === "Sử dụng";
         return (
           <div className="flex space-x-3">
             <Popconfirm
-              title={"Kích hoạt danh mục?"}
+              title={isActive ? "Đình chỉ danh mục?" : "Kích hoạt danh mục?"}
+              onConfirm={() => {
+                mutate(categories._id);
+              }}
               okText="Yes"
               cancelText="No"
             >
-              <Button type="primary" >
-                Sử dụng
+              <Button type="primary" style={{ backgroundColor: isActive ? '#ff4d4f' : '#52c41a' }}>
+                {isActive ? "Đình chỉ" : "Sử dụng"}
               </Button>
             </Popconfirm>
             <Button>
-              <Link to={`/admin/category/${category._id}/edit`}>Chi tiết</Link>
+              <Link to={`/admin/categories/${categories._id}/edit`}>Chi tiết</Link>
             </Button>
           </div>
         );
       },
     },
   ];
-
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error loading data.</p>
   return (
     <div>
+      {contextHolder}
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-semibold text-2xl">Quản lý danh mục</h1>
         <Button type="primary">
-          <Link to="/admin/category/add">
+          <Link to="/admin/categories/add">
             <PlusCircleFilled /> Thêm danh mục
           </Link>
         </Button>
       </div>
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')}
-      />
+      <Table dataSource={dataSource} columns={columns} rowClassName={record => (record.isDisabled ? 'bg-gray-300 ' : '')} />
     </div>
   );
 };
