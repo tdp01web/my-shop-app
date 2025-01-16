@@ -65,7 +65,7 @@ const AddVouchers = () => {
           name="basic"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
+          style={{ maxWidth: 800 }}
           onFinish={onFinish}
           autoComplete="off"
           disabled={isPending}
@@ -74,8 +74,9 @@ const AddVouchers = () => {
             label="Tên mã giảm giá"
             name="name"
             rules={[{ required: true, message: "Tên mã giảm giá là bắt buộc!" }]}
+
           >
-            <Input />
+            <Input placeholder="Nhập tên mã giảm giá" />
           </Form.Item>
 
           <Form.Item
@@ -86,7 +87,7 @@ const AddVouchers = () => {
               { type: 'number', min: 0, max: 1000000, message: "Số tiền giảm tối đa phải lớn hơn 0 đồng và nhỏ hơn hoặc bằng 1 triệu đồng!" }
             ]}
           >
-            <InputNumber />
+            <InputNumber className="w-full" placeholder="Nhập số tiền giảm tối đa <= 1 triệu đồng" />
           </Form.Item>
 
           <Form.Item
@@ -97,7 +98,7 @@ const AddVouchers = () => {
               { type: 'number', min: 0, message: "Số lần sử dụng phải lớn hơn hoặc bằng 0!" }
             ]}
           >
-            <InputNumber />
+            <InputNumber className="w-[11rem]" placeholder="Nhập số lần sử dụng"/>
           </Form.Item>
 
           <Form.Item

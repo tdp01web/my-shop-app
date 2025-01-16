@@ -116,8 +116,9 @@ const EditVouchers = () => {
             label="Tên mã giảm giá"
             name="name"
             rules={[{ required: true, message: "Tên mã giảm giá là bắt buộc!" }]}
+
           >
-            <Input />
+            <Input placeholder="Nhập tên mã giảm giá" />
           </Form.Item>
 
           <Form.Item
@@ -128,7 +129,7 @@ const EditVouchers = () => {
               { type: 'number', min: 0, max: 1000000, message: "Số tiền giảm tối đa phải lớn hơn 0 đồng và nhỏ hơn hoặc bằng 1 triệu đồng!" }
             ]}
           >
-            <InputNumber />
+            <InputNumber className="w-full" placeholder="Nhập số tiền giảm tối đa <= 1 triệu đồng" />
           </Form.Item>
 
           <Form.Item
