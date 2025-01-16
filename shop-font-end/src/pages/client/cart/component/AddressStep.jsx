@@ -206,7 +206,7 @@ const AddressStep = ({ handleNext, cartTotal, mobile, fullName }) => {
         value={deliveryOption}
         className="flex flex-col gap-2"
       >
-        <Radio value={3}>Giao hàng nhanh (2 - 4h) - 40.000₫</Radio>
+        <Radio value={3}>Giao hàng nhanh - 40.000₫</Radio>
         <Radio value={4}>Giao hàng tiêu chuẩn - 25.000₫</Radio>
       </Radio.Group>
 

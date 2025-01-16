@@ -183,12 +183,12 @@ const OrderDetail = () => {
         </div>
 
         <div className="md:ml-[50%] mt-4">
-          <div className="flex items-center mb-3">
+          {/* <div className="flex items-center mb-3">
             <p className="w-1/2">Giá tạm tính:</p>
             <p className="w-1/2 text-right">
               {data.totalPrice.toLocaleString()}đ
             </p>
-          </div>
+          </div> */}
 
           <div className="flex items-center mb-3">
             <p className="w-1/2">Phí vận chuyển:</p>
