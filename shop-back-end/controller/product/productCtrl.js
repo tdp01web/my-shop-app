@@ -266,25 +266,6 @@ const deleteComment = asyncHandler(async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    const brand = await Brand.findById(product.brand);
-    if (!brand) {
-      return res.status(404).json({ message: "Brand not found" });
-    }
-    if (brand.status === 0) {
-      return res.status(400).json({
-        message: "Cannot modify product because the brand is suspended.",
-      });
-    }
-
-    const category = await Category.findById(product.category);
-    if (!category) {
-      return res.status(404).json({ message: "Category not found" });
-    }
-    if (category.status === 0) {
-      return res.status(400).json({
-        message: "Cannot modify product because the category is suspended.",
-      });
-    }
 
     product.statusCmt = product.statusCmt === 1 ? 0 : 1;
 
