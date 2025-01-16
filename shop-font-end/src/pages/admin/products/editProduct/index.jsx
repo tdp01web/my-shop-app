@@ -70,9 +70,20 @@ const EditProduct = () => {
       return e;
     }
     console.log("🚀 ~ normFile ~ e:", e?.fileList);
-    return e?.fileList;
-  };
 
+    return e?.fileList.filter(file =>
+      !file.type ||
+      (file.type !== "" &&
+      file.type.startsWith('image/') &&
+      (file.type.endsWith('jpeg') || file.type.endsWith('png')) || file.type.endsWith('jpg')))
+  };
+  const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('Bạn chỉ có thể tải lên file JPG/PNG!');
+    }
+    return isJpgOrPng;
+  };
   const {
     data: product,
     isLoading,
@@ -289,6 +300,8 @@ const EditProduct = () => {
             getValueFromEvent={normFile}
           >
             <Upload
+              accept=".jpg, .jpeg, .png"
+              beforeUpload={beforeUpload}
               action="http://localhost:3000/api/upload"
               name="images"
               listType="picture-card"

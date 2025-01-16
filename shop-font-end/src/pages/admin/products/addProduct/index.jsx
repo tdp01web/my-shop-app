@@ -59,7 +59,20 @@ const AddProduct = () => {
     if (Array.isArray(e)) {
       return e;
     }
-    return e?.fileList;
+    console.log("🚀 ~ normFile ~ e:", e?.fileList);
+
+    return e?.fileList.filter(file =>
+      !file.type ||
+      (file.type !== "" &&
+        file.type.startsWith('image/') &&
+        (file.type.endsWith('jpeg') || file.type.endsWith('png')) || file.type.endsWith('jpg')))
+  };
+  const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('Bạn chỉ có thể tải lên file JPG/PNG!');
+    }
+    return isJpgOrPng;
   };
   const {
     data: dataBrand,
@@ -230,6 +243,8 @@ const AddProduct = () => {
             <Input placeholder="Nhập tên sản phẩm" />
           </Form.Item>
           <Form.Item
+            accept=".jpg, .jpeg, .png"
+            beforeUpload={beforeUpload}
             label="Images"
             name="images"
             valuePropName="fileList"
